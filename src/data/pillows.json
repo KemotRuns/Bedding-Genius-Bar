@@ -1,35 +1,41 @@
 [
   {
     "product_id": "PL001",
-    "name": "Hungarian Down",
+    "name": "Hungarian Down Pillow",
+    "sku": "TN-DW-PL-HG",
+    "collection": "Signature Collection",
     "fill": "Down",
     "attributes": {
       "loft": "High",
       "firmness": "Soft",
       "hypoallergenic": false,
-      "temperature": "Warming",
+      "temperature": "Neutral",
       "adjustable": false
     },
-    "best_for": ["Side Sleepers", "Broad Shoulders", "Cold Sleepers", "Luxury"],
-    "description": "Clusters of ethically sourced Hungarian goose down. Plush, cloud-like, and naturally warming — ideal for side sleepers with broad shoulders."
+    "best_for": ["Side Sleepers", "Broad Shoulders", "Luxury Feel", "Cold Sleepers"],
+    "description": "Premium Hungarian white down clusters deliver exceptional loft and an enveloping softness. Naturally insulating and breathable — the pillow that feels like sleeping on a cloud."
   },
   {
     "product_id": "PL002",
-    "name": "Memory Foam Contour",
+    "name": "Memory Foam Contour Pillow",
+    "sku": "TN-MF-PL-CV",
+    "collection": "Topcell Pro",
     "fill": "Memory Foam",
     "attributes": {
       "loft": "Medium",
       "firmness": "Firm",
-      "hypoallergenic": true,
-      "temperature": "Neutral",
+      "hypoallergenic": false,
+      "temperature": "Warming",
       "adjustable": false
     },
-    "best_for": ["Back Sleepers", "Neck Pain", "Allergies", "Spinal Support"],
-    "description": "Contoured memory foam that cradles the neck and supports the cervical spine. Hypoallergenic and CertiPUR-US certified."
+    "best_for": ["Back Sleepers", "Neck Pain", "Cervical Support", "Broad Shoulders"],
+    "description": "Ergonomic contour shape with temperature-responsive memory foam that conforms precisely to the neck and shoulder curve. Provides targeted cervical support for back sleepers and those with neck tension."
   },
   {
     "product_id": "PL003",
-    "name": "Shredded Latex",
+    "name": "Shredded Latex Pillow",
+    "sku": "TN-LX-PL-SH",
+    "collection": "Natural Edit",
     "fill": "Latex",
     "attributes": {
       "loft": "Medium",
@@ -38,26 +44,30 @@
       "temperature": "Cooling",
       "adjustable": true
     },
-    "best_for": ["Back Sleepers", "Combination Sleepers", "Hot Sleepers", "Allergies"],
-    "description": "Shredded natural latex with an adjustable fill level. Open-cell structure sleeps cooler than memory foam. GOLS certified organic."
+    "best_for": ["Combination Sleepers", "Side Sleepers", "Sensitive Skin", "Hot Sleepers"],
+    "description": "Shredded natural latex fill with an adjustable loft — add or remove fill to dial in your perfect height. Naturally breathable, anti-microbial, and resilient. Ideal for combination sleepers who move during the night."
   },
   {
     "product_id": "PL004",
-    "name": "Buckwheat Hull",
-    "fill": "Buckwheat",
+    "name": "Tech Fiber Pillow",
+    "sku": "TN-TF-PL-MD",
+    "collection": "TopCool Series",
+    "fill": "Tech Fiber",
     "attributes": {
-      "loft": "High",
-      "firmness": "Firm",
-      "hypoallergenic": false,
-      "temperature": "Cooling",
-      "adjustable": true
+      "loft": "Medium",
+      "firmness": "Medium",
+      "hypoallergenic": true,
+      "temperature": "Neutral",
+      "adjustable": false
     },
-    "best_for": ["Side Sleepers", "Back Sleepers", "Hot Sleepers", "Firm Support"],
-    "description": "Thousands of natural buckwheat hulls that conform to your head shape and allow air to circulate freely. Adjustable loft. A traditional favourite in Japan."
+    "best_for": ["Allergy Sufferers", "Low Maintenance", "Side Sleepers", "Combination Sleepers"],
+    "description": "High-performance tech fiber fill that stays lofty wash after wash. Machine washable, fully hypoallergenic, and dries quickly — the practical choice for allergy sufferers and busy households."
   },
   {
     "product_id": "PL005",
     "name": "Slim Down Pillow",
+    "sku": "TN-DW-PL-SL",
+    "collection": "Signature Collection",
     "fill": "Down",
     "attributes": {
       "loft": "Low",
@@ -66,7 +76,7 @@
       "temperature": "Neutral",
       "adjustable": false
     },
-    "best_for": ["Stomach Sleepers", "Petite Frames", "Low Loft Preference"],
-    "description": "A slim, flat pillow designed to keep stomach sleepers' necks neutral and prevent arching. Lightweight Hungarian down fill."
+    "best_for": ["Stomach Sleepers", "Petite Frame", "Soft Feel", "Low Loft Preference"],
+    "description": "A slim, low-loft down pillow designed specifically for stomach sleepers and those with a petite frame. Keeps the spine neutral and prevents neck strain — lightweight, whisper-soft, and unobtrusive."
   }
 ]

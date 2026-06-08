@@ -1,0 +1,86 @@
+[
+  {
+    "product_id": "C001",
+    "name": "Silk Comforter",
+    "sku": "TN-SK-CM-AS",
+    "collection": "Prestige",
+    "fill": "Silk",
+    "attributes": {
+      "warmth": "All-Season",
+      "temperature": "Cooling",
+      "hypoallergenic": true,
+      "washable": false,
+      "weight": "Light"
+    },
+    "best_for": ["Sensitive Skin", "Year-Round Use", "Luxury", "Hot Sleepers"],
+    "description": "Mulberry silk fill with a naturally protein-rich structure that regulates temperature in all seasons. Lightweight, hypoallergenic, and breathable — the preferred choice for sensitive skin.",
+    "ratings": {
+      "warmth": 3,
+      "breathability": 5,
+      "fluffiness": 3
+    }
+  },
+  {
+    "product_id": "C002",
+    "name": "Wool Comforter",
+    "sku": "TN-WL-CM-WN",
+    "collection": "Winter Comfort",
+    "fill": "Wool",
+    "attributes": {
+      "warmth": "Winter",
+      "temperature": "Warming",
+      "hypoallergenic": false,
+      "washable": false,
+      "weight": "Heavy"
+    },
+    "best_for": ["Cold Sleepers", "Winter Use", "Temperature Regulation", "Thick Coverage"],
+    "description": "Natural wool fill with an exceptional warmth-to-weight ratio. Naturally anti-static and moisture-regulating — ideal for cold sleepers who want substantial coverage without overheating.",
+    "ratings": {
+      "warmth": 5,
+      "breathability": 4,
+      "fluffiness": 3
+    }
+  },
+  {
+    "product_id": "C003",
+    "name": "Down Comforter",
+    "sku": "TN-DW-CM-WN",
+    "collection": "Signature Collection",
+    "fill": "Down",
+    "attributes": {
+      "warmth": "Winter",
+      "temperature": "Warming",
+      "hypoallergenic": false,
+      "washable": false,
+      "weight": "Light"
+    },
+    "best_for": ["Cold Sleepers", "Lightweight Warmth", "Fluffy Feel", "Winter Use"],
+    "description": "Premium white down clusters deliver outstanding warmth with remarkable lightness. High fill power creates a cloud-like loft — perfect for cold sleepers who prefer the enveloping feel of a fluffy duvet.",
+    "ratings": {
+      "warmth": 5,
+      "breathability": 5,
+      "fluffiness": 5
+    }
+  },
+  {
+    "product_id": "C004",
+    "name": "TN Tech Fiber Comforter",
+    "sku": "TN-TF-CM-AS",
+    "collection": "TopCool Series",
+    "fill": "Tech Fiber",
+    "attributes": {
+      "warmth": "All-Season",
+      "temperature": "Neutral",
+      "hypoallergenic": true,
+      "washable": true,
+      "weight": "Medium"
+    },
+    "best_for": ["Easy Care", "Allergy Sufferers", "Year-Round Use", "Busy Households"],
+    "description": "High-performance technical fiber fill that bounces back wash after wash. Machine washable, hypoallergenic, and available in summer, all-season, and winter weights — the practical choice for busy households.",
+    "ratings": {
+      "warmth": 3,
+      "breathability": 4,
+      "fluffiness": 4
+    }
+  }
+]

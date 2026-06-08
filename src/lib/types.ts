@@ -15,6 +15,8 @@ export type MaterialName =
 export interface SheetProduct {
   product_id: string
   name: string
+  sku?: string
+  collection?: string
   material: MaterialName
   weave: WeaveName
   thread_count?: number
@@ -44,7 +46,9 @@ export type FirmnessLevel = 'Firm' | 'Medium' | 'Soft'
 export interface PillowProduct {
   product_id: string
   name: string
-  fill: 'Down' | 'Memory Foam' | 'Latex' | 'Buckwheat'
+  sku?: string
+  collection?: string
+  fill: 'Down' | 'Memory Foam' | 'Latex' | 'Tech Fiber'
   attributes: {
     loft: LoftLevel
     firmness: FirmnessLevel
@@ -76,6 +80,28 @@ export interface QuizAnswers {
   bodyType?: BodyType
 }
 
+export interface ComforterProduct {
+  product_id: string
+  name: string
+  sku?: string
+  collection?: string
+  fill: 'Silk' | 'Wool' | 'Down' | 'Tech Fiber'
+  attributes: {
+    warmth: 'Summer' | 'All-Season' | 'Winter'
+    temperature: TemperatureRating
+    hypoallergenic: boolean
+    washable: boolean
+    weight: 'Light' | 'Medium' | 'Heavy'
+  }
+  best_for: string[]
+  description: string
+  ratings: {
+    warmth: 1 | 2 | 3 | 4 | 5
+    breathability: 1 | 2 | 3 | 4 | 5
+    fluffiness: 1 | 2 | 3 | 4 | 5
+  }
+}
+
 // ---- Engine Types ----
 
 export interface ScoreReason {
@@ -95,9 +121,16 @@ export interface ScoredPillow {
   scoreBreakdown: ScoreReason[]
 }
 
+export interface ScoredComforter {
+  product: ComforterProduct
+  score: number
+  scoreBreakdown: ScoreReason[]
+}
+
 export interface RecommendationResult {
   topSheet: ScoredSheet
   topPillow: ScoredPillow
+  topComforter: ScoredComforter
   allSheets: ScoredSheet[]
   whyText: string
   bundleSuggestion: string

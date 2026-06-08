@@ -223,6 +223,27 @@ const BroadIcon = () => (
 
 export const QUESTIONS: QuestionConfig[] = [
   {
+    id: 'sleepPosition',
+    question: 'What\'s your primary sleep position?',
+    columns: 4,
+    options: [
+      { value: 'Side', label: 'Side', icon: <SideSleepIcon />, sublabel: 'Ear to shoulder' },
+      { value: 'Back', label: 'Back', icon: <BackSleepIcon />, sublabel: 'Facing the ceiling' },
+      { value: 'Stomach', label: 'Stomach', icon: <StomachSleepIcon />, sublabel: 'Face down' },
+      { value: 'Combination', label: 'All over', icon: <ComboSleepIcon />, sublabel: 'I move around' },
+    ],
+  },
+  {
+    id: 'bodyType',
+    question: 'How wide are your shoulders?',
+    columns: 3,
+    options: [
+      { value: 'Petite', label: 'Narrower (S/XS)', icon: <PetiteIcon />, sublabel: '~36 cm or less' },
+      { value: 'Average', label: 'Average (M/L)', icon: <AverageIcon />, sublabel: '~38–44 cm' },
+      { value: 'Broad', label: 'Broader (XL+)', icon: <BroadIcon />, sublabel: '~46 cm or more' },
+    ],
+  },
+  {
     id: 'roomTemp',
     question: 'What temperature is your bedroom?',
     columns: 4,
@@ -245,17 +266,6 @@ export const QUESTIONS: QuestionConfig[] = [
     ],
   },
   {
-    id: 'sleepPosition',
-    question: 'What\'s your primary sleep position?',
-    columns: 4,
-    options: [
-      { value: 'Side', label: 'Side', icon: <SideSleepIcon />, sublabel: 'Ear to shoulder' },
-      { value: 'Back', label: 'Back', icon: <BackSleepIcon />, sublabel: 'Facing the ceiling' },
-      { value: 'Stomach', label: 'Stomach', icon: <StomachSleepIcon />, sublabel: 'Face down' },
-      { value: 'Combination', label: 'All over', icon: <ComboSleepIcon />, sublabel: 'I move around' },
-    ],
-  },
-  {
     id: 'skinSensitivity',
     question: 'How would you describe your skin?',
     columns: 4,
@@ -264,15 +274,6 @@ export const QUESTIONS: QuestionConfig[] = [
       { value: 'Mild', label: 'Mild', icon: <ShieldMildIcon />, sublabel: 'Occasionally dry' },
       { value: 'Sensitive', label: 'Sensitive', icon: <ShieldSensitiveIcon />, sublabel: 'Reacts to fabrics' },
       { value: 'Allergic/Eczema', label: 'Allergic', icon: <ShieldAllergyIcon />, sublabel: 'Eczema or allergies' },
-    ],
-  },
-  {
-    id: 'petStatus',
-    question: 'Do pets share your bed?',
-    columns: 2,
-    options: [
-      { value: 'No Pets', label: 'No pets', icon: <NoPetsIcon />, sublabel: 'Just me' },
-      { value: 'Yes — Cats or Dogs', label: 'Yes — cats or dogs', icon: <PetsIcon />, sublabel: 'Fur friends included' },
     ],
   },
   {
@@ -285,13 +286,12 @@ export const QUESTIONS: QuestionConfig[] = [
     ],
   },
   {
-    id: 'bodyType',
-    question: 'How would you describe your shoulder width? (for pillow fit)',
-    columns: 3,
+    id: 'petStatus',
+    question: 'Do pets share your bed?',
+    columns: 2,
     options: [
-      { value: 'Petite', label: 'Petite', icon: <PetiteIcon />, sublabel: 'Narrower frame' },
-      { value: 'Average', label: 'Average', icon: <AverageIcon />, sublabel: 'Standard width' },
-      { value: 'Broad', label: 'Broad', icon: <BroadIcon />, sublabel: 'Wider shoulders' },
+      { value: 'No Pets', label: 'No pets', icon: <NoPetsIcon />, sublabel: 'Just me' },
+      { value: 'Yes — Cats or Dogs', label: 'Yes — cats or dogs', icon: <PetsIcon />, sublabel: 'Fur friends included' },
     ],
   },
 ]

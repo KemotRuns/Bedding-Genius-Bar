@@ -2,6 +2,8 @@
   {
     "product_id": "P001",
     "name": "SUPIMA Percale",
+    "sku": "TN-SP-300-WT",
+    "collection": "Signature Collection",
     "material": "Cotton",
     "weave": "Percale",
     "thread_count": 300,
@@ -15,18 +17,15 @@
       "weave_tightness": "Tight"
     },
     "best_for": ["Hot Sleepers", "Warm Climates", "Pet Owners", "Durability Seekers"],
-    "ratings": {
-      "breathability": 5,
-      "wicking": 3,
-      "warmth": 1,
-      "softness": 3
-    },
+    "ratings": { "breathability": 5, "wicking": 3, "warmth": 1, "softness": 3 },
     "description": "Woven from SUPIMA cotton — representing less than 1% of the world's cotton supply. Its extra-long fibres produce a percale with exceptional strength and a cool, clean hand-feel that improves with every wash.",
     "weave_texture_image": "percale"
   },
   {
     "product_id": "P002",
     "name": "Egyptian Cotton Sateen",
+    "sku": "TN-CS-400-IV",
+    "collection": "Charisma Series",
     "material": "Cotton",
     "weave": "Sateen",
     "thread_count": 400,
@@ -40,18 +39,15 @@
       "weave_tightness": "Medium"
     },
     "best_for": ["Average Sleepers", "Cool Climates", "Low Maintenance", "Luxury Feel"],
-    "ratings": {
-      "breathability": 2,
-      "wicking": 2,
-      "warmth": 3,
-      "softness": 5
-    },
+    "ratings": { "breathability": 2, "wicking": 2, "warmth": 3, "softness": 5 },
     "description": "Long-staple Egyptian cotton in a four-over-one satin weave creates a luminous, silky surface with a subtle sheen. Drapes beautifully, resists wrinkles, and feels indulgent from the first night.",
     "weave_texture_image": "sateen"
   },
   {
     "product_id": "P003",
     "name": "Topcell™ Lyocell",
+    "sku": "TN-TC-HG",
+    "collection": "Topcell Pro",
     "material": "Tencel Lyocell",
     "weave": "Plain",
     "attributes": {
@@ -64,18 +60,15 @@
       "weave_tightness": "Medium"
     },
     "best_for": ["Hot Sleepers", "Sensitive Skin", "Night Sweats", "Low Maintenance"],
-    "ratings": {
-      "breathability": 5,
-      "wicking": 5,
-      "warmth": 1,
-      "softness": 5
-    },
+    "ratings": { "breathability": 5, "wicking": 5, "warmth": 1, "softness": 5 },
     "description": "Tonia Nicole's signature Topcell™ uses pine-pulp Lyocell with Faser-Lock™ British technology — enhanced fibre bonding that triples durability versus standard Lyocell. Feather-soft, hypoallergenic, and remarkably cool.",
     "weave_texture_image": "tencel"
   },
   {
     "product_id": "P004",
     "name": "TN Tencel 80S",
+    "sku": "TN-TN-80S",
+    "collection": "Eco Series",
     "material": "Tencel Lyocell",
     "weave": "Plain",
     "attributes": {
@@ -88,18 +81,15 @@
       "weave_tightness": "Medium"
     },
     "best_for": ["Hot Sleepers", "Allergic/Sensitive Skin", "Eco-Conscious", "Night Sweats"],
-    "ratings": {
-      "breathability": 4,
-      "wicking": 5,
-      "warmth": 2,
-      "softness": 4
-    },
+    "ratings": { "breathability": 4, "wicking": 5, "warmth": 2, "softness": 4 },
     "description": "OEKO-TEX certified Tencel Lyocell in an 80S yarn count. Silky smooth, hypoallergenic, and closed-loop manufactured — absorbs moisture 50% faster than cotton while remaining completely breathable.",
     "weave_texture_image": "tencel"
   },
   {
     "product_id": "P005",
     "name": "European Linen",
+    "sku": "TN-LN-EU",
+    "collection": "Natural Edit",
     "material": "Linen",
     "weave": "Plain",
     "attributes": {
@@ -112,18 +102,15 @@
       "weave_tightness": "Loose"
     },
     "best_for": ["Hot Sleepers", "Warm Climates", "Texture Lovers", "Durability Seekers"],
-    "ratings": {
-      "breathability": 5,
-      "wicking": 3,
-      "warmth": 1,
-      "softness": 2
-    },
+    "ratings": { "breathability": 5, "wicking": 3, "warmth": 1, "softness": 2 },
     "description": "Stone-washed European flax linen — the most breathable natural fibre available. Inherently temperature-regulating and only gets softer, more supple, and more beautiful with every year of use.",
     "weave_texture_image": "linen"
   },
   {
     "product_id": "P006",
     "name": "Silk 22MM",
+    "sku": "TN-SK-22M",
+    "collection": "Prestige",
     "material": "Silk",
     "weave": "Plain",
     "attributes": {
@@ -136,18 +123,15 @@
       "weave_tightness": "Tight"
     },
     "best_for": ["Sensitive Skin", "Allergic/Eczema", "Hair & Skin Care", "Luxury"],
-    "ratings": {
-      "breathability": 4,
-      "wicking": 3,
-      "warmth": 3,
-      "softness": 5
-    },
+    "ratings": { "breathability": 4, "wicking": 3, "warmth": 3, "softness": 5 },
     "description": "22-momme mulberry silk — Tonia Nicole's premium grade. Naturally hypoallergenic protein fibre that regulates temperature, reduces friction on hair and skin, and is recommended by dermatologists for eczema-prone sleepers.",
     "weave_texture_image": "silk"
   },
   {
     "product_id": "P007",
     "name": "Brushed Flannel Cotton",
+    "sku": "TN-FL-BRS",
+    "collection": "Winter Comfort",
     "material": "Flannel",
     "weave": "Plain",
     "attributes": {
@@ -160,18 +144,15 @@
       "weave_tightness": "Medium"
     },
     "best_for": ["Cold Sleepers", "Cold Climates", "Winter Comfort"],
-    "ratings": {
-      "breathability": 2,
-      "wicking": 3,
-      "warmth": 5,
-      "softness": 5
-    },
+    "ratings": { "breathability": 2, "wicking": 3, "warmth": 5, "softness": 5 },
     "description": "Double-brushed cotton flannel for exceptional warmth and cloud-like softness. Ideal for cold bedrooms and winter nights — wrap yourself in the feeling of a warm embrace.",
     "weave_texture_image": "linen"
   },
   {
     "product_id": "P008",
     "name": "CoolTouch Nylon Fiber",
+    "sku": "TN-NC-TC",
+    "collection": "TopCool Series",
     "material": "Nylon Fiber",
     "weave": "Plain",
     "attributes": {
@@ -184,12 +165,7 @@
       "weave_tightness": "Tight"
     },
     "best_for": ["Hot Sleepers", "Night Sweats", "Low Maintenance", "Active Lifestyles"],
-    "ratings": {
-      "breathability": 3,
-      "wicking": 5,
-      "warmth": 1,
-      "softness": 4
-    },
+    "ratings": { "breathability": 3, "wicking": 5, "warmth": 1, "softness": 4 },
     "description": "Tonia Nicole's high-performance nylon fibre delivers an instant cooling sensation on contact, wicks moisture rapidly, and dries in a fraction of the time of cotton — perfect for hot sleepers who prioritise low-maintenance care.",
     "weave_texture_image": "percale"
   }

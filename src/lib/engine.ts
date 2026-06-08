@@ -2,16 +2,20 @@ import type {
   QuizAnswers,
   SheetProduct,
   PillowProduct,
+  ComforterProduct,
   ScoredSheet,
   ScoredPillow,
+  ScoredComforter,
   ScoreReason,
   RecommendationResult,
 } from './types'
 import sheetsData from '../data/products.json'
 import pillowsData from '../data/pillows.json'
+import comfortersData from '../data/comforters.json'
 
 const sheets = sheetsData as SheetProduct[]
 const pillows = pillowsData as PillowProduct[]
+const comforters = comfortersData as ComforterProduct[]
 
 function scoreSheet(product: SheetProduct, answers: QuizAnswers): ScoredSheet {
   const reasons: ScoreReason[] = []
@@ -151,6 +155,64 @@ function scorePillow(product: PillowProduct, answers: QuizAnswers): ScoredPillow
   return { product, score, scoreBreakdown: reasons }
 }
 
+function scoreComforter(product: ComforterProduct, answers: QuizAnswers): ScoredComforter {
+  const reasons: ScoreReason[] = []
+  let score = 0
+
+  const add = (points: number, reason: string) => {
+    score += points
+    reasons.push({ points, reason })
+  }
+
+  const isHot = answers.roomTemp === 'Hot' || answers.sleeperTemp === 'Warm' || answers.sleeperTemp === 'Hot Flash Prone'
+  const isCold = answers.roomTemp === 'Cold' || answers.sleeperTemp === 'Always Cold'
+
+  // Temperature × warmth season
+  if (isHot) {
+    if (product.attributes.temperature === 'Cooling') add(3, 'Cooling comforter for warm sleeper')
+    if (product.attributes.temperature === 'Warming') add(-2, 'Warming fill not ideal for hot sleepers')
+    if (product.attributes.warmth === 'Winter') add(-1, 'Winter-weight too heavy for warm nights')
+  }
+
+  if (isCold) {
+    if (product.attributes.warmth === 'Winter') add(3, 'Winter-weight comforter for cold sleeper')
+    if (product.attributes.temperature === 'Warming') add(2, 'Warming fill ideal for cold sleeper')
+    if (product.attributes.temperature === 'Cooling') add(-1, 'Cooling fill provides less warmth for cold nights')
+  }
+
+  if (!isHot && !isCold) {
+    if (product.attributes.warmth === 'All-Season') add(2, 'All-season weight suits moderate sleeper')
+  }
+
+  // Hot flash / night sweats
+  if (answers.sleeperTemp === 'Hot Flash Prone') {
+    if (product.attributes.washable) add(2, 'Washable comforter for easy hot-flash maintenance')
+    if (product.attributes.temperature === 'Cooling') add(2, 'Cooling fill helps manage hot flashes')
+  }
+
+  // Skin / allergy rules
+  if (answers.skinSensitivity === 'Allergic/Eczema') {
+    if (product.attributes.hypoallergenic) add(4, 'Hypoallergenic fill essential for allergy sufferers')
+    else add(-3, 'Non-hypoallergenic fill not suitable for allergies')
+  }
+
+  if (answers.skinSensitivity === 'Sensitive') {
+    if (product.attributes.hypoallergenic) add(2, 'Hypoallergenic fill gentle on sensitive skin')
+  }
+
+  // Maintenance rules
+  if (answers.maintenancePref === 'Low Maintenance') {
+    if (product.attributes.washable) add(3, 'Machine washable — easy care for low-maintenance lifestyle')
+    else add(-1, 'Dry-clean only adds to maintenance burden')
+  }
+
+  if (answers.maintenancePref === 'I Launder Frequently') {
+    if (product.attributes.washable) add(2, 'Machine washable handles frequent laundering')
+  }
+
+  return { product, score, scoreBreakdown: reasons }
+}
+
 function generateWhyText(answers: QuizAnswers, sheet: SheetProduct, pillow: PillowProduct): string {
   const parts: string[] = []
 
@@ -196,15 +258,15 @@ function generateBundleSuggestion(answers: QuizAnswers): string {
   const isCold = answers.roomTemp === 'Cold' || answers.sleeperTemp === 'Always Cold'
 
   if (answers.skinSensitivity === 'Allergic/Eczema') {
-    return 'TN Topcell™ Lyocell duvet cover — OEKO-TEX certified, hypoallergenic, and gentle on sensitive skin.'
+    return 'Complete your sleep setup with our hypoallergenic Topcell™ Lyocell duvet cover and matching pillowcases — OEKO-TEX certified and gentle on sensitive skin.'
   }
   if (isHot) {
-    return 'TN Topcell™ Lyocell or CoolTouch Nylon Fiber duvet cover — instant cooling and high moisture-wicking for warm sleepers.'
+    return 'Round out your setup with a Topcell™ Lyocell or CoolTouch Nylon Fiber duvet cover — both deliver instant cooling and superior moisture-wicking for warm sleepers.'
   }
   if (isCold) {
-    return 'Brushed Flannel Cotton or Egyptian Cotton Sateen duvet cover for cosy warmth on cold nights.'
+    return 'Complete the warmth layer with our Brushed Flannel Cotton or Egyptian Cotton Sateen duvet cover for cosy comfort on cold nights.'
   }
-  return 'SUPIMA Percale duvet cover — crisp, breathable, and built to last season after season.'
+  return 'Complete your sleep setup with the SUPIMA Percale duvet cover and matching pillowcases — crisp, breathable, and built to last season after season.'
 }
 
 export function getRecommendation(answers: QuizAnswers): RecommendationResult {
@@ -216,12 +278,18 @@ export function getRecommendation(answers: QuizAnswers): RecommendationResult {
     .map(p => scorePillow(p, answers))
     .sort((a, b) => b.score - a.score)
 
+  const scoredComforters = comforters
+    .map(p => scoreComforter(p, answers))
+    .sort((a, b) => b.score - a.score)
+
   const topSheet = scoredSheets[0]
   const topPillow = scoredPillows[0]
+  const topComforter = scoredComforters[0]
 
   return {
     topSheet,
     topPillow,
+    topComforter,
     allSheets: scoredSheets,
     whyText: generateWhyText(answers, topSheet.product, topPillow.product),
     bundleSuggestion: generateBundleSuggestion(answers),
