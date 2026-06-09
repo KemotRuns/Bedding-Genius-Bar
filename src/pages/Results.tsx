@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { getRecommendation } from '../lib/engine'
-import type { QuizAnswers, RecommendationResult, SheetProduct, PillowProduct, ComforterProduct } from '../lib/types'
+import type { QuizAnswers, RecommendationResult, SheetProduct, PillowProduct, ComforterProduct, NightHeat } from '../lib/types'
 import FabricSimulator from '../components/results/FabricSimulator'
 
 // ── Helpers ─────────────────────────────────────────────────────────────────
@@ -112,27 +112,25 @@ function LoftDiagram({ loft }: { loft: 'Low' | 'Medium' | 'High' }) {
 function ProfileSection({ answers }: { answers: QuizAnswers }) {
   const badges: { icon: React.ReactNode; label: string }[] = []
 
-  const roomMap: Record<string, string> = { Cold: 'Cold room', Moderate: 'Moderate room', Warm: 'Warm room', Hot: 'Hot room' }
-  if (answers.roomTemp) badges.push({ icon: <TempIcon temp={answers.roomTemp} />, label: roomMap[answers.roomTemp] })
+  const heatMap: Record<string, string> = { 'Very Hot': 'Hot sleeper', Warm: 'Runs warm', Neutral: 'Comfortable', Cold: 'Runs cold' }
+  if (answers.nightHeat) badges.push({ icon: <TempIcon temp={answers.nightHeat as NightHeat} />, label: heatMap[answers.nightHeat] })
 
-  const sleeperMap: Record<string, string> = { 'Always Cold': 'Runs cold', Neutral: 'Neutral temp', Warm: 'Runs warm', 'Hot Flash Prone': 'Night sweats' }
-  if (answers.sleeperTemp) badges.push({ icon: <PersonIcon />, label: sleeperMap[answers.sleeperTemp] })
+  if (answers.skinType && answers.skinType !== 'None') {
+    const skinMap: Record<string, string> = { Sensitive: 'Sensitive skin', 'Allergic/Eczema': 'Eczema / Allergic' }
+    badges.push({ icon: <ShieldIcon />, label: skinMap[answers.skinType] })
+  }
 
   const posMap: Record<string, string> = { Side: 'Side sleeper', Back: 'Back sleeper', Stomach: 'Stomach sleeper', Combination: 'Combo sleeper' }
   if (answers.sleepPosition) badges.push({ icon: <BedIcon />, label: posMap[answers.sleepPosition] })
 
-  if (answers.skinSensitivity && answers.skinSensitivity !== 'None') {
-    const skinMap: Record<string, string> = { Mild: 'Mild skin', Sensitive: 'Sensitive skin', 'Allergic/Eczema': 'Allergic / Eczema' }
-    badges.push({ icon: <ShieldIcon />, label: skinMap[answers.skinSensitivity] })
-  }
+  const shoulderMap: Record<string, string> = { Petite: 'Narrower (S/XS)', Average: 'Average (M/L)', Broad: 'Broader (XL+)' }
+  if (answers.shoulderWidth) badges.push({ icon: <BodyIcon />, label: shoulderMap[answers.shoulderWidth] })
 
-  if (answers.petStatus === 'Yes — Cats or Dogs') badges.push({ icon: <PawIcon />, label: 'Pet owner' })
+  const feelMap: Record<string, string> = { Heavy: 'Heavy comforter', Fluffy: 'Fluffy comforter', Smooth: 'Smooth & light', Practical: 'Easy care' }
+  if (answers.comforterFeel) badges.push({ icon: <WashIcon />, label: feelMap[answers.comforterFeel] })
 
-  const maintMap: Record<string, string> = { 'Low Maintenance': 'Low upkeep', 'I Launder Frequently': 'Frequent wash' }
-  if (answers.maintenancePref) badges.push({ icon: <WashIcon />, label: maintMap[answers.maintenancePref] })
-
-  const bodyMap: Record<string, string> = { Petite: 'Narrower (S/XS)', Average: 'Average (M/L)', Broad: 'Broader (XL+)' }
-  if (answers.bodyType) badges.push({ icon: <BodyIcon />, label: bodyMap[answers.bodyType] })
+  const pillowMap: Record<string, string> = { Sink: 'Cushioned pillow', Springy: 'Springy pillow', Contour: 'Contouring pillow', Balanced: 'Balanced pillow' }
+  if (answers.pillowFeel) badges.push({ icon: <PersonIcon />, label: pillowMap[answers.pillowFeel] })
 
   return (
     <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
@@ -142,12 +140,15 @@ function ProfileSection({ answers }: { answers: QuizAnswers }) {
 }
 
 // Tiny inline SVG icons for profile badges
-const TempIcon = ({ temp }: { temp: string }) => (
+const TempIcon = ({ temp }: { temp: NightHeat }) => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    {temp === 'Cold' || temp === 'Always Cold'
+    {temp === 'Cold'
       ? <><line x1="10" y1="2" x2="10" y2="18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
           <line x1="4" y1="10" x2="16" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
           <circle cx="10" cy="10" r="2" fill="currentColor"/></>
+      : temp === 'Very Hot'
+      ? <><path d="M10 3C10 3 13.5 7 13.5 11C13.5 12.8 12.8 13.8 11.8 14.5C12 13.5 11.8 12.5 11 11.5C11 11.5 10 12.5 9 11.5C8 10.5 8 9 8 9C8 9 6.5 11 8 13.5C7 12.8 6.5 11.5 6.5 11C6.5 7 10 3 10 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
+          <path d="M10 18C12 18 13.5 16.5 13.5 14.5C13.5 12.5 10 10 10 10C10 10 6.5 12.5 6.5 14.5C6.5 16.5 8 18 10 18Z" stroke="currentColor" strokeWidth="1.5"/></>
       : <><rect x="7.5" y="3" width="5" height="11" rx="2.5" stroke="currentColor" strokeWidth="1.5"/>
           <circle cx="10" cy="15" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
           <rect x="9" y="5" width="2" height="7" rx="1" fill="currentColor"/></>
@@ -173,15 +174,7 @@ const ShieldIcon = () => (
     <path d="M10 2L3 5v7c0 4 3.5 6 7 7s7-3 7-7V5l-7-3z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
   </svg>
 )
-const PawIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <circle cx="7" cy="7" r="2" stroke="currentColor" strokeWidth="1.5"/>
-    <circle cx="13" cy="7" r="2" stroke="currentColor" strokeWidth="1.5"/>
-    <circle cx="5" cy="12" r="1.5" stroke="currentColor" strokeWidth="1.5"/>
-    <circle cx="15" cy="12" r="1.5" stroke="currentColor" strokeWidth="1.5"/>
-    <path d="M10 9c-3 0-5 2-5 5 0 1.5 1.5 2.5 3 2.5h4c1.5 0 3-1 3-2.5 0-3-2-5-5-5z" stroke="currentColor" strokeWidth="1.5"/>
-  </svg>
-)
+
 const WashIcon = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
     <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" strokeWidth="1.5"/>
@@ -205,13 +198,17 @@ const BodyIcon = () => (
 // ── Main Page ────────────────────────────────────────────────────────────────
 
 const DUMMY_ANSWERS: QuizAnswers = {
-  roomTemp: 'Hot',
-  sleeperTemp: 'Warm',
+  nightHeat: 'Warm',
+  skinType: 'Sensitive',
+  careLevel: 'Minimal',
+  sensoryPref: 'Silky',
+  comforterTemp: 'Neutral',
+  comforterFeel: 'Smooth',
+  breathingIssues: 'No',
   sleepPosition: 'Side',
-  skinSensitivity: 'Sensitive',
-  petStatus: 'Yes — Cats or Dogs',
-  maintenancePref: 'Low Maintenance',
-  bodyType: 'Average',
+  shoulderWidth: 'Average',
+  pillowFeel: 'Balanced',
+  pillowPriority: 'Value',
 }
 
 export default function Results() {

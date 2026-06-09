@@ -71,6 +71,8 @@ export default function Quiz() {
             {QUESTIONS.slice(0, revealed).map((question, index) => {
               const selectedValue = answers[question.id] as string | undefined
               const isAnswered = Boolean(selectedValue) && index < revealed - 1
+              const prevSection = index > 0 ? QUESTIONS[index - 1].section : undefined
+              const showSectionHeader = question.section && question.section !== prevSection
 
               return (
                 <motion.div
@@ -81,6 +83,15 @@ export default function Quiz() {
                   transition={{ duration: 0.45, ease: apple }}
                   className="scroll-mt-24"
                 >
+                  {showSectionHeader && (
+                    <div className={`flex items-center gap-4 ${index === 0 ? 'mb-1' : 'mt-12 mb-1'}`}>
+                      <div className="h-px flex-1 bg-charcoal/10" />
+                      <span className="text-[10px] font-semibold text-charcoal/30 tracking-[0.22em] uppercase px-1">
+                        {question.section}
+                      </span>
+                      <div className="h-px flex-1 bg-charcoal/10" />
+                    </div>
+                  )}
                   {isAnswered ? (
                     /* ── Compact answered row ── */
                     <div className="flex items-center gap-3 py-4 border-b border-charcoal/6">

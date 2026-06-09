@@ -60,26 +60,6 @@ export interface PillowProduct {
   description: string
 }
 
-// ---- Quiz Types ----
-
-export type RoomTemp = 'Cold' | 'Moderate' | 'Warm' | 'Hot'
-export type SleeperTemp = 'Always Cold' | 'Neutral' | 'Warm' | 'Hot Flash Prone'
-export type SleepPosition = 'Side' | 'Back' | 'Stomach' | 'Combination'
-export type SkinSensitivity = 'None' | 'Mild' | 'Sensitive' | 'Allergic/Eczema'
-export type PetStatus = 'No Pets' | 'Yes — Cats or Dogs'
-export type MaintenancePref = 'Low Maintenance' | 'I Launder Frequently'
-export type BodyType = 'Petite' | 'Average' | 'Broad'
-
-export interface QuizAnswers {
-  roomTemp?: RoomTemp
-  sleeperTemp?: SleeperTemp
-  sleepPosition?: SleepPosition
-  skinSensitivity?: SkinSensitivity
-  petStatus?: PetStatus
-  maintenancePref?: MaintenancePref
-  bodyType?: BodyType
-}
-
 export interface ComforterProduct {
   product_id: string
   name: string
@@ -100,6 +80,37 @@ export interface ComforterProduct {
     breathability: 1 | 2 | 3 | 4 | 5
     fluffiness: 1 | 2 | 3 | 4 | 5
   }
+}
+
+// ---- Quiz Types ----
+
+export type NightHeat = 'Very Hot' | 'Warm' | 'Neutral' | 'Cold'
+export type SkinType = 'Allergic/Eczema' | 'Sensitive' | 'None'
+export type CareLevel = 'Minimal' | 'Standard' | 'Careful'
+export type SensoryPref = 'Cooling' | 'Silky' | 'Classic'
+export type ComforterTemp = 'Always Cold' | 'Neutral' | 'Hot'
+export type ComforterFeel = 'Heavy' | 'Fluffy' | 'Smooth' | 'Practical'
+export type BreathingIssues = 'Yes' | 'No'
+export type SleepPosition = 'Side' | 'Back' | 'Stomach' | 'Combination'
+export type ShoulderWidth = 'Petite' | 'Average' | 'Broad'
+export type PillowFeel = 'Sink' | 'Springy' | 'Contour' | 'Balanced'
+export type PillowPriority = 'Allergies' | 'Value' | 'Premium'
+
+export interface QuizAnswers {
+  // Sheets & Materials
+  nightHeat?: NightHeat
+  skinType?: SkinType
+  careLevel?: CareLevel
+  sensoryPref?: SensoryPref
+  // Comforter
+  comforterTemp?: ComforterTemp
+  comforterFeel?: ComforterFeel
+  breathingIssues?: BreathingIssues
+  // Pillows
+  sleepPosition?: SleepPosition
+  shoulderWidth?: ShoulderWidth
+  pillowFeel?: PillowFeel
+  pillowPriority?: PillowPriority
 }
 
 // ---- Engine Types ----
@@ -150,4 +161,5 @@ export interface QuestionConfig {
   question: string
   options: IconOption[]
   columns: 2 | 3 | 4
+  section?: string
 }

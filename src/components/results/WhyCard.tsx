@@ -6,44 +6,28 @@ interface WhyCardProps {
   answers: QuizAnswers
 }
 
-function answerTag(value: string | undefined, map: Record<string, string>) {
-  if (!value) return null
-  return map[value] ?? null
-}
-
 export default function WhyCard({ whyText, answers }: WhyCardProps) {
   const tags: string[] = []
 
-  if (answers.roomTemp) {
-    const m: Record<string, string> = { Cold: 'Cold room', Moderate: 'Moderate room', Warm: 'Warm room', Hot: 'Hot room' }
-    const t = answerTag(answers.roomTemp, m)
-    if (t) tags.push(t)
+  if (answers.nightHeat) {
+    const m: Record<string, string> = { 'Very Hot': 'Hot sleeper', Warm: 'Runs warm', Neutral: 'Comfortable temp', Cold: 'Runs cold' }
+    if (m[answers.nightHeat]) tags.push(m[answers.nightHeat])
   }
-  if (answers.sleeperTemp) {
-    const m: Record<string, string> = { 'Always Cold': 'Runs cold', Neutral: 'Neutral temperature', Warm: 'Runs warm', 'Hot Flash Prone': 'Night sweats' }
-    const t = answerTag(answers.sleeperTemp, m)
-    if (t) tags.push(t)
+  if (answers.skinType && answers.skinType !== 'None') {
+    const m: Record<string, string> = { Sensitive: 'Sensitive skin', 'Allergic/Eczema': 'Eczema / Allergic' }
+    if (m[answers.skinType]) tags.push(m[answers.skinType])
   }
   if (answers.sleepPosition) {
     const m: Record<string, string> = { Side: 'Side sleeper', Back: 'Back sleeper', Stomach: 'Stomach sleeper', Combination: 'Combination sleeper' }
-    const t = answerTag(answers.sleepPosition, m)
-    if (t) tags.push(t)
+    if (m[answers.sleepPosition]) tags.push(m[answers.sleepPosition])
   }
-  if (answers.skinSensitivity && answers.skinSensitivity !== 'None') {
-    const m: Record<string, string> = { Mild: 'Mild skin', Sensitive: 'Sensitive skin', 'Allergic/Eczema': 'Allergic / Eczema' }
-    const t = answerTag(answers.skinSensitivity, m)
-    if (t) tags.push(t)
+  if (answers.shoulderWidth) {
+    const m: Record<string, string> = { Petite: 'Narrower frame', Average: 'Average build', Broad: 'Broad shoulders' }
+    if (m[answers.shoulderWidth]) tags.push(m[answers.shoulderWidth])
   }
-  if (answers.petStatus === 'Yes — Cats or Dogs') tags.push('Pet owner')
-  if (answers.maintenancePref) {
-    const m: Record<string, string> = { 'Low Maintenance': 'Low maintenance', 'I Launder Frequently': 'Frequent laundry' }
-    const t = answerTag(answers.maintenancePref, m)
-    if (t) tags.push(t)
-  }
-  if (answers.bodyType) {
-    const m: Record<string, string> = { Petite: 'Petite frame', Average: 'Average build', Broad: 'Broad shoulders' }
-    const t = answerTag(answers.bodyType, m)
-    if (t) tags.push(t)
+  if (answers.sensoryPref) {
+    const m: Record<string, string> = { Cooling: 'Cool & crisp feel', Silky: 'Silky smooth feel', Classic: 'Classic comfort' }
+    if (m[answers.sensoryPref]) tags.push(m[answers.sensoryPref])
   }
 
   return (
@@ -62,10 +46,7 @@ export default function WhyCard({ whyText, answers }: WhyCardProps) {
       {tags.length > 0 && (
         <div className="flex flex-wrap gap-2">
           {tags.map(tag => (
-            <span
-              key={tag}
-              className="text-xs bg-sage/15 text-sage-dark px-3 py-1 rounded-full font-medium"
-            >
+            <span key={tag} className="text-xs bg-sage/15 text-sage-dark px-3 py-1 rounded-full font-medium">
               {tag}
             </span>
           ))}
