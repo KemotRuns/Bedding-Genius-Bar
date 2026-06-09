@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { getRecommendation } from '../lib/engine'
 import type { QuizAnswers, RecommendationResult, SheetProduct, PillowProduct, ComforterProduct, NightHeat } from '../lib/types'
-import FabricSimulator from '../components/results/FabricSimulator'
 
-// ── Helpers ─────────────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
 const apple = [0.22, 1, 0.36, 1] as const
 
@@ -23,7 +22,34 @@ function matchScore(score: number): number {
   return Math.min(100, Math.max(60, Math.round(60 + (score / 18) * 40)))
 }
 
-// ── Sub-components ───────────────────────────────────────────────────────────
+const ALL_SECTIONS = [
+  {
+    id: 'sheets',
+    label: 'Sheets & Bedding',
+    chinese: '床組材質',
+    desc: 'Find your ideal fabric for temperature control and skin comfort.',
+  },
+  {
+    id: 'comforter',
+    label: 'Comforter',
+    chinese: '棉被',
+    desc: 'Match your comforter\'s fill and warmth to how you sleep.',
+  },
+  {
+    id: 'pillow',
+    label: 'Pillow',
+    chinese: '枕頭',
+    desc: 'Align loft and firmness to your sleep position for pain-free mornings.',
+  },
+]
+
+const PRODUCT_TITLES: Record<string, string> = {
+  sheets: 'Sheets Prescription',
+  comforter: 'Comforter Prescription',
+  pillow: 'Pillow Prescription',
+}
+
+// ── Sub-components ────────────────────────────────────────────────────────────
 
 function ProfileBadge({ icon, label }: { icon: React.ReactNode; label: string }) {
   return (
@@ -132,6 +158,8 @@ function ProfileSection({ answers }: { answers: QuizAnswers }) {
   const pillowMap: Record<string, string> = { Sink: 'Cushioned pillow', Springy: 'Springy pillow', Contour: 'Contouring pillow', Balanced: 'Balanced pillow' }
   if (answers.pillowFeel) badges.push({ icon: <PersonIcon />, label: pillowMap[answers.pillowFeel] })
 
+  if (badges.length === 0) return null
+
   return (
     <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
       {badges.map((b, i) => <ProfileBadge key={i} icon={b.icon} label={b.label} />)}
@@ -139,7 +167,8 @@ function ProfileSection({ answers }: { answers: QuizAnswers }) {
   )
 }
 
-// Tiny inline SVG icons for profile badges
+// ── Inline SVG icons ──────────────────────────────────────────────────────────
+
 const TempIcon = ({ temp }: { temp: NightHeat }) => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
     {temp === 'Cold'
@@ -174,7 +203,6 @@ const ShieldIcon = () => (
     <path d="M10 2L3 5v7c0 4 3.5 6 7 7s7-3 7-7V5l-7-3z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
   </svg>
 )
-
 const WashIcon = () => (
   <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
     <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" strokeWidth="1.5"/>
@@ -195,7 +223,7 @@ const BodyIcon = () => (
   </svg>
 )
 
-// ── Main Page ────────────────────────────────────────────────────────────────
+// ── Dummy answers for dev fallback ────────────────────────────────────────────
 
 const DUMMY_ANSWERS: QuizAnswers = {
   nightHeat: 'Warm',
@@ -211,8 +239,12 @@ const DUMMY_ANSWERS: QuizAnswers = {
   pillowPriority: 'Value',
 }
 
+// ── Main Page ─────────────────────────────────────────────────────────────────
+
 export default function Results() {
   const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
+  const product = searchParams.get('product') ?? 'sheets'
 
   const [{ answers, result }] = useState<{ answers: QuizAnswers; result: RecommendationResult }>(() => {
     const raw = sessionStorage.getItem('quiz_answers')
@@ -223,7 +255,15 @@ export default function Results() {
   const sheet = result.topSheet.product as SheetProduct
   const pillow = result.topPillow.product as PillowProduct
   const comforter = result.topComforter.product as ComforterProduct
-  const score = matchScore(result.topSheet.score)
+
+  const score = product === 'comforter'
+    ? matchScore(result.topComforter.score)
+    : product === 'pillow'
+    ? matchScore(result.topPillow.score)
+    : matchScore(result.topSheet.score)
+
+  const pageTitle = PRODUCT_TITLES[product] ?? 'Sleep Prescription'
+  const otherSections = ALL_SECTIONS.filter(s => s.id !== product)
 
   return (
     <motion.div
@@ -233,13 +273,13 @@ export default function Results() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.35 }}
     >
-      {/* ── Report Header ─────────────────────────────────────── */}
+      {/* ── Report Header ────────────────────────────────────────── */}
       <div className="bg-gradient-to-br from-charcoal via-charcoal/95 to-gold text-cream">
         <div className="max-w-4xl mx-auto px-6 py-10">
           <div className="flex items-start justify-between mb-6">
             <div>
               <p className="text-gold-light text-xs font-semibold tracking-[0.25em] uppercase mb-1">TN Select · Tonia Nicole Pro Bar</p>
-              <h1 className="font-serif text-3xl sm:text-4xl font-normal tracking-tight">Sleep Profile Report</h1>
+              <h1 className="font-serif text-3xl sm:text-4xl font-normal tracking-tight">{pageTitle}</h1>
             </div>
             <button
               onClick={() => navigate('/')}
@@ -259,124 +299,101 @@ export default function Results() {
       </div>
 
       <main className="max-w-4xl mx-auto px-6 pb-16">
-          <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-5 pt-5">
+        <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-5 pt-5">
 
-            {/* ── Sheet Prescription ──────────────────────────── */}
-            <motion.div variants={itemVariants} className="glass-card p-0 overflow-hidden">
-              <div className="bg-sage/12 border-b border-sage/20 px-7 py-4 flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">Sheet Prescription</p>
-                  <h2 className="text-xl font-semibold text-charcoal tracking-tight">{sheet.name}</h2>
-                  {sheet.collection && (
-                    <p className="text-xs text-charcoal/45 mt-0.5">{sheet.collection}</p>
-                  )}
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="hidden sm:flex flex-col items-end gap-1.5">
-                    <span className="text-xs bg-charcoal/8 text-charcoal/55 px-3 py-1.5 rounded-full font-medium">
-                      {sheet.material} · {sheet.weave === 'N/A' ? 'Plain Weave' : `${sheet.weave} Weave`}
-                    </span>
-                    {sheet.sku && (
-                      <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">
-                        {sheet.sku}
-                      </span>
+          {/* ══════════════════ SHEETS ══════════════════ */}
+          {product === 'sheets' && (
+            <>
+              {/* Sheet Prescription */}
+              <motion.div variants={itemVariants} className="glass-card p-0 overflow-hidden">
+                <div className="bg-sage/12 border-b border-sage/20 px-7 py-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">Sheet Prescription</p>
+                    <h2 className="text-xl font-semibold text-charcoal tracking-tight">{sheet.name}</h2>
+                    {sheet.collection && (
+                      <p className="text-xs text-charcoal/45 mt-0.5">{sheet.collection}</p>
                     )}
                   </div>
-                  <MatchRing score={score} />
-                </div>
-              </div>
-
-              <div className="px-7 py-6">
-                <p className="text-charcoal/60 text-sm leading-relaxed mb-6">{sheet.description}</p>
-
-                <div className="space-y-4 mb-6">
-                  <AttributeBar label="Breathability" value={sheet.ratings.breathability} color="bg-sage" descriptor={descriptors[sheet.ratings.breathability]} />
-                  <AttributeBar label="Moisture Wicking" value={sheet.ratings.wicking} color="bg-blue-400/70" descriptor={descriptors[sheet.ratings.wicking]} />
-                  <AttributeBar label="Warmth" value={sheet.ratings.warmth} color="bg-orange-400/70" descriptor={descriptors[sheet.ratings.warmth]} />
-                  <AttributeBar label="Softness" value={sheet.ratings.softness} color="bg-purple-400/70" descriptor={descriptors[sheet.ratings.softness]} />
-                </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {sheet.best_for.map(tag => (
-                    <span key={tag} className="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">{tag}</span>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-
-            {/* ── Why This Works + Fabric Simulator ─────────── */}
-            <motion.div variants={itemVariants} className="grid sm:grid-cols-2 gap-5">
-              <div className="glass-card p-6 flex flex-col gap-4">
-                <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-full bg-sage/20 flex items-center justify-center flex-shrink-0">
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6L5 9L10 3" stroke="#6A8E67" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                  <div className="flex items-center gap-3">
+                    <div className="hidden sm:flex flex-col items-end gap-1.5">
+                      <span className="text-xs bg-charcoal/8 text-charcoal/55 px-3 py-1.5 rounded-full font-medium">
+                        {sheet.material} · {sheet.weave === 'N/A' ? 'Plain Weave' : `${sheet.weave} Weave`}
+                      </span>
+                      {sheet.sku && (
+                        <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">
+                          {sheet.sku}
+                        </span>
+                      )}
+                    </div>
+                    <MatchRing score={score} />
                   </div>
-                  <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40">Why This Works</p>
                 </div>
-                <p className="text-sm text-charcoal/75 leading-relaxed flex-1">{result.whyText}</p>
-              </div>
 
-              <FabricSimulator product={sheet} />
-            </motion.div>
+                <div className="px-7 py-6">
+                  <p className="text-charcoal/60 text-sm leading-relaxed mb-6">{sheet.description}</p>
 
-            {/* ── Pillow Prescription ────────────────────────── */}
-            <motion.div variants={itemVariants} className="glass-card p-6">
-              <div className="flex items-start justify-between mb-1">
-                <div>
-                  <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">Pillow Prescription</p>
-                  <h3 className="text-lg font-semibold text-charcoal">{pillow.name}</h3>
-                  {pillow.collection && (
-                    <p className="text-xs text-charcoal/45 mt-0.5">{pillow.collection}</p>
-                  )}
+                  <div className="space-y-4 mb-6">
+                    <AttributeBar label="Breathability" value={sheet.ratings.breathability} color="bg-sage" descriptor={descriptors[sheet.ratings.breathability]} />
+                    <AttributeBar label="Moisture Wicking" value={sheet.ratings.wicking} color="bg-blue-400/70" descriptor={descriptors[sheet.ratings.wicking]} />
+                    <AttributeBar label="Warmth" value={sheet.ratings.warmth} color="bg-orange-400/70" descriptor={descriptors[sheet.ratings.warmth]} />
+                    <AttributeBar label="Softness" value={sheet.ratings.softness} color="bg-purple-400/70" descriptor={descriptors[sheet.ratings.softness]} />
+                  </div>
+
+                  <div className="flex flex-wrap gap-2">
+                    {sheet.best_for.map(tag => (
+                      <span key={tag} className="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">{tag}</span>
+                    ))}
+                  </div>
                 </div>
-                {pillow.sku && (
-                  <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider mt-1">
-                    {pillow.sku}
-                  </span>
-                )}
-              </div>
-              <p className="text-xs text-charcoal/45 mb-5">{pillow.fill} · {pillow.attributes.firmness} firmness</p>
+              </motion.div>
 
-              <div className="flex items-end gap-6 mb-5">
-                <LoftDiagram loft={pillow.attributes.loft} />
-                <div className="text-sm text-charcoal/60 leading-relaxed flex-1">
-                  {pillow.attributes.loft === 'High' && 'Fills the gap between ear and shoulder — ideal for side sleepers with broad frames.'}
-                  {pillow.attributes.loft === 'Medium' && 'Keeps your neck in neutral alignment whether you sleep on your back or side.'}
-                  {pillow.attributes.loft === 'Low' && 'Prevents neck arching — the only safe loft for stomach sleepers.'}
-                </div>
-              </div>
-
-              <p className="text-sm text-charcoal/55 leading-relaxed">{pillow.description}</p>
-
-              {pillow.attributes.adjustable && (
-                <div className="flex items-center gap-2 mt-4 pt-4 border-t border-charcoal/6">
-                  <div className="w-1.5 h-1.5 rounded-full bg-sage" />
-                  <span className="text-xs text-charcoal/50">Adjustable fill — customise loft to your preference</span>
-                </div>
+              {/* Also Consider runner-up */}
+              {result.allSheets.length > 1 && (
+                <motion.div variants={itemVariants} className="glass-card p-5">
+                  <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/30 mb-3">Also Consider</p>
+                  <div className="flex items-center gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-baseline gap-2">
+                        <p className="font-medium text-charcoal text-sm">{result.allSheets[1].product.name}</p>
+                        {result.allSheets[1].product.sku && (
+                          <span className="font-mono text-[10px] text-charcoal/30 tracking-wider">{result.allSheets[1].product.sku}</span>
+                        )}
+                      </div>
+                      <p className="text-xs text-charcoal/45 mt-0.5">{result.allSheets[1].product.material} — {result.allSheets[1].product.description.split('.')[0]}.</p>
+                    </div>
+                    <div className="text-right flex-shrink-0">
+                      <div className="text-sm font-bold text-charcoal/40">{matchScore(result.allSheets[1].score)}%</div>
+                      <div className="text-xs text-charcoal/30">match</div>
+                    </div>
+                  </div>
+                </motion.div>
               )}
-            </motion.div>
+            </>
+          )}
 
-            {/* ── Comforter Prescription ─────────────────────── */}
+          {/* ══════════════════ COMFORTER ══════════════════ */}
+          {product === 'comforter' && (
             <motion.div variants={itemVariants} className="glass-card p-0 overflow-hidden">
               <div className="bg-gold/8 border-b border-gold/20 px-7 py-4 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">Comforter Prescription</p>
-                  <h3 className="text-xl font-semibold text-charcoal tracking-tight">{comforter.name}</h3>
+                  <h2 className="text-xl font-semibold text-charcoal tracking-tight">{comforter.name}</h2>
                   {comforter.collection && (
                     <p className="text-xs text-charcoal/45 mt-0.5">{comforter.collection}</p>
                   )}
                 </div>
-                <div className="hidden sm:flex flex-col items-end gap-1.5">
-                  <span className="text-xs bg-gold/15 text-gold px-3 py-1.5 rounded-full font-medium">
-                    {comforter.fill} · {comforter.attributes.warmth}
-                  </span>
-                  {comforter.sku && (
-                    <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">
-                      {comforter.sku}
+                <div className="flex items-center gap-3">
+                  <div className="hidden sm:flex flex-col items-end gap-1.5">
+                    <span className="text-xs bg-gold/15 text-gold px-3 py-1.5 rounded-full font-medium">
+                      {comforter.fill} · {comforter.attributes.warmth}
                     </span>
-                  )}
+                    {comforter.sku && (
+                      <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">
+                        {comforter.sku}
+                      </span>
+                    )}
+                  </div>
+                  <MatchRing score={score} />
                 </div>
               </div>
 
@@ -408,87 +425,105 @@ export default function Results() {
                 </div>
               </div>
             </motion.div>
+          )}
 
-            {/* ── Complete Setup Bundle ──────────────────────── */}
-            <motion.div variants={itemVariants} className="glass-card p-6 bg-sage/5">
-              <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-4">Complete Setup</p>
-
-              <div className="space-y-4">
-                {[
-                  {
-                    label: 'Sheets',
-                    name: sheet.name,
-                    detail: sheet.collection ?? sheet.material,
-                    sku: sheet.sku,
-                  },
-                  {
-                    label: 'Pillow',
-                    name: pillow.name,
-                    detail: `${pillow.attributes.loft} Loft · ${pillow.attributes.firmness}`,
-                    sku: pillow.sku,
-                  },
-                  {
-                    label: 'Comforter',
-                    name: comforter.name,
-                    detail: `${comforter.fill} · ${comforter.attributes.warmth}`,
-                    sku: comforter.sku,
-                  },
-                  {
-                    label: 'Duvet Cover',
-                    name: 'Climate-tuned pick',
-                    detail: result.bundleSuggestion,
-                    sku: undefined,
-                  },
-                ].map((item, i) => (
-                  <div key={i} className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-sage flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
-                        <path d="M2 5L4 7L8 3" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs text-charcoal/40 uppercase tracking-wide font-medium">{item.label}</p>
-                      <div className="flex items-baseline gap-2 flex-wrap">
-                        <p className="text-sm font-semibold text-charcoal">{item.name}</p>
-                        {item.sku && (
-                          <span className="font-mono text-[10px] text-charcoal/30 tracking-wider">{item.sku}</span>
-                        )}
-                      </div>
-                      <p className="text-xs text-charcoal/50 mt-0.5 leading-snug">{item.detail}</p>
-                    </div>
+          {/* ══════════════════ PILLOW ══════════════════ */}
+          {product === 'pillow' && (
+            <motion.div variants={itemVariants} className="glass-card p-0 overflow-hidden">
+              <div className="bg-sage/12 border-b border-sage/20 px-7 py-4 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">Pillow Prescription</p>
+                  <h2 className="text-xl font-semibold text-charcoal tracking-tight">{pillow.name}</h2>
+                  {pillow.collection && (
+                    <p className="text-xs text-charcoal/45 mt-0.5">{pillow.collection}</p>
+                  )}
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="hidden sm:flex flex-col items-end gap-1.5">
+                    <span className="text-xs bg-charcoal/8 text-charcoal/55 px-3 py-1.5 rounded-full font-medium">
+                      {pillow.fill} · {pillow.attributes.firmness}
+                    </span>
+                    {pillow.sku && (
+                      <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">
+                        {pillow.sku}
+                      </span>
+                    )}
                   </div>
-                ))}
+                  <MatchRing score={score} />
+                </div>
               </div>
-            </motion.div>
 
-            {/* ── Runner-up / Also Consider ──────────────────── */}
-            {result.allSheets.length > 1 && (
-              <motion.div variants={itemVariants} className="glass-card p-5">
-                <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/30 mb-3">Also Consider</p>
-                <div className="flex items-center gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-baseline gap-2">
-                      <p className="font-medium text-charcoal text-sm">{result.allSheets[1].product.name}</p>
-                      {result.allSheets[1].product.sku && (
-                        <span className="font-mono text-[10px] text-charcoal/30 tracking-wider">{result.allSheets[1].product.sku}</span>
-                      )}
-                    </div>
-                    <p className="text-xs text-charcoal/45 mt-0.5">{result.allSheets[1].product.material} — {result.allSheets[1].product.description.split('.')[0]}.</p>
-                  </div>
-                  <div className="text-right flex-shrink-0">
-                    <div className="text-sm font-bold text-charcoal/40">{matchScore(result.allSheets[1].score)}%</div>
-                    <div className="text-xs text-charcoal/30">match</div>
+              <div className="px-7 py-6">
+                <div className="flex items-end gap-6 mb-5">
+                  <LoftDiagram loft={pillow.attributes.loft} />
+                  <div className="text-sm text-charcoal/60 leading-relaxed flex-1">
+                    {pillow.attributes.loft === 'High' && 'Fills the gap between ear and shoulder — ideal for side sleepers with broad frames.'}
+                    {pillow.attributes.loft === 'Medium' && 'Keeps your neck in neutral alignment whether you sleep on your back or side.'}
+                    {pillow.attributes.loft === 'Low' && 'Prevents neck arching — the only safe loft for stomach sleepers.'}
                   </div>
                 </div>
-              </motion.div>
-            )}
 
-            {/* ── Footer ────────────────────────────────────── */}
-            <motion.div variants={itemVariants} className="text-center pt-2 pb-4">
-              <p className="text-xs text-charcoal/25">TN Select · Tonia Nicole Pro Bar · {new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                <p className="text-sm text-charcoal/60 leading-relaxed mb-5">{pillow.description}</p>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {pillow.best_for.map(tag => (
+                    <span key={tag} className="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">{tag}</span>
+                  ))}
+                </div>
+
+                {pillow.attributes.adjustable && (
+                  <div className="flex items-center gap-2 pt-4 border-t border-charcoal/6">
+                    <div className="w-1.5 h-1.5 rounded-full bg-sage" />
+                    <span className="text-xs text-charcoal/50">Adjustable fill — customise loft to your preference</span>
+                  </div>
+                )}
+              </div>
             </motion.div>
+          )}
 
+          {/* ── Why This Works ─────────────────────────── */}
+          <motion.div variants={itemVariants} className="glass-card p-6">
+            <div className="flex items-center gap-2 mb-4">
+              <div className="w-6 h-6 rounded-full bg-sage/20 flex items-center justify-center flex-shrink-0">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 6L5 9L10 3" stroke="#6A8E67" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              </div>
+              <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40">Why This Works</p>
+            </div>
+            <p className="text-sm text-charcoal/75 leading-relaxed">{result.whyText}</p>
           </motion.div>
+
+          {/* ── Also Explore ───────────────────────────── */}
+          <motion.div variants={itemVariants} className="glass-card p-6 bg-sage/5">
+            <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-4">Also Explore</p>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {otherSections.map(s => (
+                <button
+                  key={s.id}
+                  onClick={() => navigate(`/quiz?product=${s.id}`)}
+                  className="text-left p-4 rounded-xl border border-charcoal/10 bg-white/40 hover:border-gold/50 hover:bg-white/70 transition-all cursor-pointer"
+                >
+                  <p className="text-[10px] font-bold tracking-widest uppercase text-charcoal/35 mb-0.5">{s.label}</p>
+                  <p className="text-base font-semibold text-charcoal mb-1">{s.chinese}</p>
+                  <p className="text-xs text-charcoal/50 leading-relaxed mb-3">{s.desc}</p>
+                  <div className="flex items-center gap-1.5 text-gold text-xs font-semibold">
+                    Begin
+                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                      <path d="M2 6h8M8 4l2 2-2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </motion.div>
+
+          {/* ── Footer ────────────────────────────────── */}
+          <motion.div variants={itemVariants} className="text-center pt-2 pb-4">
+            <p className="text-xs text-charcoal/25">TN Select · Tonia Nicole Pro Bar · {new Date().toLocaleDateString('en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+          </motion.div>
+
+        </motion.div>
       </main>
     </motion.div>
   )

@@ -1,65 +1,32 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 
 const apple = [0.22, 1, 0.36, 1] as const
 const base = import.meta.env.BASE_URL
 
-const SERVICES = [
+const PRODUCTS = [
   {
-    id: 'select',
-    icon: `${base}tn-select.png`,
-    name: 'TN SELECT',
-    chinese: '「選」得好眠',
-    desc: '親身體驗，選配最適合您的材質',
-    active: true,
+    id: 'sheets',
+    label: 'Sheets & Bedding',
+    chinese: '床組材質',
+    desc: 'The fabric against your skin for 8 hours controls moisture, temperature, and how your skin recovers. Find the weave that fits your body.',
   },
   {
-    id: 'care',
-    icon: `${base}tn-care.png`,
-    name: 'TN CARE',
-    chinese: '「惜」物如新',
-    desc: '專業保養，細心呵護舒適觸感',
-    active: false,
+    id: 'comforter',
+    label: 'Comforter',
+    chinese: '棉被',
+    desc: 'Fill type determines warmth, weight, and breathability. The right comforter keeps you at an even temperature through the night.',
   },
   {
-    id: 'pairing',
-    icon: `${base}tn-pairing.png`,
-    name: 'TN PAIRING',
-    chinese: '「搭」出美感',
-    desc: 'AI 智能模擬，搭出完美居家風格',
-    active: false,
-  },
-  {
-    id: 'customization',
-    icon: `${base}tn-customization.png`,
-    name: 'TN CUSTOMIZATION',
-    chinese: '「配」您所愛',
-    desc: '訂製服務，打造專屬理想家',
-    active: false,
-  },
-  {
-    id: 'hygiene',
-    icon: `${base}tn-hygiene.png`,
-    name: 'TN HYGIENE',
-    chinese: '「安心」深睡',
-    desc: '國際認證的純淨防護，給您無憂的睡眠',
-    active: false,
+    id: 'pillow',
+    label: 'Pillow',
+    chinese: '枕頭',
+    desc: 'Loft and firmness follow your sleep position. The right fit keeps your neck in neutral alignment and eliminates morning tension.',
   },
 ]
 
 export default function Landing() {
   const navigate = useNavigate()
-  const [toast, setToast] = useState(false)
-
-  function handleServiceClick(active: boolean) {
-    if (active) {
-      navigate('/quiz')
-    } else {
-      setToast(true)
-      setTimeout(() => setToast(false), 2200)
-    }
-  }
 
   return (
     <motion.div
@@ -98,109 +65,106 @@ export default function Landing() {
         {/* ── Divider ── */}
         <div className="border-t border-charcoal/20 mb-8" />
 
-        {/* ── Top row: 3 cards ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
-          {SERVICES.slice(0, 3).map((svc, i) => (
-            <ServiceCard key={svc.id} svc={svc} delay={i * 0.06} onClick={() => handleServiceClick(svc.active)} />
-          ))}
-        </div>
-
-        {/* ── Bottom row: 2 cards centered ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:px-[16.67%]">
-          {SERVICES.slice(3).map((svc, i) => (
-            <ServiceCard key={svc.id} svc={svc} delay={(i + 3) * 0.06} onClick={() => handleServiceClick(svc.active)} />
+        {/* ── Product entry cards ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {PRODUCTS.map((product, i) => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              delay={i * 0.07}
+              onClick={() => navigate(`/quiz?product=${product.id}`)}
+            />
           ))}
         </div>
 
         {/* ── Brand footer ── */}
         <p className="text-center text-xs text-charcoal/30 mt-8 tracking-widest uppercase">Tonia Nicole · 東妮寢飾</p>
       </motion.div>
-
-      {/* ── Coming soon toast ── */}
-      <AnimatePresence>
-        {toast && (
-          <motion.div
-            className="fixed bottom-8 left-1/2 -translate-x-1/2 bg-charcoal text-cream text-sm px-5 py-3 rounded-2xl shadow-lg font-medium whitespace-nowrap"
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 8 }}
-            transition={{ duration: 0.25 }}
-          >
-            Coming soon — stay tuned
-          </motion.div>
-        )}
-      </AnimatePresence>
     </motion.div>
   )
 }
 
-// ── ServiceCard ───────────────────────────────────────────────────────────────
+// ── Icons ─────────────────────────────────────────────────────────────────────
 
-interface Svc {
-  id: string
-  icon: string
-  name: string
-  chinese: string
-  desc: string
-  active: boolean
+function SheetsIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <rect x="2" y="4" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M2 9h18" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M6 13h4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M6 16h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  )
 }
 
-function ServiceCard({ svc, delay, onClick }: { svc: Svc; delay: number; onClick: () => void }) {
+function ComforterIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <path d="M3 13c0-3.314 2.686-6 6-6h4c3.314 0 6 2.686 6 6v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1z" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M8 7V6a3 3 0 0 1 6 0v1" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <circle cx="8.5" cy="12" r="0.75" fill="currentColor" />
+      <circle cx="11" cy="12" r="0.75" fill="currentColor" />
+      <circle cx="13.5" cy="12" r="0.75" fill="currentColor" />
+    </svg>
+  )
+}
+
+function PillowIcon() {
+  return (
+    <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+      <rect x="2" y="7" width="18" height="8" rx="4" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M7 11c0-1.105.895-2 2-2h4a2 2 0 0 1 0 4H9a2 2 0 0 1-2-2z" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  )
+}
+
+const ICONS: Record<string, React.ReactNode> = {
+  sheets: <SheetsIcon />,
+  comforter: <ComforterIcon />,
+  pillow: <PillowIcon />,
+}
+
+// ── ProductCard ───────────────────────────────────────────────────────────────
+
+interface Product {
+  id: string
+  label: string
+  chinese: string
+  desc: string
+}
+
+function ProductCard({ product, delay, onClick }: { product: Product; delay: number; onClick: () => void }) {
   return (
     <motion.button
       onClick={onClick}
-      className={[
-        'w-full text-left p-5 rounded-2xl border transition-all duration-200',
-        svc.active
-          ? 'bg-white/70 backdrop-blur-md border-gold/60 shadow-glass cursor-pointer hover:border-gold hover:shadow-glass-hover'
-          : 'bg-white/35 backdrop-blur-sm border-charcoal/10 cursor-pointer hover:bg-white/50',
-      ].join(' ')}
+      className="w-full text-left p-6 rounded-2xl border bg-white/70 backdrop-blur-md border-gold/40 shadow-glass cursor-pointer hover:border-gold hover:shadow-glass-hover transition-all duration-200"
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: 0.2 + delay }}
-      whileHover={{ y: svc.active ? -2 : 0 }}
+      transition={{ duration: 0.45, ease: apple, delay: 0.2 + delay }}
+      whileHover={{ y: -3 }}
       whileTap={{ scale: 0.98 }}
     >
-      {/* Icon row + badge */}
-      <div className="flex items-start justify-between mb-3">
-        <img
-          src={svc.icon}
-          alt={svc.name}
-          className="w-10 h-10 object-contain"
-          style={{
-            mixBlendMode: 'multiply',
-            opacity: svc.active ? 1 : 0.25,
-          }}
-        />
-        {svc.active
-          ? <span className="text-[10px] font-semibold text-gold bg-gold/10 px-2 py-0.5 rounded-full tracking-wide uppercase">Start</span>
-          : <span className="text-[10px] font-semibold text-charcoal/30 bg-charcoal/6 px-2 py-0.5 rounded-full tracking-wide uppercase">Soon</span>
-        }
+      {/* Icon */}
+      <div className="w-10 h-10 rounded-xl bg-gold/12 flex items-center justify-center text-gold mb-4">
+        {ICONS[product.id]}
       </div>
 
-      {/* Service name */}
-      <p className={[
-        'font-bold text-xs tracking-widest uppercase mb-0.5',
-        svc.active ? 'text-charcoal' : 'text-charcoal/35',
-      ].join(' ')}>
-        {svc.name}
-      </p>
+      {/* Category label */}
+      <p className="text-[10px] font-bold tracking-widest uppercase text-charcoal/40 mb-1">{product.label}</p>
 
-      {/* Chinese subtitle */}
-      <p className={[
-        'text-base font-semibold mb-1.5',
-        svc.active ? 'text-charcoal' : 'text-charcoal/30',
-      ].join(' ')}>
-        {svc.chinese}
-      </p>
+      {/* Chinese name */}
+      <p className="text-xl font-semibold text-charcoal mb-2">{product.chinese}</p>
 
       {/* Description */}
-      <p className={[
-        'text-xs leading-relaxed',
-        svc.active ? 'text-charcoal/60' : 'text-charcoal/25',
-      ].join(' ')}>
-        {svc.desc}
-      </p>
+      <p className="text-xs text-charcoal/55 leading-relaxed mb-4">{product.desc}</p>
+
+      {/* CTA */}
+      <div className="flex items-center gap-1.5 text-gold text-xs font-semibold">
+        Start
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+          <path d="M2 6h8M8 4l2 2-2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+      </div>
     </motion.button>
   )
 }

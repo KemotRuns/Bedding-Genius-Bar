@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion, AnimatePresence } from 'framer-motion'
 import ProgressBar from '../components/ui/ProgressBar'
 import IconSelector from '../components/ui/IconSelector'
@@ -9,29 +9,61 @@ import type { QuizAnswers } from '../lib/types'
 
 const apple = [0.22, 1, 0.36, 1] as const
 
+const SECTION_MAP: Record<string, string> = {
+  sheets: 'Sheets & Materials',
+  comforter: 'Comforter',
+  pillow: 'Pillows',
+}
+
+const SECTION_TITLE: Record<string, string> = {
+  sheets: 'Sheets & Bedding',
+  comforter: 'Comforter',
+  pillow: 'Pillow',
+}
+
 export default function Quiz() {
   const navigate = useNavigate()
-  const [answers, setAnswers] = useState<QuizAnswers>({})
-  const [revealed, setRevealed] = useState(1) // how many questions are visible
+  const [searchParams] = useSearchParams()
+
+  const product = searchParams.get('product') ?? 'sheets'
+  const sectionName = SECTION_MAP[product] ?? 'Sheets & Materials'
+  const sectionTitle = SECTION_TITLE[product] ?? 'Sheets & Bedding'
+  const sectionQuestions = QUESTIONS.filter(q => q.section === sectionName)
+
+  const [answers, setAnswers] = useState<QuizAnswers>(() => {
+    const raw = sessionStorage.getItem('quiz_answers')
+    if (!raw) return {}
+    const all = JSON.parse(raw) as QuizAnswers
+    const sectionKeys = new Set(sectionQuestions.map(q => q.id as string))
+    return Object.fromEntries(
+      Object.entries(all).filter(([k]) => sectionKeys.has(k))
+    ) as QuizAnswers
+  })
+
+  const [revealed, setRevealed] = useState(() => {
+    const raw = sessionStorage.getItem('quiz_answers')
+    if (!raw) return 1
+    const all = JSON.parse(raw) as QuizAnswers
+    const answered = sectionQuestions.filter(q => all[q.id as keyof QuizAnswers]).length
+    return Math.min(sectionQuestions.length, Math.max(1, answered + 1))
+  })
+
   const questionRefs = useRef<(HTMLDivElement | null)[]>([])
-  const isComplete = Object.keys(answers).length === QUESTIONS.length
+  const answeredCount = sectionQuestions.filter(q => answers[q.id]).length
+  const isComplete = answeredCount === sectionQuestions.length
 
   function handleSelect(stepIndex: number, value: string) {
-    const q = QUESTIONS[stepIndex]
+    const q = sectionQuestions[stepIndex]
     setAnswers(prev => ({ ...prev, [q.id]: value }))
-
-    // Reveal next question
-    if (stepIndex + 1 < QUESTIONS.length) {
+    if (stepIndex + 1 < sectionQuestions.length) {
       setRevealed(stepIndex + 2)
     }
   }
 
-  // Scroll to the most recently revealed question
   useEffect(() => {
     const idx = revealed - 1
     const el = questionRefs.current[idx]
     if (!el || idx === 0) return
-    // Small delay so the element is painted before scrolling
     const t = setTimeout(() => {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }, 80)
@@ -39,14 +71,17 @@ export default function Quiz() {
   }, [revealed])
 
   function handleSubmit() {
-    sessionStorage.setItem('quiz_answers', JSON.stringify(answers))
-    navigate('/results')
+    const existing: QuizAnswers = (() => {
+      const raw = sessionStorage.getItem('quiz_answers')
+      return raw ? JSON.parse(raw) as QuizAnswers : {}
+    })()
+    sessionStorage.setItem('quiz_answers', JSON.stringify({ ...existing, ...answers }))
+    navigate(`/results?product=${product}`)
   }
 
-  // Find the label for a selected value in a question's options
   function selectedLabel(stepIndex: number, value: string | undefined) {
     if (!value) return value
-    return QUESTIONS[stepIndex].options.find(o => o.value === value)?.label ?? value
+    return sectionQuestions[stepIndex].options.find(o => o.value === value)?.label ?? value
   }
 
   return (
@@ -58,8 +93,8 @@ export default function Quiz() {
       transition={{ duration: 0.3 }}
     >
       <ProgressBar
-        current={Object.keys(answers).length - 1}
-        total={QUESTIONS.length}
+        current={answeredCount - 1}
+        total={sectionQuestions.length}
       />
 
       <div className="max-w-6xl mx-auto px-6 pt-20 pb-24">
@@ -68,11 +103,9 @@ export default function Quiz() {
           {/* ── Question stack ───────────────────────────── */}
           <div className="lg:col-span-2">
 
-            {QUESTIONS.slice(0, revealed).map((question, index) => {
+            {sectionQuestions.slice(0, revealed).map((question, index) => {
               const selectedValue = answers[question.id] as string | undefined
               const isAnswered = Boolean(selectedValue) && index < revealed - 1
-              const prevSection = index > 0 ? QUESTIONS[index - 1].section : undefined
-              const showSectionHeader = question.section && question.section !== prevSection
 
               return (
                 <motion.div
@@ -83,11 +116,12 @@ export default function Quiz() {
                   transition={{ duration: 0.45, ease: apple }}
                   className="scroll-mt-24"
                 >
-                  {showSectionHeader && (
-                    <div className={`flex items-center gap-4 ${index === 0 ? 'mb-1' : 'mt-12 mb-1'}`}>
+                  {/* Section label — shown once at the top */}
+                  {index === 0 && (
+                    <div className="flex items-center gap-4 mb-1">
                       <div className="h-px flex-1 bg-charcoal/10" />
                       <span className="text-[10px] font-semibold text-charcoal/30 tracking-[0.22em] uppercase px-1">
-                        {question.section}
+                        {sectionTitle}
                       </span>
                       <div className="h-px flex-1 bg-charcoal/10" />
                     </div>
@@ -109,7 +143,7 @@ export default function Quiz() {
                     /* ── Active question ── */
                     <div className="pt-8 pb-4">
                       <p className="text-xs text-charcoal/35 font-medium tracking-widest uppercase mb-3">
-                        Question {index + 1} of {QUESTIONS.length}
+                        Question {index + 1} of {sectionQuestions.length}
                       </p>
                       <h2 className="text-2xl sm:text-3xl font-light text-charcoal mb-8 leading-snug tracking-tight">
                         {question.question}
@@ -142,7 +176,7 @@ export default function Quiz() {
                       </svg>
                     </div>
                     <p className="text-charcoal/50 text-sm mb-6">
-                      All done — your sleep profile is ready.
+                      All done — your {sectionTitle.toLowerCase()} prescription is ready.
                     </p>
                     <motion.button
                       onClick={handleSubmit}
