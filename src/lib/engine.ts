@@ -281,6 +281,40 @@ function generateWhyText(answers: QuizAnswers, sheet: SheetProduct, pillow: Pill
   return parts.join(' ')
 }
 
+function generateWhyText_zh(answers: QuizAnswers, sheet: SheetProduct, pillow: PillowProduct): string {
+  const parts: string[] = []
+
+  if (answers.nightHeat === 'Very Hot') {
+    parts.push(`您容易夜間出汗，${sheet.name}的透氣結構能有效排濕散熱，讓您整夜舒適。`)
+  } else if (answers.nightHeat === 'Warm') {
+    parts.push(`您偏熱體質，${sheet.name}的透氣材質能保持清涼，不讓您感到悶熱。`)
+  } else if (answers.nightHeat === 'Cold') {
+    parts.push(`${sheet.name}提供充足的保暖感，非常適合偏冷體質的您。`)
+  } else {
+    parts.push(`${sheet.name}溫度調節均衡，非常適合體溫適中的您。`)
+  }
+
+  if (answers.skinType === 'Allergic/Eczema') {
+    parts.push(`其低敏抗菌特性對有過敏或濕疹困擾的您尤為重要。`)
+  } else if (answers.skinType === 'Sensitive') {
+    parts.push(`其溫和觸感對敏感肌膚十分呵護。`)
+  }
+
+  if (answers.sensoryPref === 'Silky') {
+    parts.push(`您一定會愛上滑入被窩那一瞬間的絲滑奢華觸感。`)
+  } else if (answers.sensoryPref === 'Cooling') {
+    parts.push(`清涼接觸感完美符合您對第一觸感的期待。`)
+  }
+
+  const posMap: Record<string, string> = { Side: '側睡', Back: '仰睡', Stomach: '趴睡', Combination: '混合' }
+  const loftMap: Record<string, string> = { High: '高枕', Medium: '中枕', Low: '低枕' }
+  const pos = answers.sleepPosition ? posMap[answers.sleepPosition] : '您的'
+  const loft = loftMap[pillow.attributes.loft] ?? pillow.attributes.loft
+  parts.push(`針對您的${pos}睡姿，${pillow.name}（${loft}）能讓脊椎保持自然對齊，助您一夜好眠。`)
+
+  return parts.join('')
+}
+
 function generateBundleSuggestion(answers: QuizAnswers): string {
   const isHot = answers.nightHeat === 'Very Hot' || answers.nightHeat === 'Warm'
   const isCold = answers.nightHeat === 'Cold'
@@ -323,6 +357,7 @@ export function getRecommendation(answers: QuizAnswers): RecommendationResult {
     topComforter,
     allSheets: scoredSheets,
     whyText: generateWhyText(answers, topSheet.product, topPillow.product),
+    whyText_zh: generateWhyText_zh(answers, topSheet.product, topPillow.product),
     bundleSuggestion: generateBundleSuggestion(answers),
   }
 }

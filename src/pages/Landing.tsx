@@ -1,32 +1,47 @@
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import { useLang } from '../lib/LanguageContext'
+import { tr } from '../lib/i18n'
 
 const apple = [0.22, 1, 0.36, 1] as const
 const base = import.meta.env.BASE_URL
 
-const PRODUCTS = [
+const PRODUCT_DATA = [
   {
     id: 'sheets',
-    label: 'Sheets & Bedding',
+    label:   { en: 'Sheets & Bedding', zh: '床組材質' },
     chinese: '床組材質',
-    desc: 'The fabric against your skin for 8 hours controls moisture, temperature, and how your skin recovers. Find the weave that fits your body.',
+    desc: {
+      en: 'The fabric against your skin for 8 hours controls moisture, temperature, and how your skin recovers. Find the weave that fits your body.',
+      zh: '材質決定了你躺進被窩後的前10秒感受，以及整夜的體感溫度。找出最適合您的床單。',
+    },
+    cta: { en: 'Start', zh: '開始' },
   },
   {
     id: 'comforter',
-    label: 'Comforter',
+    label:   { en: 'Comforter', zh: '棉被' },
     chinese: '棉被',
-    desc: 'Fill type determines warmth, weight, and breathability. The right comforter keeps you at an even temperature through the night.',
+    desc: {
+      en: 'Fill type determines warmth, weight, and breathability. The right comforter keeps you at an even temperature through the night.',
+      zh: '填充物決定保暖度、重量與透氣性。選對棉被，讓您整夜維持舒適體溫。',
+    },
+    cta: { en: 'Start', zh: '開始' },
   },
   {
     id: 'pillow',
-    label: 'Pillow',
+    label:   { en: 'Pillow', zh: '枕頭' },
     chinese: '枕頭',
-    desc: 'Loft and firmness follow your sleep position. The right fit keeps your neck in neutral alignment and eliminates morning tension.',
+    desc: {
+      en: 'Loft and firmness follow your sleep position. The right fit keeps your neck in neutral alignment and eliminates morning tension.',
+      zh: '枕頭高度與硬度需配合您的睡姿。選對枕頭，讓脊椎對齊，消除晨間頸部緊繃。',
+    },
+    cta: { en: 'Start', zh: '開始' },
   },
 ]
 
 export default function Landing() {
   const navigate = useNavigate()
+  const { lang } = useLang()
 
   return (
     <motion.div
@@ -36,7 +51,7 @@ export default function Landing() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.4 }}
     >
-      {/* Subtle background blobs */}
+      {/* Background blobs */}
       <div className="absolute top-1/4 left-1/5 w-80 h-80 rounded-full blur-3xl pointer-events-none animate-blob" style={{ backgroundColor: 'rgba(196,154,108,0.12)' }} />
       <div className="absolute bottom-1/4 right-1/5 w-64 h-64 rounded-full blur-3xl pointer-events-none animate-blob-delay" style={{ backgroundColor: 'rgba(122,154,119,0.12)' }} />
 
@@ -67,18 +82,24 @@ export default function Landing() {
 
         {/* ── Product entry cards ── */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {PRODUCTS.map((product, i) => (
+          {PRODUCT_DATA.map((pd, i) => (
             <ProductCard
-              key={product.id}
-              product={product}
+              key={pd.id}
+              id={pd.id}
+              label={tr(pd.label, lang)}
+              chinese={pd.chinese}
+              desc={tr(pd.desc, lang)}
+              cta={tr(pd.cta, lang)}
               delay={i * 0.07}
-              onClick={() => navigate(`/quiz?product=${product.id}`)}
+              onClick={() => navigate(`/quiz?product=${pd.id}`)}
             />
           ))}
         </div>
 
         {/* ── Brand footer ── */}
-        <p className="text-center text-xs text-charcoal/30 mt-8 tracking-widest uppercase">Tonia Nicole · 東妮寢飾</p>
+        <p className="text-center text-xs text-charcoal/30 mt-8 tracking-widest uppercase">
+          Tonia Nicole · 東妮寢飾
+        </p>
       </motion.div>
     </motion.div>
   )
@@ -126,14 +147,17 @@ const ICONS: Record<string, React.ReactNode> = {
 
 // ── ProductCard ───────────────────────────────────────────────────────────────
 
-interface Product {
+interface ProductCardProps {
   id: string
   label: string
   chinese: string
   desc: string
+  cta: string
+  delay: number
+  onClick: () => void
 }
 
-function ProductCard({ product, delay, onClick }: { product: Product; delay: number; onClick: () => void }) {
+function ProductCard({ id, label, chinese, desc, cta, delay, onClick }: ProductCardProps) {
   return (
     <motion.button
       onClick={onClick}
@@ -144,23 +168,14 @@ function ProductCard({ product, delay, onClick }: { product: Product; delay: num
       whileHover={{ y: -3 }}
       whileTap={{ scale: 0.98 }}
     >
-      {/* Icon */}
       <div className="w-10 h-10 rounded-xl bg-gold/12 flex items-center justify-center text-gold mb-4">
-        {ICONS[product.id]}
+        {ICONS[id]}
       </div>
-
-      {/* Category label */}
-      <p className="text-[10px] font-bold tracking-widest uppercase text-charcoal/40 mb-1">{product.label}</p>
-
-      {/* Chinese name */}
-      <p className="text-xl font-semibold text-charcoal mb-2">{product.chinese}</p>
-
-      {/* Description */}
-      <p className="text-xs text-charcoal/55 leading-relaxed mb-4">{product.desc}</p>
-
-      {/* CTA */}
+      <p className="text-[10px] font-bold tracking-widest uppercase text-charcoal/40 mb-1">{label}</p>
+      <p className="text-xl font-semibold text-charcoal mb-2">{chinese}</p>
+      <p className="text-xs text-charcoal/55 leading-relaxed mb-4">{desc}</p>
       <div className="flex items-center gap-1.5 text-gold text-xs font-semibold">
-        Start
+        {cta}
         <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
           <path d="M2 6h8M8 4l2 2-2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
         </svg>

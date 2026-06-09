@@ -3,6 +3,8 @@ import { AnimatePresence } from 'framer-motion'
 import Landing from './pages/Landing'
 import Quiz from './pages/Quiz'
 import Results from './pages/Results'
+import { LanguageProvider } from './lib/LanguageContext'
+import LanguageSwitcher from './components/ui/LanguageSwitcher'
 import './index.css'
 
 function AnimatedRoutes() {
@@ -21,7 +23,10 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <HashRouter>
-      <AnimatedRoutes />
+      <LanguageProvider>
+        <LanguageSwitcher />
+        <AnimatedRoutes />
+      </LanguageProvider>
     </HashRouter>
   )
 }

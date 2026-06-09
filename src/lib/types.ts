@@ -144,6 +144,7 @@ export interface RecommendationResult {
   topComforter: ScoredComforter
   allSheets: ScoredSheet[]
   whyText: string
+  whyText_zh: string
   bundleSuggestion: string
 }
 
@@ -152,13 +153,16 @@ export interface RecommendationResult {
 export interface IconOption<T extends string = string> {
   value: T
   label: string
+  label_zh?: string
   icon: ReactNode
   sublabel?: string
+  sublabel_zh?: string
 }
 
 export interface QuestionConfig {
   id: keyof QuizAnswers
   question: string
+  question_zh?: string
   options: IconOption[]
   columns: 2 | 3 | 4
   section?: string
