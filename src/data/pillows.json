@@ -13,7 +13,9 @@
       "adjustable": false
     },
     "best_for": ["Side Sleepers", "Broad Shoulders", "Luxury Feel", "Cold Sleepers"],
-    "description": "Premium Hungarian white down clusters deliver exceptional loft and an enveloping softness. Naturally insulating and breathable — the pillow that feels like sleeping on a cloud."
+    "best_for_zh": ["側睡", "寬肩體型", "奢華觸感", "怕冷體質"],
+    "description": "Premium Hungarian white down clusters deliver exceptional loft and an enveloping softness. Naturally insulating and breathable — the pillow that feels like sleeping on a cloud.",
+    "description_zh": "頂級匈牙利白鵝絨提供卓越蓬鬆度與包覆柔軟感。天然保暖透氣——讓您體驗如睡在雲端般的枕頭感受。"
   },
   {
     "product_id": "PL002",
@@ -29,7 +31,9 @@
       "adjustable": false
     },
     "best_for": ["Back Sleepers", "Neck Pain", "Cervical Support", "Broad Shoulders"],
-    "description": "Ergonomic contour shape with temperature-responsive memory foam that conforms precisely to the neck and shoulder curve. Provides targeted cervical support for back sleepers and those with neck tension."
+    "best_for_zh": ["仰睡", "頸部疼痛", "頸椎支撐", "寬肩體型"],
+    "description": "Ergonomic contour shape with temperature-responsive memory foam that conforms precisely to the neck and shoulder curve. Provides targeted cervical support for back sleepers and those with neck tension.",
+    "description_zh": "人體工學輪廓設計，記憶棉精準貼合頸肩曲線。為仰睡者及頸部緊繃者提供精確的頸椎支撐。"
   },
   {
     "product_id": "PL003",
@@ -45,7 +49,9 @@
       "adjustable": true
     },
     "best_for": ["Combination Sleepers", "Side Sleepers", "Sensitive Skin", "Hot Sleepers"],
-    "description": "Shredded natural latex fill with an adjustable loft — add or remove fill to dial in your perfect height. Naturally breathable, anti-microbial, and resilient. Ideal for combination sleepers who move during the night."
+    "best_for_zh": ["多種睡姿", "側睡", "敏感肌膚", "易出汗體質"],
+    "description": "Shredded natural latex fill with an adjustable loft — add or remove fill to dial in your perfect height. Naturally breathable, anti-microbial, and resilient. Ideal for combination sleepers who move during the night.",
+    "description_zh": "碎片天然乳膠填充，可自由調整枕頭高度——增減填充量找到完美高度。天然透氣、抗菌、彈力持久，適合夜間翻身的多種睡姿者。"
   },
   {
     "product_id": "PL004",
@@ -61,7 +67,9 @@
       "adjustable": false
     },
     "best_for": ["Allergy Sufferers", "Low Maintenance", "Side Sleepers", "Combination Sleepers"],
-    "description": "High-performance tech fiber fill that stays lofty wash after wash. Machine washable, fully hypoallergenic, and dries quickly — the practical choice for allergy sufferers and busy households."
+    "best_for_zh": ["過敏體質", "低保養需求", "側睡", "多種睡姿"],
+    "description": "High-performance tech fiber fill that stays lofty wash after wash. Machine washable, fully hypoallergenic, and dries quickly — the practical choice for allergy sufferers and busy households.",
+    "description_zh": "高性能科技纖維填充，每次洗滌後依然保持蓬鬆。可機洗、完全低敏、快乾——過敏體質及忙碌家庭的實用選擇。"
   },
   {
     "product_id": "PL005",
@@ -77,6 +85,8 @@
       "adjustable": false
     },
     "best_for": ["Stomach Sleepers", "Petite Frame", "Soft Feel", "Low Loft Preference"],
-    "description": "A slim, low-loft down pillow designed specifically for stomach sleepers and those with a petite frame. Keeps the spine neutral and prevents neck strain — lightweight, whisper-soft, and unobtrusive."
+    "best_for_zh": ["趴睡", "嬌小體型", "柔軟觸感", "偏好低枕"],
+    "description": "A slim, low-loft down pillow designed specifically for stomach sleepers and those with a petite frame. Keeps the spine neutral and prevents neck strain — lightweight, whisper-soft, and unobtrusive.",
+    "description_zh": "專為趴睡者及嬌小體型設計的低枕。保持脊椎中立、預防頸椎緊繃——輕盈、極柔、不累贅。"
   }
 ]

@@ -17,8 +17,10 @@
       "weave_tightness": "Tight"
     },
     "best_for": ["Hot Sleepers", "Warm Climates", "Pet Owners", "Durability Seekers"],
+    "best_for_zh": ["易出汗體質", "溫熱氣候", "有養寵物者", "注重耐用性"],
     "ratings": { "breathability": 5, "wicking": 3, "warmth": 1, "softness": 3 },
     "description": "Woven from SUPIMA cotton — representing less than 1% of the world's cotton supply. Its extra-long fibres produce a percale with exceptional strength and a cool, clean hand-feel that improves with every wash.",
+    "description_zh": "採用全球不到1%的SUPIMA棉紡製而成，超長纖維打造出高強度平織床單，觸感清爽潔淨，每次洗滌後更加柔順舒適。",
     "weave_texture_image": "percale"
   },
   {
@@ -39,8 +41,10 @@
       "weave_tightness": "Medium"
     },
     "best_for": ["Average Sleepers", "Cool Climates", "Low Maintenance", "Luxury Feel"],
+    "best_for_zh": ["一般體質", "涼爽氣候", "低保養需求", "奢華觸感"],
     "ratings": { "breathability": 2, "wicking": 2, "warmth": 3, "softness": 5 },
     "description": "Long-staple Egyptian cotton in a four-over-one satin weave creates a luminous, silky surface with a subtle sheen. Drapes beautifully, resists wrinkles, and feels indulgent from the first night.",
+    "description_zh": "長絨埃及棉以四上一下緞紋織法織成，呈現光澤絲滑的表面。垂墜感佳、抗皺性強，從第一個夜晚起就帶來奢華享受。",
     "weave_texture_image": "sateen"
   },
   {
@@ -60,8 +64,10 @@
       "weave_tightness": "Medium"
     },
     "best_for": ["Hot Sleepers", "Sensitive Skin", "Night Sweats", "Low Maintenance"],
+    "best_for_zh": ["易出汗體質", "敏感肌膚", "盜汗問題", "低保養需求"],
     "ratings": { "breathability": 5, "wicking": 5, "warmth": 1, "softness": 5 },
     "description": "Tonia Nicole's signature Topcell™ uses pine-pulp Lyocell with Faser-Lock™ British technology — enhanced fibre bonding that triples durability versus standard Lyocell. Feather-soft, hypoallergenic, and remarkably cool.",
+    "description_zh": "東妮寢飾獨家Topcell™採用松木漿天絲，結合英國Faser-Lock™技術，纖維結合強度是標準天絲的三倍。超柔、低敏、清涼感卓越。",
     "weave_texture_image": "tencel"
   },
   {
@@ -81,8 +87,10 @@
       "weave_tightness": "Medium"
     },
     "best_for": ["Hot Sleepers", "Allergic/Sensitive Skin", "Eco-Conscious", "Night Sweats"],
+    "best_for_zh": ["易出汗體質", "過敏／敏感肌", "環保意識", "盜汗問題"],
     "ratings": { "breathability": 4, "wicking": 5, "warmth": 2, "softness": 4 },
     "description": "OEKO-TEX certified Tencel Lyocell in an 80S yarn count. Silky smooth, hypoallergenic, and closed-loop manufactured — absorbs moisture 50% faster than cotton while remaining completely breathable.",
+    "description_zh": "OEKO-TEX認證天絲Lyocell 80支紗，絲滑觸感、低敏特性、閉環製程——吸濕速度比棉快50%，同時保持完全透氣。",
     "weave_texture_image": "tencel"
   },
   {
@@ -102,8 +110,10 @@
       "weave_tightness": "Loose"
     },
     "best_for": ["Hot Sleepers", "Warm Climates", "Texture Lovers", "Durability Seekers"],
+    "best_for_zh": ["易出汗體質", "溫熱氣候", "喜愛質感者", "注重耐用性"],
     "ratings": { "breathability": 5, "wicking": 3, "warmth": 1, "softness": 2 },
     "description": "Stone-washed European flax linen — the most breathable natural fibre available. Inherently temperature-regulating and only gets softer, more supple, and more beautiful with every year of use.",
+    "description_zh": "石洗歐洲亞麻——最透氣的天然纖維。天然調溫特性讓您保持舒適，越洗越柔軟，越用越美麗。",
     "weave_texture_image": "linen"
   },
   {
@@ -123,8 +133,10 @@
       "weave_tightness": "Tight"
     },
     "best_for": ["Sensitive Skin", "Allergic/Eczema", "Hair & Skin Care", "Luxury"],
+    "best_for_zh": ["敏感肌膚", "過敏／濕疹", "髮膚保護", "頂級奢華"],
     "ratings": { "breathability": 4, "wicking": 3, "warmth": 3, "softness": 5 },
     "description": "22-momme mulberry silk — Tonia Nicole's premium grade. Naturally hypoallergenic protein fibre that regulates temperature, reduces friction on hair and skin, and is recommended by dermatologists for eczema-prone sleepers.",
+    "description_zh": "22姆米桑蠶絲——東妮寢飾頂級規格。天然低敏蛋白纖維，調節體溫、減少對髮膚的摩擦，皮膚科醫師推薦給濕疹肌膚者使用。",
     "weave_texture_image": "silk"
   },
   {
@@ -144,8 +156,10 @@
       "weave_tightness": "Medium"
     },
     "best_for": ["Cold Sleepers", "Cold Climates", "Winter Comfort"],
+    "best_for_zh": ["怕冷體質", "寒冷氣候", "冬日舒適"],
     "ratings": { "breathability": 2, "wicking": 3, "warmth": 5, "softness": 5 },
     "description": "Double-brushed cotton flannel for exceptional warmth and cloud-like softness. Ideal for cold bedrooms and winter nights — wrap yourself in the feeling of a warm embrace.",
+    "description_zh": "雙面刷毛棉法蘭絨，提供卓越保暖性與如雲朵般的柔軟感。適合寒冷臥室與冬夜——如同溫暖擁抱般的睡眠體驗。",
     "weave_texture_image": "linen"
   },
   {
@@ -165,8 +179,10 @@
       "weave_tightness": "Tight"
     },
     "best_for": ["Hot Sleepers", "Night Sweats", "Low Maintenance", "Active Lifestyles"],
+    "best_for_zh": ["易出汗體質", "盜汗問題", "低保養需求", "活躍生活型態"],
     "ratings": { "breathability": 3, "wicking": 5, "warmth": 1, "softness": 4 },
     "description": "Tonia Nicole's high-performance nylon fibre delivers an instant cooling sensation on contact, wicks moisture rapidly, and dries in a fraction of the time of cotton — perfect for hot sleepers who prioritise low-maintenance care.",
+    "description_zh": "東妮寢飾高性能尼龍纖維，接觸瞬間帶來清涼感，快速吸濕導汗，乾燥速度遠快於棉——適合重視低保養的熱睡者。",
     "weave_texture_image": "percale"
   }
 ]

@@ -30,6 +30,7 @@ export interface SheetProduct {
     weave_tightness: 'Tight' | 'Medium' | 'Loose'
   }
   best_for: string[]
+  best_for_zh?: string[]
   ratings: {
     breathability: 1 | 2 | 3 | 4 | 5
     wicking: 1 | 2 | 3 | 4 | 5
@@ -37,6 +38,7 @@ export interface SheetProduct {
     softness: 1 | 2 | 3 | 4 | 5
   }
   description: string
+  description_zh?: string
   weave_texture_image?: string
 }
 
@@ -57,7 +59,9 @@ export interface PillowProduct {
     adjustable: boolean
   }
   best_for: string[]
+  best_for_zh?: string[]
   description: string
+  description_zh?: string
 }
 
 export interface ComforterProduct {
@@ -74,7 +78,9 @@ export interface ComforterProduct {
     weight: 'Light' | 'Medium' | 'Heavy'
   }
   best_for: string[]
+  best_for_zh?: string[]
   description: string
+  description_zh?: string
   ratings: {
     warmth: 1 | 2 | 3 | 4 | 5
     breathability: 1 | 2 | 3 | 4 | 5

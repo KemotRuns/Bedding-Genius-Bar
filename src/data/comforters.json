@@ -13,7 +13,9 @@
       "weight": "Light"
     },
     "best_for": ["Sensitive Skin", "Year-Round Use", "Luxury", "Hot Sleepers"],
+    "best_for_zh": ["敏感肌膚", "四季適用", "奢華體驗", "易出汗體質"],
     "description": "Mulberry silk fill with a naturally protein-rich structure that regulates temperature in all seasons. Lightweight, hypoallergenic, and breathable — the preferred choice for sensitive skin.",
+    "description_zh": "桑蠶絲填充，天然蛋白質結構四季調溫。輕盈、低敏、透氣——敏感肌膚的首選棉被。",
     "ratings": {
       "warmth": 3,
       "breathability": 5,
@@ -34,7 +36,9 @@
       "weight": "Heavy"
     },
     "best_for": ["Cold Sleepers", "Winter Use", "Temperature Regulation", "Thick Coverage"],
+    "best_for_zh": ["怕冷體質", "冬季使用", "體溫調節", "厚實包覆感"],
     "description": "Natural wool fill with an exceptional warmth-to-weight ratio. Naturally anti-static and moisture-regulating — ideal for cold sleepers who want substantial coverage without overheating.",
+    "description_zh": "天然羊毛填充，保暖性與重量比卓越。天然防靜電、調節濕氣——適合怕冷且想要厚實包覆感而不悶熱的睡眠者。",
     "ratings": {
       "warmth": 5,
       "breathability": 4,
@@ -55,7 +59,9 @@
       "weight": "Light"
     },
     "best_for": ["Cold Sleepers", "Lightweight Warmth", "Fluffy Feel", "Winter Use"],
+    "best_for_zh": ["怕冷體質", "輕盈保暖", "蓬鬆感", "冬季使用"],
     "description": "Premium white down clusters deliver outstanding warmth with remarkable lightness. High fill power creates a cloud-like loft — perfect for cold sleepers who prefer the enveloping feel of a fluffy duvet.",
+    "description_zh": "頂級白鵝絨提供卓越保暖性與驚人輕盈感。高蓬鬆度打造如雲朵般的被體——適合喜愛蓬鬆包覆感的怕冷者。",
     "ratings": {
       "warmth": 5,
       "breathability": 5,
@@ -76,7 +82,9 @@
       "weight": "Medium"
     },
     "best_for": ["Easy Care", "Allergy Sufferers", "Year-Round Use", "Busy Households"],
+    "best_for_zh": ["易於清洗", "過敏體質", "四季適用", "忙碌家庭"],
     "description": "High-performance technical fiber fill that bounces back wash after wash. Machine washable, hypoallergenic, and available in summer, all-season, and winter weights — the practical choice for busy households.",
+    "description_zh": "高性能科技纖維填充，每次洗滌後依然回彈蓬鬆。可機洗、低敏，夏季、四季及冬季重量均有提供——忙碌家庭的實用首選。",
     "ratings": {
       "warmth": 3,
       "breathability": 4,

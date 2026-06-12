@@ -57,6 +57,24 @@ const CARD_LABELS: Record<string, { en: string; zh: string }> = {
   pillow:    { en: 'Pillow Prescription',    zh: '枕頭推薦' },
 }
 
+const FILL_ZH: Record<string, string> = {
+  Silk: '蠶絲', Wool: '羊毛', Down: '羽絨', 'Tech Fiber': '科技纖維',
+  'Memory Foam': '記憶棉', Latex: '乳膠',
+}
+const WARMTH_ZH: Record<string, string> = {
+  'All-Season': '四季被', Winter: '冬被', Summer: '夏被',
+}
+const WEIGHT_ZH: Record<string, string> = {
+  Light: '輕量', Medium: '中等', Heavy: '厚重',
+}
+const MATERIAL_ZH: Record<string, string> = {
+  Cotton: '棉', 'Tencel Lyocell': '天絲', Linen: '亞麻',
+  Silk: '蠶絲', Flannel: '法蘭絨', 'Nylon Fiber': '尼龍纖維',
+}
+const WEAVE_ZH: Record<string, string> = {
+  Percale: '平織', Sateen: '緞紋', Plain: '平紋', 'N/A': '平紋',
+}
+
 // ── Sub-components ────────────────────────────────────────────────────────────
 
 function ProfileBadge({ icon, label }: { icon: React.ReactNode; label: string }) {
@@ -88,7 +106,7 @@ function AttributeBar({ label, value, color, descriptor }: {
   )
 }
 
-function MatchRing({ score }: { score: number }) {
+function MatchRing({ score, zh }: { score: number; zh: boolean }) {
   const radius = 28
   const circumference = 2 * Math.PI * radius
   const dash = (score / 100) * circumference
@@ -110,7 +128,7 @@ function MatchRing({ score }: { score: number }) {
           <span className="text-lg font-bold text-charcoal">{score}%</span>
         </div>
       </div>
-      <span className="text-xs text-charcoal/40 font-medium tracking-wide">Match</span>
+      <span className="text-xs text-charcoal/40 font-medium tracking-wide">{zh ? '匹配' : 'Match'}</span>
     </div>
   )
 }
@@ -375,17 +393,17 @@ export default function Results() {
                   <div className="flex items-center gap-3">
                     <div className="hidden sm:flex flex-col items-end gap-1.5">
                       <span className="text-xs bg-charcoal/8 text-charcoal/55 px-3 py-1.5 rounded-full font-medium">
-                        {sheet.material} · {sheet.weave === 'N/A' ? (zh ? '平織' : 'Plain Weave') : `${sheet.weave} ${zh ? '織法' : 'Weave'}`}
+                        {zh ? (MATERIAL_ZH[sheet.material] ?? sheet.material) : sheet.material} · {zh ? (WEAVE_ZH[sheet.weave] ?? sheet.weave) : (sheet.weave === 'N/A' ? 'Plain Weave' : `${sheet.weave} Weave`)}
                       </span>
                       {sheet.sku && (
                         <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">{sheet.sku}</span>
                       )}
                     </div>
-                    <MatchRing score={score} />
+                    <MatchRing score={score} zh={zh} />
                   </div>
                 </div>
                 <div className="px-7 py-6">
-                  <p className="text-charcoal/60 text-sm leading-relaxed mb-6">{sheet.description}</p>
+                  <p className="text-charcoal/60 text-sm leading-relaxed mb-6">{zh && sheet.description_zh ? sheet.description_zh : sheet.description}</p>
                   <div className="space-y-4 mb-6">
                     <AttributeBar label={zh ? '透氣度' : 'Breathability'}    value={sheet.ratings.breathability} color="bg-sage"            descriptor={desc(sheet.ratings.breathability)} />
                     <AttributeBar label={zh ? '吸濕排汗' : 'Moisture Wicking'} value={sheet.ratings.wicking}       color="bg-blue-400/70"    descriptor={desc(sheet.ratings.wicking)} />
@@ -393,7 +411,7 @@ export default function Results() {
                     <AttributeBar label={zh ? '柔軟度' : 'Softness'}          value={sheet.ratings.softness}       color="bg-purple-400/70"  descriptor={desc(sheet.ratings.softness)} />
                   </div>
                   <div className="flex flex-wrap gap-2">
-                    {sheet.best_for.map(tag => (
+                    {(zh && sheet.best_for_zh ? sheet.best_for_zh : sheet.best_for).map(tag => (
                       <span key={tag} className="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">{tag}</span>
                     ))}
                   </div>
@@ -413,7 +431,9 @@ export default function Results() {
                           <span className="font-mono text-[10px] text-charcoal/30 tracking-wider">{result.allSheets[1].product.sku}</span>
                         )}
                       </div>
-                      <p className="text-xs text-charcoal/45 mt-0.5">{result.allSheets[1].product.material} — {result.allSheets[1].product.description.split('.')[0]}.</p>
+                      <p className="text-xs text-charcoal/45 mt-0.5">
+                        {zh ? (MATERIAL_ZH[result.allSheets[1].product.material] ?? result.allSheets[1].product.material) : result.allSheets[1].product.material} — {zh && result.allSheets[1].product.description_zh ? result.allSheets[1].product.description_zh.split('。')[0] + '。' : result.allSheets[1].product.description.split('.')[0] + '.'}
+                      </p>
                     </div>
                     <div className="text-right flex-shrink-0">
                       <div className="text-sm font-bold text-charcoal/40">{matchScore(result.allSheets[1].score)}%</div>
@@ -437,24 +457,24 @@ export default function Results() {
                 <div className="flex items-center gap-3">
                   <div className="hidden sm:flex flex-col items-end gap-1.5">
                     <span className="text-xs bg-gold/15 text-gold px-3 py-1.5 rounded-full font-medium">
-                      {comforter.fill} · {comforter.attributes.warmth}
+                      {zh ? (FILL_ZH[comforter.fill] ?? comforter.fill) : comforter.fill} · {zh ? (WARMTH_ZH[comforter.attributes.warmth] ?? comforter.attributes.warmth) : comforter.attributes.warmth}
                     </span>
                     {comforter.sku && (
                       <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">{comforter.sku}</span>
                     )}
                   </div>
-                  <MatchRing score={score} />
+                  <MatchRing score={score} zh={zh} />
                 </div>
               </div>
               <div className="px-7 py-6">
-                <p className="text-charcoal/60 text-sm leading-relaxed mb-6">{comforter.description}</p>
+                <p className="text-charcoal/60 text-sm leading-relaxed mb-6">{zh && comforter.description_zh ? comforter.description_zh : comforter.description}</p>
                 <div className="space-y-4 mb-6">
                   <AttributeBar label={zh ? '保暖度' : 'Warmth'}       value={comforter.ratings.warmth}        color="bg-orange-400/70" descriptor={desc(comforter.ratings.warmth)} />
                   <AttributeBar label={zh ? '透氣度' : 'Breathability'} value={comforter.ratings.breathability} color="bg-sage"          descriptor={desc(comforter.ratings.breathability)} />
                   <AttributeBar label={zh ? '蓬鬆度' : 'Fluffiness'}    value={comforter.ratings.fluffiness}    color="bg-purple-400/70" descriptor={desc(comforter.ratings.fluffiness)} />
                 </div>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {comforter.best_for.map(tag => (
+                  {(zh && comforter.best_for_zh ? comforter.best_for_zh : comforter.best_for).map(tag => (
                     <span key={tag} className="text-xs bg-gold/10 text-gold px-3 py-1 rounded-full font-medium">{tag}</span>
                   ))}
                 </div>
@@ -466,7 +486,7 @@ export default function Results() {
                     {comforter.attributes.washable ? (zh ? '✓ 可機洗' : '✓ Machine washable') : (zh ? '僅限乾洗' : 'Dry-clean only')}
                   </span>
                   <span className="text-xs bg-charcoal/6 text-charcoal/40 px-3 py-1 rounded-full font-medium">
-                    {comforter.attributes.weight}{zh ? '量' : ' weight'}
+                    {zh ? (WEIGHT_ZH[comforter.attributes.weight] ?? comforter.attributes.weight) : `${comforter.attributes.weight} weight`}
                   </span>
                 </div>
               </div>
@@ -485,7 +505,7 @@ export default function Results() {
                 <div className="flex items-center gap-3">
                   <div className="hidden sm:flex flex-col items-end gap-1.5">
                     <span className="text-xs bg-charcoal/8 text-charcoal/55 px-3 py-1.5 rounded-full font-medium">
-                      {pillow.fill} · {zh
+                      {zh ? (FILL_ZH[pillow.fill] ?? pillow.fill) : pillow.fill} · {zh
                         ? { Firm: '硬', Medium: '中', Soft: '軟' }[pillow.attributes.firmness]
                         : `${pillow.attributes.firmness} firmness`}
                     </span>
@@ -493,7 +513,7 @@ export default function Results() {
                       <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">{pillow.sku}</span>
                     )}
                   </div>
-                  <MatchRing score={score} />
+                  <MatchRing score={score} zh={zh} />
                 </div>
               </div>
               <div className="px-7 py-6">
@@ -503,9 +523,9 @@ export default function Results() {
                     {tr(loftDesc[pillow.attributes.loft], lang)}
                   </div>
                 </div>
-                <p className="text-sm text-charcoal/60 leading-relaxed mb-5">{pillow.description}</p>
+                <p className="text-sm text-charcoal/60 leading-relaxed mb-5">{zh && pillow.description_zh ? pillow.description_zh : pillow.description}</p>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {pillow.best_for.map(tag => (
+                  {(zh && pillow.best_for_zh ? pillow.best_for_zh : pillow.best_for).map(tag => (
                     <span key={tag} className="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">{tag}</span>
                   ))}
                 </div>
