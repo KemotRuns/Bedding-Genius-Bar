@@ -5,6 +5,7 @@ import { getRecommendation } from '../lib/engine'
 import type { QuizAnswers, RecommendationResult, SheetProduct, PillowProduct, ComforterProduct, NightHeat } from '../lib/types'
 import { useLang } from '../lib/LanguageContext'
 import { tr } from '../lib/i18n'
+import { buildSession, saveSession } from '../lib/session'
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -342,6 +343,18 @@ export default function Results() {
     Low:    { en: 'Prevents neck arching — the only safe loft for stomach sleepers.',                    zh: '避免頸椎過度後仰，趴睡者的最佳選擇。' },
   }
 
+  // ── Finalize / save session ──
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [saved, setSaved] = useState(false)
+  const [nameError, setNameError] = useState(false)
+
+  function handleFinalize() {
+    if (!name.trim()) { setNameError(true); return }
+    saveSession(buildSession({ name, email, lang, answers }))
+    setSaved(true)
+  }
+
   return (
     <motion.div
       className="min-h-screen bg-cream"
@@ -541,6 +554,19 @@ export default function Results() {
             </motion.div>
           )}
 
+          {/* ── Edit answers ─────────────────────────── */}
+          <motion.div variants={itemVariants} className="flex justify-end -mt-1">
+            <button
+              onClick={() => navigate(`/quiz?product=${product}&edit=1`)}
+              className="text-xs font-medium text-charcoal/45 hover:text-gold transition-colors flex items-center gap-1.5 cursor-pointer"
+            >
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                <path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9l6.5-6.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+              </svg>
+              {zh ? '修改我的答案' : 'Edit answers'}
+            </button>
+          </motion.div>
+
           {/* ── Why This Works ───────────────────────── */}
           <motion.div variants={itemVariants} className="glass-card p-6">
             <div className="flex items-center gap-2 mb-4">
@@ -556,6 +582,70 @@ export default function Results() {
             <p className="text-sm text-charcoal/75 leading-relaxed">
               {zh ? result.whyText_zh : result.whyText}
             </p>
+          </motion.div>
+
+          {/* ── Save / finalize session ──────────────── */}
+          <motion.div variants={itemVariants} className="glass-card p-6">
+            {saved ? (
+              <div className="text-center py-2">
+                <div className="w-10 h-10 rounded-full bg-sage/20 flex items-center justify-center mx-auto mb-3">
+                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M4 10L8 14L16 6" stroke="#6A8E67" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </div>
+                <p className="text-sm font-semibold text-charcoal mb-1">
+                  {zh ? `已儲存，${name} ！` : `Saved, ${name}!`}
+                </p>
+                <p className="text-xs text-charcoal/50 leading-relaxed">
+                  {email
+                    ? (zh ? `我們會將您的睡眠診斷結果寄送至 ${email}。` : `We'll send your sleep prescription to ${email}.`)
+                    : (zh ? '您的睡眠檔案已儲存。' : 'Your sleep profile has been saved.')}
+                </p>
+              </div>
+            ) : (
+              <>
+                <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-1">
+                  {zh ? '儲存您的睡眠檔案' : 'Save your sleep profile'}
+                </p>
+                <p className="text-sm text-charcoal/55 leading-relaxed mb-4">
+                  {zh
+                    ? '留下您的姓名以儲存診斷結果，並可選填 Email 以接收完整報告。'
+                    : 'Add your name to save this prescription — and an optional email to receive your full report.'}
+                </p>
+                <div className="grid sm:grid-cols-2 gap-3 mb-4">
+                  <div>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={e => { setName(e.target.value); if (nameError) setNameError(false) }}
+                      placeholder={zh ? '姓名（必填）' : 'Name (required)'}
+                      className={`w-full px-4 py-3 rounded-xl bg-white/60 border text-sm text-charcoal placeholder:text-charcoal/35 outline-none focus:border-gold transition-colors ${nameError ? 'border-red-300' : 'border-charcoal/12'}`}
+                    />
+                    {nameError && (
+                      <p className="text-xs text-red-400 mt-1 pl-1">{zh ? '請輸入您的姓名' : 'Please enter your name'}</p>
+                    )}
+                  </div>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    placeholder={zh ? 'Email（選填）' : 'Email (optional)'}
+                    className="w-full px-4 py-3 rounded-xl bg-white/60 border border-charcoal/12 text-sm text-charcoal placeholder:text-charcoal/35 outline-none focus:border-gold transition-colors"
+                  />
+                </div>
+                <motion.button
+                  onClick={handleFinalize}
+                  className="bg-charcoal text-cream px-8 py-3 rounded-xl text-sm font-medium hover:bg-charcoal/85 transition-colors shadow-sm inline-flex items-center gap-2 cursor-pointer"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.97 }}
+                >
+                  {zh ? '儲存我的檔案' : 'Save my profile'}
+                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                    <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </motion.button>
+              </>
+            )}
           </motion.div>
 
           {/* ── Also Explore ─────────────────────────── */}

@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { HashRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { AnimatePresence } from 'framer-motion'
 import Landing from './pages/Landing'
@@ -5,6 +6,7 @@ import Quiz from './pages/Quiz'
 import Results from './pages/Results'
 import { LanguageProvider } from './lib/LanguageContext'
 import LanguageSwitcher from './components/ui/LanguageSwitcher'
+import { flushQueue } from './lib/session'
 import './index.css'
 
 function AnimatedRoutes() {
@@ -21,6 +23,9 @@ function AnimatedRoutes() {
 }
 
 export default function App() {
+  // Retry any sessions that couldn't reach the remote endpoint last time.
+  useEffect(() => { void flushQueue() }, [])
+
   return (
     <HashRouter>
       <LanguageProvider>

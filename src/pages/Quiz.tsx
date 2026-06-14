@@ -29,6 +29,7 @@ export default function Quiz() {
   const zh = lang === 'zh'
 
   const product = searchParams.get('product') ?? 'sheets'
+  const editParam = searchParams.get('edit') === '1'
   const sectionName = SECTION_MAP[product] ?? 'Sheets & Materials'
   const sectionTitleObj = SECTION_TITLE_BILINGUAL[product] ?? SECTION_TITLE_BILINGUAL.sheets
   const sectionTitle = zh ? sectionTitleObj.zh : sectionTitleObj.en
@@ -53,19 +54,44 @@ export default function Quiz() {
     return Math.min(sectionQuestions.length, Math.max(1, answered + 1))
   })
 
+  // Which previously-answered question is currently open for editing (null = none).
+  const [editingIndex, setEditingIndex] = useState<number | null>(null)
+
   const questionRefs = useRef<(HTMLDivElement | null)[]>([])
   const answeredCount = sectionQuestions.filter(q => answers[q.id]).length
   const isComplete = answeredCount === sectionQuestions.length
 
-  function handleSelect(stepIndex: number, value: string) {
-    const q = sectionQuestions[stepIndex]
+  // In review mode every question is shown (as editable rows). Triggered either
+  // by an explicit ?edit=1 (from the Results "Edit answers" button) or once the
+  // whole section is answered.
+  const reviewMode = editParam || isComplete
+
+  // If the user lands on a section they already finished (without explicitly
+  // choosing to edit), send them straight to the results for that section.
+  const arrivedComplete = useRef(isComplete)
+  useEffect(() => {
+    if (arrivedComplete.current && !editParam) {
+      navigate(`/results?product=${product}`, { replace: true })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  function handleSelect(index: number, value: string) {
+    const q = sectionQuestions[index]
+    const wasEditing = editingIndex === index
     setAnswers(prev => ({ ...prev, [q.id]: value }))
-    if (stepIndex + 1 < sectionQuestions.length) {
-      setRevealed(stepIndex + 2)
+    if (wasEditing) {
+      setEditingIndex(null)
+      return
+    }
+    // Progressive reveal: advance to the next question after answering the active one.
+    if (!reviewMode && index === revealed - 1 && index + 1 < sectionQuestions.length) {
+      setRevealed(index + 2)
     }
   }
 
   useEffect(() => {
+    if (reviewMode) return
     const idx = revealed - 1
     const el = questionRefs.current[idx]
     if (!el || idx === 0) return
@@ -73,7 +99,16 @@ export default function Quiz() {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }, 80)
     return () => clearTimeout(t)
-  }, [revealed])
+  }, [revealed, reviewMode])
+
+  // Smoothly scroll a question into view when it's opened for editing.
+  useEffect(() => {
+    if (editingIndex === null) return
+    const el = questionRefs.current[editingIndex]
+    if (!el) return
+    const t = setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 60)
+    return () => clearTimeout(t)
+  }, [editingIndex])
 
   function handleSubmit() {
     const existing: QuizAnswers = (() => {
@@ -84,13 +119,15 @@ export default function Quiz() {
     navigate(`/results?product=${product}`)
   }
 
-  function selectedLabel(stepIndex: number, value: string | undefined) {
+  function selectedLabel(index: number, value: string | undefined) {
     if (!value) return value
-    const q = sectionQuestions[stepIndex]
+    const q = sectionQuestions[index]
     const opt = q.options.find(o => o.value === value)
     if (!opt) return value
     return zh && opt.label_zh ? opt.label_zh : opt.label
   }
+
+  const visibleQuestions = reviewMode ? sectionQuestions : sectionQuestions.slice(0, revealed)
 
   return (
     <motion.div
@@ -111,9 +148,23 @@ export default function Quiz() {
           {/* ── Question stack ─────────────────────────── */}
           <div className="lg:col-span-2">
 
-            {sectionQuestions.slice(0, revealed).map((question, index) => {
+            {/* Edit-mode hint */}
+            {editParam && (
+              <motion.p
+                initial={{ opacity: 0, y: -6 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-sm text-charcoal/45 mb-4"
+              >
+                {zh ? '點選任一答案即可修改，完成後按「更新結果」。' : 'Tap any answer to change it, then press "Update results".'}
+              </motion.p>
+            )}
+
+            {visibleQuestions.map((question, index) => {
               const selectedValue = answers[question.id] as string | undefined
-              const isAnswered = Boolean(selectedValue) && index < revealed - 1
+              const hasValue = Boolean(selectedValue)
+              const isExpanded =
+                editingIndex === index ||
+                (reviewMode ? !hasValue : index === revealed - 1)
               const questionText = zh && question.question_zh ? question.question_zh : question.question
 
               // Build bilingual options
@@ -143,19 +194,27 @@ export default function Quiz() {
                     </div>
                   )}
 
-                  {isAnswered ? (
-                    /* ── Compact answered row ── */
-                    <div className="flex items-center gap-3 py-4 border-b border-charcoal/6">
+                  {!isExpanded && hasValue ? (
+                    /* ── Compact answered row (tap to edit) ── */
+                    <button
+                      onClick={() => setEditingIndex(index)}
+                      className="w-full flex items-center gap-3 py-4 border-b border-charcoal/6 text-left group cursor-pointer"
+                    >
                       <span className="text-xs text-charcoal/25 font-medium w-5 flex-shrink-0 text-right">
                         {index + 1}
                       </span>
-                      <p className="text-sm text-charcoal/45 flex-1 leading-snug">{questionText}</p>
+                      <p className="text-sm text-charcoal/45 flex-1 leading-snug group-hover:text-charcoal/70 transition-colors">{questionText}</p>
                       <span className="text-xs bg-sage/15 text-sage-dark px-3 py-1.5 rounded-full font-semibold flex-shrink-0">
                         {selectedLabel(index, selectedValue)}
                       </span>
-                    </div>
+                      <span className="text-charcoal/25 group-hover:text-gold transition-colors flex-shrink-0" aria-hidden>
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                          <path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9l6.5-6.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+                        </svg>
+                      </span>
+                    </button>
                   ) : (
-                    /* ── Active question ── */
+                    /* ── Active / expanded question ── */
                     <div className="pt-8 pb-4">
                       <p className="text-xs text-charcoal/35 font-medium tracking-widest uppercase mb-3">
                         {zh
@@ -179,7 +238,7 @@ export default function Quiz() {
 
             {/* ── CTA after all answered ─────────────── */}
             <AnimatePresence>
-              {isComplete && (
+              {isComplete && editingIndex === null && (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -204,7 +263,7 @@ export default function Quiz() {
                       whileTap={{ scale: 0.97 }}
                       transition={{ ease: apple }}
                     >
-                      {zh ? '查看診斷結果' : 'Get My Prescription'}
+                      {editParam ? (zh ? '更新結果' : 'Update results') : (zh ? '查看診斷結果' : 'Get My Prescription')}
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
