@@ -32,10 +32,19 @@ VITE_SUPABASE_ANON_KEY=eyJhbGc...your-anon-key...
 Restart `npm run dev` so Vite picks up the vars. For Netlify, add the same two
 variables under **Site settings → Environment variables**.
 
-## 5. Seed the catalog, questions & scoring rules
-After the integration is in place, run the generated seed (created in Phase 1)
-in the SQL Editor to load the current products, questions, and scoring rules.
-This is what the app reads at runtime and what the admin panel edits.
+## 5. Seed the catalog & scoring rules
+Run [`supabase/seed.sql`](../supabase/seed.sql) in the SQL Editor. It loads the
+17 products and 101 scoring rules the app reads at runtime (and that the admin
+panel will edit). It's safe to re-run — it resets `products` + `scoring_rules`
+and leaves `responses` untouched.
+
+> Regenerate it any time the bundled JSON/rules change: `npx tsx scripts/gen-seed.ts`.
+
+After seeding, the app automatically loads the catalog from Supabase; until then
+it falls back to the bundled data, so nothing breaks if the seed hasn't run yet.
+
+_(Questions are still served from code for now — moving them into the DB is the
+next sub-step, ahead of the admin panel.)_
 
 ## 6. Create an admin user (Phase 2)
 1. Dashboard → **Authentication → Users → Add user** (email + password).

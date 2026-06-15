@@ -8,245 +8,78 @@ import type {
   ScoredComforter,
   ScoreReason,
   RecommendationResult,
+  ScoringRule,
+  ProductCategory,
+  RuleOperator,
 } from './types'
 import sheetsData from '../data/products.json'
 import pillowsData from '../data/pillows.json'
 import comfortersData from '../data/comforters.json'
+import { SCORING_RULES } from './scoringRules'
 
 const sheets = sheetsData as SheetProduct[]
 const pillows = pillowsData as PillowProduct[]
 const comforters = comfortersData as ComforterProduct[]
 
-function scoreSheet(product: SheetProduct, answers: QuizAnswers): ScoredSheet {
-  const reasons: ScoreReason[] = []
-  let score = 0
-  const add = (points: number, reason: string) => { score += points; reasons.push({ points, reason }) }
-
-  // Q1: nightHeat — temperature tendency
-  if (answers.nightHeat === 'Very Hot') {
-    if (product.attributes.temperature === 'Cooling') add(4, 'Cooling fabric ideal for hot sleepers')
-    if (product.ratings.breathability >= 4) add(3, 'High breathability handles night sweats')
-    if (product.attributes.moisture_wicking === 'High') add(2, 'High wicking for night sweats')
-    if (product.attributes.temperature === 'Warming') add(-3, 'Warming fabric not suitable for hot sleepers')
-  }
-  if (answers.nightHeat === 'Warm') {
-    if (product.attributes.temperature === 'Cooling') add(3, 'Cooling fabric for warm sleeper')
-    if (product.ratings.breathability >= 4) add(2, 'Breathable weave for warm nights')
-  }
-  if (answers.nightHeat === 'Cold') {
-    if (product.attributes.temperature === 'Warming') add(4, 'Warming fabric for cold sleeper')
-    if (product.attributes.temperature === 'Cooling') add(-2, 'Cooling fabric not ideal for cold sleeper')
-  }
-  if (answers.nightHeat === 'Neutral') {
-    if (product.attributes.temperature === 'Neutral') add(2, 'Neutral temperature for balanced sleeper')
-  }
-
-  // Q2: skinType — skin sensitivity
-  if (answers.skinType === 'Allergic/Eczema') {
-    if (product.attributes.hypoallergenic) add(5, 'Hypoallergenic — essential for eczema or allergies')
-    else add(-3, 'Non-hypoallergenic fabric not recommended for eczema')
-    if (product.material === 'Silk') add(1, 'Silk protein is gentle on eczema-prone skin')
-    if (product.attributes.softness === 'Ultra-Soft') add(2, 'Ultra-soft texture soothes sensitive skin')
-    if (product.attributes.softness === 'Textured') add(-2, 'Textured surface may aggravate eczema')
-  }
-  if (answers.skinType === 'Sensitive') {
-    if (product.attributes.hypoallergenic) add(3, 'Hypoallergenic material for sensitive skin')
-    if (product.attributes.softness === 'Ultra-Soft' || product.attributes.softness === 'Smooth') add(2, 'Smooth texture gentle on sensitive skin')
-    if (product.attributes.softness === 'Textured') add(-1, 'Textured surface may irritate sensitive skin')
-  }
-
-  // Q3: careLevel — maintenance preference
-  if (answers.careLevel === 'Minimal') {
-    if (product.attributes.wrinkle_resistance === 'High') add(3, 'Wrinkle-resistant for wash-and-go lifestyle')
-    if (product.attributes.wrinkle_resistance === 'Low') add(-2, 'Wrinkles easily — requires ironing')
-    if (product.attributes.durability === 'High') add(1, 'Durable for frequent low-fuss washing')
-    if (product.material === 'Silk') add(-2, 'Silk requires delicate care, not ideal for minimal upkeep')
-  }
-  if (answers.careLevel === 'Standard') {
-    if (product.attributes.durability === 'High') add(1, 'Durable for regular machine washing')
-  }
-  if (answers.careLevel === 'Careful') {
-    if (product.material === 'Silk') add(2, 'Silk rewards careful hand-washing')
-    if (product.material === 'Tencel Lyocell') add(1, 'Tencel benefits from careful wash routine')
-  }
-
-  // Q4: sensoryPref — first-touch sensation
-  if (answers.sensoryPref === 'Cooling') {
-    if (product.material === 'Nylon Fiber') add(4, 'Nylon delivers instant cool-to-touch sensation')
-    if (product.attributes.temperature === 'Cooling') add(2, 'Cooling fabric matches sensory preference')
-    if (product.ratings.breathability >= 4) add(2, 'High breathability for a cool, crisp feel')
-  }
-  if (answers.sensoryPref === 'Silky') {
-    if (product.material === 'Silk') add(5, 'Silk is the ultimate in silky, lustrous texture')
-    if (product.material === 'Tencel Lyocell') add(3, 'Tencel offers silky smooth natural sheen')
-    if (product.attributes.softness === 'Ultra-Soft') add(2, 'Ultra-soft surface for silky preference')
-  }
-  if (answers.sensoryPref === 'Classic') {
-    if (product.material === 'Cotton') add(4, 'Cotton delivers the classic, familiar soft feel')
-    if (product.weave === 'Sateen') add(2, 'Sateen weave for classic elegance')
-    if (product.material === 'Flannel') add(2, 'Flannel is the classic cosy comfort choice')
-  }
-
-  return { product, score, scoreBreakdown: reasons }
+// A Catalog bundles the products + scoring rules the engine evaluates. Defaults
+// to the bundled JSON + canonical rules; the app passes a Supabase-sourced
+// catalog at runtime.
+export interface Catalog {
+  sheets: SheetProduct[]
+  pillows: PillowProduct[]
+  comforters: ComforterProduct[]
+  rules: ScoringRule[]
 }
 
-function scoreComforter(product: ComforterProduct, answers: QuizAnswers): ScoredComforter {
-  const reasons: ScoreReason[] = []
-  let score = 0
-  const add = (points: number, reason: string) => { score += points; reasons.push({ points, reason }) }
+export const defaultCatalog: Catalog = { sheets, pillows, comforters, rules: SCORING_RULES }
 
-  // Q5: comforterTemp — warmth under covers
-  if (answers.comforterTemp === 'Always Cold') {
-    if (product.attributes.warmth === 'Winter') add(5, 'Winter weight delivers the warmth cold sleepers need')
-    if (product.attributes.temperature === 'Warming') add(3, 'Warming fill for cold nights')
-    if (product.attributes.temperature === 'Cooling') add(-2, 'Cooling fill provides less warmth for cold nights')
-  }
-  if (answers.comforterTemp === 'Hot') {
-    if (product.attributes.warmth === 'All-Season') add(4, 'All-season weight ideal for hot sleeper')
-    if (product.attributes.temperature === 'Cooling') add(4, 'Cooling fill for hot sleeper')
-    if (product.attributes.warmth === 'Winter') add(-4, 'Winter weight too heavy for hot sleeper')
-    if (product.attributes.temperature === 'Warming') add(-3, 'Warming fill not ideal for hot sleeper')
-  }
-  if (answers.comforterTemp === 'Neutral') {
-    if (product.attributes.warmth === 'All-Season') add(4, 'All-season weight suits comfortable sleeper')
-    if (product.attributes.warmth === 'Winter') add(1, 'Winter weight available for extra warmth')
-  }
-
-  // Q6: comforterFeel — weight and sensation preference
-  if (answers.comforterFeel === 'Heavy') {
-    if (product.fill === 'Wool') add(5, 'Wool delivers heavy, cocooned warmth')
-    if (product.attributes.weight === 'Heavy') add(3, 'Heavy weight matches preference')
-  }
-  if (answers.comforterFeel === 'Fluffy') {
-    if (product.fill === 'Down') add(5, 'Down delivers light, cloud-like loft')
-    if (product.ratings.fluffiness >= 4) add(2, 'High fluffiness rating matches preference')
-  }
-  if (answers.comforterFeel === 'Smooth') {
-    if (product.fill === 'Silk') add(5, 'Silk delivers smooth, body-hugging breathable comfort')
-    if (product.attributes.hypoallergenic) add(2, 'Hypoallergenic bonus for smooth, skin-friendly preference')
-  }
-  if (answers.comforterFeel === 'Practical') {
-    if (product.fill === 'Tech Fiber') add(5, 'Tech fiber is practical, washable, and resilient')
-    if (product.attributes.washable) add(3, 'Machine washable for easy-care households')
-  }
-
-  // Q7: breathingIssues — allergies or asthma
-  if (answers.breathingIssues === 'Yes') {
-    if (product.attributes.hypoallergenic) add(5, 'Hypoallergenic fill — essential for breathing sensitivities')
-    if (product.attributes.washable) add(3, 'Machine washable removes allergens effectively')
-    if (product.fill === 'Down') add(-4, 'Down can trigger respiratory sensitivities')
-    if (product.fill === 'Wool') add(-2, 'Wool may carry natural scents that affect breathing')
-  }
-
-  // Skintype also influences comforter
-  if (answers.skinType === 'Allergic/Eczema') {
-    if (product.attributes.hypoallergenic) add(3, 'Hypoallergenic fill for allergy-prone skin')
-    else add(-2, 'Non-hypoallergenic fill not ideal for allergies')
-  }
-  if (answers.skinType === 'Sensitive') {
-    if (product.attributes.hypoallergenic) add(2, 'Hypoallergenic fill gentle on sensitive skin')
-  }
-
-  // careLevel influences comforter care
-  if (answers.careLevel === 'Minimal') {
-    if (product.attributes.washable) add(3, 'Machine washable for low-maintenance preference')
-    else add(-1, 'Dry-clean only adds to maintenance burden')
-  }
-  if (answers.careLevel === 'Standard') {
-    if (product.attributes.washable) add(2, 'Machine washable for standard care preference')
-  }
-
-  return { product, score, scoreBreakdown: reasons }
+// ── Data-driven scorer ────────────────────────────────────────────────────────
+function getPath(obj: unknown, path: string): unknown {
+  return path.split('.').reduce<unknown>(
+    (o, k) => (o && typeof o === 'object' ? (o as Record<string, unknown>)[k] : undefined),
+    obj,
+  )
 }
 
-function scorePillow(product: PillowProduct, answers: QuizAnswers): ScoredPillow {
-  const reasons: ScoreReason[] = []
-  let score = 0
-  const add = (points: number, reason: string) => { score += points; reasons.push({ points, reason }) }
-
-  // Q8 × Q9: sleepPosition × shoulderWidth — loft selection
-  if (answers.sleepPosition === 'Stomach') {
-    if (product.attributes.loft === 'Low') add(8, 'Low loft prevents neck arching for stomach sleepers')
-    if (product.attributes.loft === 'Medium') add(-3, 'Too thick for stomach sleepers — neck strain risk')
-    if (product.attributes.loft === 'High') add(-5, 'High loft causes neck arching — not safe for stomach sleepers')
+function matches(actual: unknown, op: RuleOperator, expected: string): boolean {
+  if (op === 'eq' || op === 'neq') {
+    const eq = typeof actual === 'boolean'
+      ? actual === (expected === 'true')
+      : String(actual) === expected
+    return op === 'eq' ? eq : !eq
   }
-  if (answers.sleepPosition === 'Side') {
-    if (answers.shoulderWidth === 'Broad') {
-      if (product.attributes.loft === 'High') add(6, 'High loft fills gap between ear and broad shoulder')
-      if (product.attributes.loft === 'Medium') add(2, 'Medium loft may suit broad side sleeper')
-      if (product.attributes.loft === 'Low') add(-4, 'Too flat for broad-shouldered side sleeper')
-    } else if (answers.shoulderWidth === 'Average') {
-      if (product.attributes.loft === 'High') add(3, 'High loft supports average side sleeper')
-      if (product.attributes.loft === 'Medium') add(4, 'Medium loft ideal for average side sleeper')
-      if (product.attributes.loft === 'Low') add(-3, 'Too flat for side sleeping')
-    } else if (answers.shoulderWidth === 'Petite') {
-      if (product.attributes.loft === 'Medium') add(5, 'Medium loft fills petite shoulder gap without overfilling')
-      if (product.attributes.loft === 'High') add(1, 'Slightly high for petite frame')
-      if (product.attributes.loft === 'Low') add(-2, 'Too flat for petite side sleeper')
+  const a = typeof actual === 'number' ? actual : Number(actual)
+  const e = Number(expected)
+  if (Number.isNaN(a) || Number.isNaN(e)) return false
+  switch (op) {
+    case 'gte': return a >= e
+    case 'lte': return a <= e
+    case 'gt':  return a > e
+    case 'lt':  return a < e
+  }
+  return false
+}
+
+function scoreByRules<T extends object>(
+  product: T,
+  category: ProductCategory,
+  answers: QuizAnswers,
+  rules: ScoringRule[],
+): { product: T; score: number; scoreBreakdown: ScoreReason[] } {
+  const a = answers as Record<string, string | undefined>
+  let score = 0
+  const scoreBreakdown: ScoreReason[] = []
+  for (const rule of rules) {
+    if (rule.active === false) continue
+    if (rule.target_category !== category) continue
+    if (a[rule.question_key] !== rule.answer_value) continue
+    if (rule.also_question_key && a[rule.also_question_key] !== rule.also_answer_value) continue
+    if (matches(getPath(product, rule.attribute_path), rule.operator, rule.compare_value)) {
+      score += rule.points
+      scoreBreakdown.push({ points: rule.points, reason: rule.reason ?? '' })
     }
   }
-  if (answers.sleepPosition === 'Back') {
-    if (product.attributes.loft === 'Medium') add(6, 'Medium loft keeps neck in neutral alignment for back sleepers')
-    if (product.attributes.loft === 'High') add(-3, 'Too thick for back sleepers — pushes neck forward')
-    if (product.attributes.loft === 'Low') add(-2, 'Too flat for back sleepers — neck unsupported')
-  }
-  if (answers.sleepPosition === 'Combination') {
-    if (product.attributes.loft === 'Medium') add(5, 'Medium loft adapts to multiple sleep positions')
-    if (product.attributes.adjustable) add(3, 'Adjustable fill is perfect for combination sleepers')
-    if (product.attributes.loft === 'High') add(1, 'Can work for combination sleepers who lean toward side')
-  }
-
-  // Q10: pillowFeel — sink vs support preference
-  if (answers.pillowFeel === 'Sink') {
-    if (product.fill === 'Down') add(5, 'Down delivers deeply cushioned, fluffy enveloping feel')
-    if (product.attributes.firmness === 'Soft') add(3, 'Soft firmness for sink-in preference')
-    if (product.attributes.loft === 'High') add(1, 'High loft adds to plush, cushioned feel')
-  }
-  if (answers.pillowFeel === 'Springy') {
-    if (product.fill === 'Latex') add(5, 'Latex delivers resilient, springy responsive support')
-    if (product.attributes.firmness === 'Medium') add(2, 'Medium firmness for responsive feel')
-  }
-  if (answers.pillowFeel === 'Contour') {
-    if (product.fill === 'Memory Foam') add(5, 'Memory foam contours precisely to neck and head shape')
-    if (product.attributes.firmness === 'Firm') add(2, 'Firm support ideal for contouring preference')
-  }
-  if (answers.pillowFeel === 'Balanced') {
-    if (product.fill === 'Tech Fiber') add(5, 'Tech fiber delivers balanced support and easy care')
-    if (product.attributes.firmness === 'Medium') add(1, 'Medium firmness for balanced feel')
-  }
-
-  // Q11: pillowPriority — allergy, value, or premium
-  if (answers.pillowPriority === 'Allergies') {
-    if (product.attributes.hypoallergenic) add(5, 'Hypoallergenic fill essential for allergy protection')
-    if (product.fill === 'Down') add(-4, 'Down not recommended for allergy sufferers')
-  }
-  if (answers.pillowPriority === 'Value') {
-    if (product.fill === 'Tech Fiber') add(4, 'Tech fiber offers the best comfort-to-cost ratio')
-  }
-  if (answers.pillowPriority === 'Premium') {
-    if (product.fill === 'Down') add(3, 'Down is the premium choice for cloud-like comfort')
-    if (product.fill === 'Latex') add(2, 'Latex is a premium natural material')
-  }
-
-  // skinType also affects pillow
-  if (answers.skinType === 'Allergic/Eczema') {
-    if (product.attributes.hypoallergenic) add(3, 'Hypoallergenic fill for allergy-prone skin')
-    else add(-2, 'Non-hypoallergenic fill not suitable for allergies')
-  }
-  if (answers.skinType === 'Sensitive') {
-    if (product.attributes.hypoallergenic) add(2, 'Hypoallergenic fill gentle on sensitive skin')
-  }
-
-  // nightHeat affects pillow temperature
-  if (answers.nightHeat === 'Very Hot' || answers.nightHeat === 'Warm') {
-    if (product.attributes.temperature === 'Cooling') add(2, 'Cooling pillow for warm sleeper')
-    if (product.attributes.temperature === 'Warming') add(-2, 'Warming pillow not ideal for hot sleeper')
-  }
-  if (answers.nightHeat === 'Cold') {
-    if (product.attributes.temperature === 'Warming') add(2, 'Warming pillow for cold sleeper')
-  }
-
-  return { product, score, scoreBreakdown: reasons }
+  return { product, score, scoreBreakdown }
 }
 
 function generateWhyText(answers: QuizAnswers, sheet: SheetProduct, pillow: PillowProduct): string {
@@ -334,17 +167,17 @@ function generateBundleSuggestion(answers: QuizAnswers): string {
   return 'Complete your sleep setup with the SUPIMA Percale duvet cover and matching pillowcases — crisp, breathable, and built to last season after season.'
 }
 
-export function getRecommendation(answers: QuizAnswers): RecommendationResult {
-  const scoredSheets = sheets
-    .map(p => scoreSheet(p, answers))
+export function getRecommendation(answers: QuizAnswers, catalog: Catalog = defaultCatalog): RecommendationResult {
+  const scoredSheets = catalog.sheets
+    .map(p => scoreByRules(p, 'sheet', answers, catalog.rules) as ScoredSheet)
     .sort((a, b) => b.score - a.score)
 
-  const scoredPillows = pillows
-    .map(p => scorePillow(p, answers))
+  const scoredPillows = catalog.pillows
+    .map(p => scoreByRules(p, 'pillow', answers, catalog.rules) as ScoredPillow)
     .sort((a, b) => b.score - a.score)
 
-  const scoredComforters = comforters
-    .map(p => scoreComforter(p, answers))
+  const scoredComforters = catalog.comforters
+    .map(p => scoreByRules(p, 'comforter', answers, catalog.rules) as ScoredComforter)
     .sort((a, b) => b.score - a.score)
 
   const topSheet = scoredSheets[0]
@@ -361,3 +194,4 @@ export function getRecommendation(answers: QuizAnswers): RecommendationResult {
     bundleSuggestion: generateBundleSuggestion(answers),
   }
 }
+

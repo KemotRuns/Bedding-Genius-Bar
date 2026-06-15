@@ -1,5 +1,6 @@
 import type { QuizAnswers } from './types'
 import { getRecommendation } from './engine'
+import type { Catalog } from './engine'
 import { supabase, isSupabaseConfigured } from './supabase'
 
 // ── Storage keys ──────────────────────────────────────────────────────────────
@@ -73,8 +74,9 @@ export function buildSession(input: {
   email?: string
   lang: string
   answers: QuizAnswers
+  catalog?: Catalog
 }): CapturedSession {
-  const rec = getRecommendation(input.answers)
+  const rec = getRecommendation(input.answers, input.catalog)
   return {
     id: uid(),
     createdAt: new Date().toISOString(),

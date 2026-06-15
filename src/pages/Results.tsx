@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { getRecommendation } from '../lib/engine'
+import { useCatalog } from '../lib/CatalogContext'
 import type { QuizAnswers, RecommendationResult, SheetProduct, PillowProduct, ComforterProduct, NightHeat } from '../lib/types'
 import { useLang } from '../lib/LanguageContext'
 import { tr } from '../lib/i18n'
@@ -305,12 +306,13 @@ export default function Results() {
   const zh = lang === 'zh'
 
   const product = searchParams.get('product') ?? 'sheets'
+  const { catalog } = useCatalog()
 
-  const [{ answers, result }] = useState<{ answers: QuizAnswers; result: RecommendationResult }>(() => {
+  const [answers] = useState<QuizAnswers>(() => {
     const raw = sessionStorage.getItem('quiz_answers')
-    const a: QuizAnswers = raw ? JSON.parse(raw) as QuizAnswers : DUMMY_ANSWERS
-    return { answers: a, result: getRecommendation(a) }
+    return raw ? JSON.parse(raw) as QuizAnswers : DUMMY_ANSWERS
   })
+  const result: RecommendationResult = useMemo(() => getRecommendation(answers, catalog), [answers, catalog])
 
   const sheet     = result.topSheet.product    as SheetProduct
   const pillow    = result.topPillow.product   as PillowProduct
@@ -351,7 +353,7 @@ export default function Results() {
 
   function handleFinalize() {
     if (!name.trim()) { setNameError(true); return }
-    saveSession(buildSession({ name, email, lang, answers }))
+    saveSession(buildSession({ name, email, lang, answers, catalog }))
     setSaved(true)
   }
 

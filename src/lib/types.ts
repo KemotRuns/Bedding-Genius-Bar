@@ -119,6 +119,27 @@ export interface QuizAnswers {
   pillowPriority?: PillowPriority
 }
 
+// ---- Scoring rule (data-driven engine) ----
+
+export type ProductCategory = 'sheet' | 'comforter' | 'pillow'
+export type RuleOperator = 'eq' | 'neq' | 'gte' | 'lte' | 'gt' | 'lt'
+
+export interface ScoringRule {
+  question_key: string        // answer that triggers this rule (matches QuizAnswers key)
+  answer_value: string        // the option value, e.g. 'Very Hot'
+  target_category: ProductCategory
+  attribute_path: string      // dot path into the product, e.g. 'attributes.temperature', 'ratings.breathability', 'material'
+  operator: RuleOperator
+  compare_value: string       // compared numerically when both sides are numeric, else as string ('true'/'false' for booleans)
+  points: number
+  reason?: string
+  reason_zh?: string
+  // Optional second condition — rule only fires when this answer also matches.
+  also_question_key?: string | null
+  also_answer_value?: string | null
+  active?: boolean
+}
+
 // ---- Engine Types ----
 
 export interface ScoreReason {

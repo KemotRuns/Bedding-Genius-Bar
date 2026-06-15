@@ -13,6 +13,10 @@ create table if not exists products (
   name_zh        text,
   sku            text,
   collection     text,
+  material       text,                             -- sheets: top-level scoring field
+  weave          text,                             -- sheets
+  thread_count   int,                              -- sheets
+  fill           text,                             -- pillows / comforters
   description    text,
   description_zh text,
   best_for       jsonb not null default '[]'::jsonb,
@@ -66,6 +70,8 @@ create table if not exists scoring_rules (
   points          int  not null,
   reason          text,
   reason_zh       text,
+  also_question_key text,                          -- optional 2nd condition: rule fires only if this answer also matches
+  also_answer_value text,
   active          boolean not null default true,
   created_at      timestamptz not null default now()
 );

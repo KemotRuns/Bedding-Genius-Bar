@@ -5,6 +5,7 @@ import Landing from './pages/Landing'
 import Quiz from './pages/Quiz'
 import Results from './pages/Results'
 import { LanguageProvider } from './lib/LanguageContext'
+import { CatalogProvider } from './lib/CatalogContext'
 import LanguageSwitcher from './components/ui/LanguageSwitcher'
 import { flushQueue } from './lib/session'
 import './index.css'
@@ -29,8 +30,10 @@ export default function App() {
   return (
     <HashRouter>
       <LanguageProvider>
-        <LanguageSwitcher />
-        <AnimatedRoutes />
+        <CatalogProvider>
+          <LanguageSwitcher />
+          <AnimatedRoutes />
+        </CatalogProvider>
       </LanguageProvider>
     </HashRouter>
   )
