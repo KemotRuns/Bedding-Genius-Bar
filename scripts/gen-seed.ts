@@ -6,6 +6,7 @@ import sheets from '../src/data/products.json'
 import pillows from '../src/data/pillows.json'
 import comforters from '../src/data/comforters.json'
 import { SCORING_RULES } from '../src/lib/scoringRules'
+import { QUESTION_SEED, SECTION_LONG_TO_SHORT } from '../src/lib/questionData'
 
 const esc = (s: string) => s.replace(/'/g, "''")
 const S = (v: string | null | undefined) => (v == null ? 'null' : `'${esc(v)}'`)
@@ -24,6 +25,8 @@ out.push('alter table products      add column if not exists fill text;')
 out.push('alter table scoring_rules add column if not exists also_question_key text;')
 out.push('alter table scoring_rules add column if not exists also_answer_value text;\n')
 
+out.push('delete from question_options;')
+out.push('delete from questions;')
 out.push('delete from scoring_rules;')
 out.push('delete from products;\n')
 
@@ -56,5 +59,24 @@ const rrows = SCORING_RULES.map(r =>
 )
 out.push(rrows.join(',\n') + ';\n')
 
+// ── Questions ──
+out.push('insert into questions (key, section, question, question_zh, columns, sort_order, active) values')
+const qrows = QUESTION_SEED.map((q, i) =>
+  `  (${S(q.id)}, ${S(SECTION_LONG_TO_SHORT[q.section] ?? q.section)}, ${S(q.question)}, ${S(q.question_zh)}, ${N(q.columns)}, ${i}, true)`,
+)
+out.push(qrows.join(',\n') + ';\n')
+
+// ── Question options (question_id resolved by key) ──
+out.push('insert into question_options (question_id, value, label, label_zh, sublabel, sublabel_zh, icon_key, sort_order) values')
+const orows: string[] = []
+QUESTION_SEED.forEach(q => {
+  q.options.forEach((o, i) => {
+    orows.push(
+      `  ((select id from questions where key = ${S(q.id)}), ${S(o.value)}, ${S(o.label)}, ${S(o.label_zh)}, ${S(o.sublabel)}, ${S(o.sublabel_zh)}, ${S(o.icon_key)}, ${i})`,
+    )
+  })
+})
+out.push(orows.join(',\n') + ';\n')
+
 writeFileSync(new URL('../supabase/seed.sql', import.meta.url), out.join('\n'))
-console.log(`Wrote supabase/seed.sql — ${rows.length} products, ${rrows.length} scoring rules`)
+console.log(`Wrote supabase/seed.sql — ${rows.length} products, ${rrows.length} scoring rules, ${qrows.length} questions, ${orows.length} options`)

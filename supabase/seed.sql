@@ -8,6 +8,8 @@ alter table products      add column if not exists fill text;
 alter table scoring_rules add column if not exists also_question_key text;
 alter table scoring_rules add column if not exists also_answer_value text;
 
+delete from question_options;
+delete from questions;
 delete from scoring_rules;
 delete from products;
 
@@ -132,3 +134,54 @@ insert into scoring_rules (question_key, answer_value, target_category, attribut
   ('nightHeat', 'Warm', 'pillow', 'attributes.temperature', 'eq', 'Cooling', 2, 'Cooling pillow for warm sleeper', null, null, null, true),
   ('nightHeat', 'Warm', 'pillow', 'attributes.temperature', 'eq', 'Warming', -2, 'Warming pillow not ideal for hot sleeper', null, null, null, true),
   ('nightHeat', 'Cold', 'pillow', 'attributes.temperature', 'eq', 'Warming', 2, 'Warming pillow for cold sleeper', null, null, null, true);
+
+insert into questions (key, section, question, question_zh, columns, sort_order, active) values
+  ('nightHeat', 'sheets', 'Do you overheat or sweat at night, or do you tend to feel cold in bed?', '您晚上睡覺時，通常感覺如何？', 4, 0, true),
+  ('skinType', 'sheets', 'Does your skin react to certain fabrics, or do you have allergies or eczema?', '您的皮膚容易對材質產生反應嗎？', 3, 1, true),
+  ('careLevel', 'sheets', 'How much time can you give to washing and caring for your sheets?', '您願意花多少心思保養寢具？', 3, 2, true),
+  ('sensoryPref', 'sheets', 'What feeling do you look for the moment you get into bed?', '您最重視床單的哪種觸感？', 3, 3, true),
+  ('comforterTemp', 'comforter', 'Under the covers at night — do you sleep cold, or do you kick the duvet off?', '您在被窩裡容易感到寒冷，還是容易過熱？', 3, 4, true),
+  ('comforterFeel', 'comforter', 'Do you prefer a heavy cocooned feel, or something light and airy?', '您偏好哪種棉被觸感？', 4, 5, true),
+  ('breathingIssues', 'comforter', 'Do asthma, dust allergies, or breathing sensitivities disrupt your sleep?', '您有塵蟎過敏、氣喘或睡眠呼吸問題嗎？', 2, 6, true),
+  ('sleepPosition', 'pillow', 'What is your main sleeping position?', '您最常用的睡姿是？', 4, 7, true),
+  ('shoulderWidth', 'pillow', 'How wide are your shoulders? This determines your ideal pillow height.', '您的肩寬大約是多少？這決定了最適合您的枕頭高度。', 3, 8, true),
+  ('pillowFeel', 'pillow', 'Do you prefer your head to sink deeply in, or be actively supported?', '您偏好頭部陷入枕頭，還是有明顯的支撐感？', 4, 9, true),
+  ('pillowPriority', 'pillow', 'What matters most in your pillow decision?', '選枕頭時，您最在意什麼？', 3, 10, true);
+
+insert into question_options (question_id, value, label, label_zh, sublabel, sublabel_zh, icon_key, sort_order) values
+  ((select id from questions where key = 'nightHeat'), 'Very Hot', 'Often hot / sweats', '非常熱', 'Night sweats or very warm', '常常踢被、容易盜汗', 'flame', 0),
+  ((select id from questions where key = 'nightHeat'), 'Warm', 'Slightly warm', '偏熱', 'Kick covers off sometimes', '偏熱但大致舒適', 'thermometer-high', 1),
+  ((select id from questions where key = 'nightHeat'), 'Neutral', 'Just right', '體溫適中', 'Comfortable most nights', '整夜體溫均衡舒適', 'thermometer-mid', 2),
+  ((select id from questions where key = 'nightHeat'), 'Cold', 'Usually cold', '偏冷', 'Always reaching for blankets', '容易感到寒冷', 'snowflake', 3),
+  ((select id from questions where key = 'skinType'), 'Allergic/Eczema', 'Eczema or allergies', '過敏／濕疹', 'Strong reactions to fabric', '有已知過敏或皮膚炎', 'shield-allergy', 0),
+  ((select id from questions where key = 'skinType'), 'Sensitive', 'Sensitive skin', '敏感肌', 'Mild irritation sometimes', '接觸粗糙材質偶爾泛紅', 'shield-sensitive', 1),
+  ((select id from questions where key = 'skinType'), 'None', 'No concerns', '無特殊狀況', 'No skin issues', '皮膚耐受性強', 'shield-none', 2),
+  ((select id from questions where key = 'careLevel'), 'Minimal', 'Wash and go', '越簡單越好', 'Machine wash, no ironing', '機洗即可，快速搞定', 'care-minimal', 0),
+  ((select id from questions where key = 'careLevel'), 'Standard', 'Regular machine wash', '標準保養', 'Happy to follow care labels', '會遵照洗標指示', 'care-standard', 1),
+  ((select id from questions where key = 'careLevel'), 'Careful', 'Happy to hand wash', '細心呵護', 'Dry-clean or gentle wash OK', '重視品質，願意用心保養', 'care-careful', 2),
+  ((select id from questions where key = 'sensoryPref'), 'Cooling', 'Cool & crisp', '清涼感', 'Instant cool-to-touch refresh', '瞬間接觸涼感，清爽降溫', 'cooling', 0),
+  ((select id from questions where key = 'sensoryPref'), 'Silky', 'Silky & lustrous', '絲滑感', 'Smooth, elegant, natural sheen', '柔順奢華，如絲綢般滑順', 'silky', 1),
+  ((select id from questions where key = 'sensoryPref'), 'Classic', 'Classic soft comfort', '棉質感', 'Familiar, reliable, cosy', '天然透氣，日常舒適', 'classic', 2),
+  ((select id from questions where key = 'comforterTemp'), 'Always Cold', 'Always cold', '非常怕冷', 'Need heavy warmth to sleep', '蓋很厚還是覺得不夠暖', 'person-cold', 0),
+  ((select id from questions where key = 'comforterTemp'), 'Neutral', 'Comfortable', '適中舒適', 'Most nights are just right', '一般棉被就足夠保暖', 'person-neutral', 1),
+  ((select id from questions where key = 'comforterTemp'), 'Hot', 'Often too warm', '容易發熱', 'Kick covers off at night', '睡覺容易發熱，常常踢被', 'person-hot', 2),
+  ((select id from questions where key = 'comforterFeel'), 'Heavy', 'Heavy & wrapped', '厚實沉穩', 'Secure, weighted warmth', '喜歡有重量、包覆感', 'heavy-blanket', 0),
+  ((select id from questions where key = 'comforterFeel'), 'Fluffy', 'Light & fluffy', '蓬鬆輕盈', 'Cloud-like, weightless loft', '如雲朵般柔軟蓬鬆', 'cloud', 1),
+  ((select id from questions where key = 'comforterFeel'), 'Smooth', 'Smooth & light', '輕薄順滑', 'Body-hugging, breathable', '輕盈滑順，翻身自如', 'smooth-wave', 2),
+  ((select id from questions where key = 'comforterFeel'), 'Practical', 'Practical & easy', '實用易洗', 'Machine washable, durable', '易洗易乾，注重方便', 'practical', 3),
+  ((select id from questions where key = 'breathingIssues'), 'Yes', 'Yes, it affects me', '有，會影響睡眠', 'Allergies or asthma at night', '尤其在冬天或乾燥季節', 'breathing-yes', 0),
+  ((select id from questions where key = 'breathingIssues'), 'No', 'No issues', '沒有困擾', 'Breathing is not a concern', '幾乎不受影響', 'breathing-no', 1),
+  ((select id from questions where key = 'sleepPosition'), 'Side', 'Side', '側睡', 'Ear to shoulder', '靠左或靠右睡', 'side-sleep', 0),
+  ((select id from questions where key = 'sleepPosition'), 'Back', 'Back', '仰睡', 'Facing the ceiling', '臉朝上、平躺', 'back-sleep', 1),
+  ((select id from questions where key = 'sleepPosition'), 'Stomach', 'Stomach', '趴睡', 'Face down', '臉朝下俯臥', 'stomach-sleep', 2),
+  ((select id from questions where key = 'sleepPosition'), 'Combination', 'All over', '多種睡姿', 'I move around a lot', '睡眠中經常翻身', 'combo-sleep', 3),
+  ((select id from questions where key = 'shoulderWidth'), 'Petite', 'Narrower (S/XS)', '窄肩 (S/XS)', '~36 cm or less', '約 36 cm 以下', 'petite', 0),
+  ((select id from questions where key = 'shoulderWidth'), 'Average', 'Average (M/L)', '標準肩 (M/L)', '~38–44 cm', '約 38–44 cm', 'average', 1),
+  ((select id from questions where key = 'shoulderWidth'), 'Broad', 'Broader (XL+)', '寬肩 (XL+)', '~46 cm or more', '約 46 cm 以上', 'broad', 2),
+  ((select id from questions where key = 'pillowFeel'), 'Sink', 'Sink in & fluffy', '陷入感', 'Soft, cushioned, enveloping', '柔軟包覆，整個陷入', 'sink', 0),
+  ((select id from questions where key = 'pillowFeel'), 'Springy', 'Resilient & springy', '彈力回彈', 'Pushes back, responsive', 'Q彈有支撐，富有彈性', 'springy', 1),
+  ((select id from questions where key = 'pillowFeel'), 'Contour', 'Pressure-relieving', '貼合頸部', 'Moulds to neck shape', '慢回彈，完美貼合曲線', 'contour', 2),
+  ((select id from questions where key = 'pillowFeel'), 'Balanced', 'Balanced support', '均衡輕盈', 'Soft resilience, easy care', '軟硬適中，靈活適應', 'balanced', 3),
+  ((select id from questions where key = 'pillowPriority'), 'Allergies', 'Allergy protection', '防蟎抗菌', 'Hypoallergenic is a must', '適合過敏族群，低敏材質', 'allergy-protect', 0),
+  ((select id from questions where key = 'pillowPriority'), 'Value', 'Best value', '價格實惠', 'Great comfort per dollar', '好洗好乾，高CP值', 'value', 1),
+  ((select id from questions where key = 'pillowPriority'), 'Premium', 'Premium quality', '優質觸感', 'Only the best materials', '願意投資，追求高品質', 'premium', 2);

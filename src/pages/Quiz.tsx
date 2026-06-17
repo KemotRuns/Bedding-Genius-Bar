@@ -4,9 +4,9 @@ import { motion, AnimatePresence } from 'framer-motion'
 import ProgressBar from '../components/ui/ProgressBar'
 import IconSelector from '../components/ui/IconSelector'
 import Sidebar from '../components/quiz/Sidebar'
-import { QUESTIONS } from '../lib/questions'
 import type { QuizAnswers } from '../lib/types'
 import { useLang } from '../lib/LanguageContext'
+import { useCatalog } from '../lib/CatalogContext'
 
 const apple = [0.22, 1, 0.36, 1] as const
 
@@ -26,6 +26,7 @@ export default function Quiz() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { lang } = useLang()
+  const { questions } = useCatalog()
   const zh = lang === 'zh'
 
   const product = searchParams.get('product') ?? 'sheets'
@@ -34,7 +35,7 @@ export default function Quiz() {
   const sectionTitleObj = SECTION_TITLE_BILINGUAL[product] ?? SECTION_TITLE_BILINGUAL.sheets
   const sectionTitle = zh ? sectionTitleObj.zh : sectionTitleObj.en
 
-  const sectionQuestions = QUESTIONS.filter(q => q.section === sectionName)
+  const sectionQuestions = questions.filter(q => q.section === sectionName)
 
   const [answers, setAnswers] = useState<QuizAnswers>(() => {
     const raw = sessionStorage.getItem('quiz_answers')

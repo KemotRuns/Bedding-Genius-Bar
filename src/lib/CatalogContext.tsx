@@ -3,19 +3,23 @@ import type { ReactNode } from 'react'
 import { defaultCatalog } from './engine'
 import type { Catalog } from './engine'
 import { supabase, isSupabaseConfigured } from './supabase'
+import { QUESTIONS, SECTION_SHORT_TO_LONG } from './questions'
+import { getIcon } from './icons'
 import type {
   SheetProduct, PillowProduct, ComforterProduct, ScoringRule,
-  ProductCategory, RuleOperator,
+  ProductCategory, RuleOperator, QuestionConfig, QuizAnswers,
 } from './types'
 
 interface CatalogContextValue {
   catalog: Catalog
+  questions: QuestionConfig[]
   loading: boolean
   source: 'bundled' | 'supabase'
 }
 
 const Ctx = createContext<CatalogContextValue>({
   catalog: defaultCatalog,
+  questions: QUESTIONS,
   loading: false,
   source: 'bundled',
 })
@@ -34,6 +38,15 @@ interface RuleRow {
   operator: string; compare_value: string; points: number
   reason: string | null; reason_zh: string | null
   also_question_key: string | null; also_answer_value: string | null; active: boolean
+}
+interface QuestionRow {
+  id: string; key: string; section: string
+  question: string; question_zh: string | null; columns: number
+}
+interface OptionRow {
+  question_id: string; value: string
+  label: string; label_zh: string | null
+  sublabel: string | null; sublabel_zh: string | null; icon_key: string | null
 }
 
 function mapSheet(r: ProductRow): SheetProduct {
@@ -82,6 +95,26 @@ function mapComforter(r: ProductRow): ComforterProduct {
     description_zh: r.description_zh ?? undefined,
   }
 }
+function buildQuestions(qrows: QuestionRow[], orows: OptionRow[]): QuestionConfig[] {
+  return qrows.map(q => ({
+    id: q.key as keyof QuizAnswers,
+    section: SECTION_SHORT_TO_LONG[q.section] ?? q.section,
+    question: q.question,
+    question_zh: q.question_zh ?? undefined,
+    columns: (q.columns as 2 | 3 | 4),
+    options: orows
+      .filter(o => o.question_id === q.id)
+      .map(o => ({
+        value: o.value,
+        label: o.label,
+        label_zh: o.label_zh ?? undefined,
+        sublabel: o.sublabel ?? undefined,
+        sublabel_zh: o.sublabel_zh ?? undefined,
+        icon: getIcon(o.icon_key),
+      })),
+  }))
+}
+
 function mapRule(r: RuleRow): ScoringRule {
   return {
     question_key: r.question_key,
@@ -101,6 +134,7 @@ function mapRule(r: RuleRow): ScoringRule {
 
 export function CatalogProvider({ children }: { children: ReactNode }) {
   const [catalog, setCatalog] = useState<Catalog>(defaultCatalog)
+  const [questions, setQuestions] = useState<QuestionConfig[]>(QUESTIONS)
   const [loading, setLoading] = useState(isSupabaseConfigured)
   const [source, setSource] = useState<'bundled' | 'supabase'>('bundled')
 
@@ -109,24 +143,34 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
     let cancelled = false
     ;(async () => {
       try {
-        const [products, rules] = await Promise.all([
+        const [products, rules, qs, opts] = await Promise.all([
           supabase.from('products').select('*').eq('active', true).order('sort_order'),
           supabase.from('scoring_rules').select('*').eq('active', true),
+          supabase.from('questions').select('*').eq('active', true).order('sort_order'),
+          supabase.from('question_options').select('*').order('sort_order'),
         ])
         if (cancelled) return
         const prows = (products.data ?? []) as ProductRow[]
         const rrows = (rules.data ?? []) as RuleRow[]
-        // Only override the bundled catalog if the DB actually has products.
-        if (products.error || rules.error || prows.length === 0) return
-        setCatalog({
-          sheets: prows.filter(p => p.category === 'sheet').map(mapSheet),
-          pillows: prows.filter(p => p.category === 'pillow').map(mapPillow),
-          comforters: prows.filter(p => p.category === 'comforter').map(mapComforter),
-          rules: rrows.map(mapRule),
-        })
-        setSource('supabase')
+        const qrows = (qs.data ?? []) as QuestionRow[]
+        const orows = (opts.data ?? []) as OptionRow[]
+
+        // Override bundled catalog only if the DB actually has products.
+        if (!products.error && !rules.error && prows.length > 0) {
+          setCatalog({
+            sheets: prows.filter(p => p.category === 'sheet').map(mapSheet),
+            pillows: prows.filter(p => p.category === 'pillow').map(mapPillow),
+            comforters: prows.filter(p => p.category === 'comforter').map(mapComforter),
+            rules: rrows.map(mapRule),
+          })
+          setSource('supabase')
+        }
+        // Override bundled questions only if the DB actually has questions.
+        if (!qs.error && qrows.length > 0) {
+          setQuestions(buildQuestions(qrows, orows))
+        }
       } catch {
-        /* keep bundled catalog on any failure */
+        /* keep bundled catalog/questions on any failure */
       } finally {
         if (!cancelled) setLoading(false)
       }
@@ -134,7 +178,7 @@ export function CatalogProvider({ children }: { children: ReactNode }) {
     return () => { cancelled = true }
   }, [])
 
-  return <Ctx.Provider value={{ catalog, loading, source }}>{children}</Ctx.Provider>
+  return <Ctx.Provider value={{ catalog, questions, loading, source }}>{children}</Ctx.Provider>
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
