@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import type { Session } from '@supabase/supabase-js'
 import { supabase, isSupabaseConfigured } from '../lib/supabase'
 import AdminLogin from '../components/admin/AdminLogin'
-import ResponsesPanel from '../components/admin/ResponsesPanel'
+import AdminShell from '../components/admin/AdminShell'
 
 function Centered({ children }: { children: React.ReactNode }) {
   return (
@@ -56,5 +56,5 @@ export default function Admin() {
       </Centered>
     )
   }
-  return <ResponsesPanel email={session.user.email} onSignOut={() => supabase!.auth.signOut()} />
+  return <AdminShell email={session.user.email} onSignOut={() => supabase!.auth.signOut()} />
 }

@@ -34,7 +34,7 @@ function toCsv(rows: ResponseRow[]): string {
   return [header.join(','), ...lines].join('\n')
 }
 
-export default function ResponsesPanel({ email, onSignOut }: { email?: string; onSignOut: () => void }) {
+export default function ResponsesPanel() {
   const [rows, setRows] = useState<ResponseRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
@@ -100,22 +100,7 @@ export default function ResponsesPanel({ email, onSignOut }: { email?: string; o
   const fmtDate = (s: string) => new Date(s).toLocaleString('en-GB', { dateStyle: 'medium', timeStyle: 'short' })
 
   return (
-    <div className="min-h-screen bg-cream">
-      {/* Header */}
-      <header className="bg-charcoal text-cream">
-        <div className="max-w-6xl mx-auto px-6 py-5 flex items-center justify-between">
-          <div>
-            <p className="text-[10px] font-bold tracking-[0.25em] uppercase text-gold-light mb-0.5">TN Select · Admin</p>
-            <h1 className="font-serif text-2xl">Responses</h1>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-xs text-cream/50 hidden sm:inline">{email}</span>
-            <button onClick={onSignOut} className="text-xs text-cream/70 hover:text-cream underline-offset-2 hover:underline cursor-pointer">Sign out</button>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-6xl mx-auto px-6 py-8">
+    <>
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-3 mb-5">
           <input
@@ -191,7 +176,6 @@ export default function ResponsesPanel({ email, onSignOut }: { email?: string; o
             </div>
           </div>
         )}
-      </main>
-    </div>
+    </>
   )
 }
