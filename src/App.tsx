@@ -4,6 +4,7 @@ import { AnimatePresence } from 'framer-motion'
 import Landing from './pages/Landing'
 import Quiz from './pages/Quiz'
 import Results from './pages/Results'
+import Admin from './pages/Admin'
 import { LanguageProvider } from './lib/LanguageContext'
 import { CatalogProvider } from './lib/CatalogContext'
 import LanguageSwitcher from './components/ui/LanguageSwitcher'
@@ -18,9 +19,17 @@ function AnimatedRoutes() {
         <Route path="/" element={<Landing />} />
         <Route path="/quiz" element={<Quiz />} />
         <Route path="/results" element={<Results />} />
+        <Route path="/admin" element={<Admin />} />
       </Routes>
     </AnimatePresence>
   )
+}
+
+// The language switcher is for the public quiz only — hide it on /admin.
+function GlobalChrome() {
+  const { pathname } = useLocation()
+  if (pathname.startsWith('/admin')) return null
+  return <LanguageSwitcher />
 }
 
 export default function App() {
@@ -31,7 +40,7 @@ export default function App() {
     <HashRouter>
       <LanguageProvider>
         <CatalogProvider>
-          <LanguageSwitcher />
+          <GlobalChrome />
           <AnimatedRoutes />
         </CatalogProvider>
       </LanguageProvider>
