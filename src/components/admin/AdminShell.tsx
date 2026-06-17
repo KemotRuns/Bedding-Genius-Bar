@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import ResponsesPanel from './ResponsesPanel'
 import ProductsPanel from './ProductsPanel'
+import QuestionsPanel from './QuestionsPanel'
+import ScoringPanel from './ScoringPanel'
 
 type Tab = 'responses' | 'products' | 'questions' | 'scoring'
 
@@ -47,13 +49,9 @@ export default function AdminShell({ email, onSignOut }: { email?: string; onSig
       <main className="max-w-6xl mx-auto px-6 py-8">
         {tab === 'responses' && <ResponsesPanel />}
         {tab === 'products' && <ProductsPanel />}
-        {tab === 'questions' && <ComingSoon label="Questions editor" />}
-        {tab === 'scoring' && <ComingSoon label="Scoring-rule editor" />}
+        {tab === 'questions' && <QuestionsPanel />}
+        {tab === 'scoring' && <ScoringPanel />}
       </main>
     </div>
   )
-}
-
-function ComingSoon({ label }: { label: string }) {
-  return <p className="text-charcoal/40 text-sm py-12 text-center">{label} — coming in the next step.</p>
 }
