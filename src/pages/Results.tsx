@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { getRecommendation } from '../lib/engine'
@@ -6,7 +6,9 @@ import { useCatalog } from '../lib/CatalogContext'
 import type { QuizAnswers, RecommendationResult, SheetProduct, PillowProduct, ComforterProduct, NightHeat } from '../lib/types'
 import { useLang } from '../lib/LanguageContext'
 import { tr } from '../lib/i18n'
-import { buildSession, saveSession } from '../lib/session'
+import { buildSession, saveSession, isSectionComplete } from '../lib/session'
+
+const SECTION_ORDER = ['sheets', 'comforter', 'pillow'] as const
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -46,12 +48,6 @@ const ALL_SECTIONS = [
     desc:    { en: 'Align loft and firmness to your sleep position for pain-free mornings.', zh: '依睡姿選對枕頭高度與硬度，告別晨間頸痛。' },
   },
 ]
-
-const PRODUCT_TITLES: Record<string, { en: string; zh: string }> = {
-  sheets:    { en: 'Sheets Prescription',    zh: '床組診斷' },
-  comforter: { en: 'Comforter Prescription', zh: '棉被診斷' },
-  pillow:    { en: 'Pillow Prescription',    zh: '枕頭診斷' },
-}
 
 const CARD_LABELS: Record<string, { en: string; zh: string }> = {
   sheets:    { en: 'Sheet Prescription',    zh: '床組推薦' },
@@ -318,17 +314,20 @@ export default function Results() {
   const pillow    = result.topPillow.product   as PillowProduct
   const comforter = result.topComforter.product as ComforterProduct
 
-  const score = product === 'comforter'
-    ? matchScore(result.topComforter.score)
-    : product === 'pillow'
-    ? matchScore(result.topPillow.score)
-    : matchScore(result.topSheet.score)
+  const scoreSheet     = matchScore(result.topSheet.score)
+  const scoreComforter = matchScore(result.topComforter.score)
+  const scorePillow    = matchScore(result.topPillow.score)
 
-  const pageTitle   = tr(PRODUCT_TITLES[product] ?? PRODUCT_TITLES.sheets, lang)
-  const cardLabel   = tr(CARD_LABELS[product]    ?? CARD_LABELS.sheets, lang)
-  const otherSections = ALL_SECTIONS.filter(s => s.id !== product)
+  // Per-section completion → unified plan.
+  const done: Record<string, boolean> = {
+    sheets: isSectionComplete('sheets', answers),
+    comforter: isSectionComplete('comforter', answers),
+    pillow: isSectionComplete('pillow', answers),
+  }
+  const doneCount = SECTION_ORDER.filter(id => done[id]).length
+  const anyComplete = doneCount > 0
 
-  // Descriptor helper (bilingual)
+  // Bilingual rating descriptor.
   const descriptors: Record<number, { en: string; zh: string }> = {
     1: { en: 'Minimal',  zh: '極低' },
     2: { en: 'Low',      zh: '低' },
@@ -338,23 +337,186 @@ export default function Results() {
   }
   const desc = (v: 1 | 2 | 3 | 4 | 5) => tr(descriptors[v], lang)
 
-  // Pillow loft description
   const loftDesc = {
     High:   { en: 'Fills the gap between ear and shoulder — ideal for side sleepers with broad frames.', zh: '填補耳朵到肩膀外側的空間，適合側睡的寬肩者。' },
     Medium: { en: 'Keeps your neck in neutral alignment whether you sleep on your back or side.',        zh: '讓頸椎保持自然對齊，適合仰睡或側睡。' },
     Low:    { en: 'Prevents neck arching — the only safe loft for stomach sleepers.',                    zh: '避免頸椎過度後仰，趴睡者的最佳選擇。' },
   }
 
-  // ── Finalize / save session ──
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [saved, setSaved] = useState(false)
+  // ── Save (remembered across the session) ──
+  const savedInit = (() => {
+    try { return JSON.parse(sessionStorage.getItem('tn_saved') || 'null') as { name: string; email: string } | null }
+    catch { return null }
+  })()
+  const [name, setName] = useState(savedInit?.name ?? '')
+  const [email, setEmail] = useState(savedInit?.email ?? '')
+  const [saved, setSaved] = useState(Boolean(savedInit))
   const [nameError, setNameError] = useState(false)
 
   function handleFinalize() {
     if (!name.trim()) { setNameError(true); return }
     saveSession(buildSession({ name, email, lang, answers, catalog }))
+    try { sessionStorage.setItem('tn_saved', JSON.stringify({ name: name.trim(), email: email.trim() })) } catch { /* ignore */ }
     setSaved(true)
+  }
+
+  function startOver() {
+    try { sessionStorage.removeItem('quiz_answers'); sessionStorage.removeItem('tn_saved') } catch { /* ignore */ }
+    navigate('/')
+  }
+
+  function scrollToSection(id: string) {
+    document.getElementById(`sec-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+
+  // On arrival, scroll to the section the user just finished (?product=…).
+  useEffect(() => {
+    const el = document.getElementById(`sec-${product}`)
+    if (el) { const t = setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200); return () => clearTimeout(t) }
+  }, [product])
+
+  // ── Per-section prescription cards ──
+  const CARDS: Record<string, React.ReactNode> = {
+    sheets: (
+      <>
+        <div className="glass-card p-0 overflow-hidden">
+          <div className="bg-sage/12 border-b border-sage/20 px-7 py-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">{tr(CARD_LABELS.sheets, lang)}</p>
+              <h2 className="text-xl font-semibold text-charcoal tracking-tight">{sheet.name}</h2>
+              {sheet.collection && <p className="text-xs text-charcoal/45 mt-0.5">{sheet.collection}</p>}
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:flex flex-col items-end gap-1.5">
+                <span className="text-xs bg-charcoal/8 text-charcoal/55 px-3 py-1.5 rounded-full font-medium">
+                  {zh ? (MATERIAL_ZH[sheet.material] ?? sheet.material) : sheet.material} · {zh ? (WEAVE_ZH[sheet.weave] ?? sheet.weave) : (sheet.weave === 'N/A' ? 'Plain Weave' : `${sheet.weave} Weave`)}
+                </span>
+                {sheet.sku && <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">{sheet.sku}</span>}
+              </div>
+              <MatchRing score={scoreSheet} zh={zh} />
+            </div>
+          </div>
+          <div className="px-7 py-6">
+            <p className="text-charcoal/60 text-sm leading-relaxed mb-6">{zh && sheet.description_zh ? sheet.description_zh : sheet.description}</p>
+            <div className="space-y-4 mb-6">
+              <AttributeBar label={zh ? '透氣度' : 'Breathability'}    value={sheet.ratings.breathability} color="bg-sage"           descriptor={desc(sheet.ratings.breathability)} />
+              <AttributeBar label={zh ? '吸濕排汗' : 'Moisture Wicking'} value={sheet.ratings.wicking}       color="bg-blue-400/70"   descriptor={desc(sheet.ratings.wicking)} />
+              <AttributeBar label={zh ? '保暖度' : 'Warmth'}            value={sheet.ratings.warmth}         color="bg-orange-400/70" descriptor={desc(sheet.ratings.warmth)} />
+              <AttributeBar label={zh ? '柔軟度' : 'Softness'}          value={sheet.ratings.softness}       color="bg-purple-400/70" descriptor={desc(sheet.ratings.softness)} />
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {(zh && sheet.best_for_zh ? sheet.best_for_zh : sheet.best_for).map(tag => (
+                <span key={tag} className="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">{tag}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+        {result.allSheets.length > 1 && (
+          <div className="glass-card p-5 mt-4">
+            <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/30 mb-3">{zh ? '也可考慮' : 'Also Consider'}</p>
+            <div className="flex items-center gap-4">
+              <div className="flex-1">
+                <div className="flex items-baseline gap-2">
+                  <p className="font-medium text-charcoal text-sm">{result.allSheets[1].product.name}</p>
+                  {result.allSheets[1].product.sku && <span className="font-mono text-[10px] text-charcoal/30 tracking-wider">{result.allSheets[1].product.sku}</span>}
+                </div>
+                <p className="text-xs text-charcoal/45 mt-0.5">
+                  {zh ? (MATERIAL_ZH[result.allSheets[1].product.material] ?? result.allSheets[1].product.material) : result.allSheets[1].product.material} — {zh && result.allSheets[1].product.description_zh ? result.allSheets[1].product.description_zh.split('。')[0] + '。' : result.allSheets[1].product.description.split('.')[0] + '.'}
+                </p>
+              </div>
+              <div className="text-right flex-shrink-0">
+                <div className="text-sm font-bold text-charcoal/40">{matchScore(result.allSheets[1].score)}%</div>
+                <div className="text-xs text-charcoal/30">{zh ? '匹配度' : 'match'}</div>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
+    ),
+    comforter: (
+      <div className="glass-card p-0 overflow-hidden">
+        <div className="bg-gold/8 border-b border-gold/20 px-7 py-4 flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">{tr(CARD_LABELS.comforter, lang)}</p>
+            <h2 className="text-xl font-semibold text-charcoal tracking-tight">{comforter.name}</h2>
+            {comforter.collection && <p className="text-xs text-charcoal/45 mt-0.5">{comforter.collection}</p>}
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex flex-col items-end gap-1.5">
+              <span className="text-xs bg-gold/15 text-gold px-3 py-1.5 rounded-full font-medium">
+                {zh ? (FILL_ZH[comforter.fill] ?? comforter.fill) : comforter.fill} · {zh ? (WARMTH_ZH[comforter.attributes.warmth] ?? comforter.attributes.warmth) : comforter.attributes.warmth}
+              </span>
+              {comforter.sku && <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">{comforter.sku}</span>}
+            </div>
+            <MatchRing score={scoreComforter} zh={zh} />
+          </div>
+        </div>
+        <div className="px-7 py-6">
+          <p className="text-charcoal/60 text-sm leading-relaxed mb-6">{zh && comforter.description_zh ? comforter.description_zh : comforter.description}</p>
+          <div className="space-y-4 mb-6">
+            <AttributeBar label={zh ? '保暖度' : 'Warmth'}       value={comforter.ratings.warmth}        color="bg-orange-400/70" descriptor={desc(comforter.ratings.warmth)} />
+            <AttributeBar label={zh ? '透氣度' : 'Breathability'} value={comforter.ratings.breathability} color="bg-sage"          descriptor={desc(comforter.ratings.breathability)} />
+            <AttributeBar label={zh ? '蓬鬆度' : 'Fluffiness'}    value={comforter.ratings.fluffiness}    color="bg-purple-400/70" descriptor={desc(comforter.ratings.fluffiness)} />
+          </div>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {(zh && comforter.best_for_zh ? comforter.best_for_zh : comforter.best_for).map(tag => (
+              <span key={tag} className="text-xs bg-gold/10 text-gold px-3 py-1 rounded-full font-medium">{tag}</span>
+            ))}
+          </div>
+          <div className="flex gap-3 flex-wrap">
+            <span className={`text-xs px-3 py-1 rounded-full font-medium ${comforter.attributes.hypoallergenic ? 'bg-sage/12 text-sage-dark' : 'bg-charcoal/6 text-charcoal/40'}`}>
+              {comforter.attributes.hypoallergenic ? (zh ? '✓ 防蟎抗菌' : '✓ Hypoallergenic') : (zh ? '非低敏材質' : 'Non-hypoallergenic')}
+            </span>
+            <span className={`text-xs px-3 py-1 rounded-full font-medium ${comforter.attributes.washable ? 'bg-blue-400/12 text-blue-600/80' : 'bg-charcoal/6 text-charcoal/40'}`}>
+              {comforter.attributes.washable ? (zh ? '✓ 可機洗' : '✓ Machine washable') : (zh ? '僅限乾洗' : 'Dry-clean only')}
+            </span>
+            <span className="text-xs bg-charcoal/6 text-charcoal/40 px-3 py-1 rounded-full font-medium">
+              {zh ? (WEIGHT_ZH[comforter.attributes.weight] ?? comforter.attributes.weight) : `${comforter.attributes.weight} weight`}
+            </span>
+          </div>
+        </div>
+      </div>
+    ),
+    pillow: (
+      <div className="glass-card p-0 overflow-hidden">
+        <div className="bg-sage/12 border-b border-sage/20 px-7 py-4 flex items-center justify-between">
+          <div>
+            <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">{tr(CARD_LABELS.pillow, lang)}</p>
+            <h2 className="text-xl font-semibold text-charcoal tracking-tight">{pillow.name}</h2>
+            {pillow.collection && <p className="text-xs text-charcoal/45 mt-0.5">{pillow.collection}</p>}
+          </div>
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex flex-col items-end gap-1.5">
+              <span className="text-xs bg-charcoal/8 text-charcoal/55 px-3 py-1.5 rounded-full font-medium">
+                {zh ? (FILL_ZH[pillow.fill] ?? pillow.fill) : pillow.fill} · {zh
+                  ? { Firm: '硬', Medium: '中', Soft: '軟' }[pillow.attributes.firmness]
+                  : `${pillow.attributes.firmness} firmness`}
+              </span>
+              {pillow.sku && <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">{pillow.sku}</span>}
+            </div>
+            <MatchRing score={scorePillow} zh={zh} />
+          </div>
+        </div>
+        <div className="px-7 py-6">
+          <div className="flex items-end gap-6 mb-5">
+            <LoftDiagram loft={pillow.attributes.loft} zh={zh} />
+            <div className="text-sm text-charcoal/60 leading-relaxed flex-1">{tr(loftDesc[pillow.attributes.loft], lang)}</div>
+          </div>
+          <p className="text-sm text-charcoal/60 leading-relaxed mb-5">{zh && pillow.description_zh ? pillow.description_zh : pillow.description}</p>
+          <div className="flex flex-wrap gap-2 mb-4">
+            {(zh && pillow.best_for_zh ? pillow.best_for_zh : pillow.best_for).map(tag => (
+              <span key={tag} className="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">{tag}</span>
+            ))}
+          </div>
+          {pillow.attributes.adjustable && (
+            <div className="flex items-center gap-2 pt-4 border-t border-charcoal/6">
+              <div className="w-1.5 h-1.5 rounded-full bg-sage" />
+              <span className="text-xs text-charcoal/50">{zh ? '可調整填充量，依喜好自訂枕頭高度' : 'Adjustable fill — customise loft to your preference'}</span>
+            </div>
+          )}
+        </div>
+      </div>
+    ),
   }
 
   return (
@@ -365,7 +527,7 @@ export default function Results() {
       exit={{ opacity: 0 }}
       transition={{ duration: 0.35 }}
     >
-      {/* ── Report Header ─────────────────────────────────────── */}
+      {/* ── Header ── */}
       <div className="bg-gradient-to-br from-charcoal via-charcoal/95 to-gold text-cream">
         <div className="max-w-4xl mx-auto px-6 py-10">
           <div className="flex items-start justify-between mb-6">
@@ -373,10 +535,11 @@ export default function Results() {
               <p className="text-gold-light text-xs font-semibold tracking-[0.25em] uppercase mb-1">
                 {zh ? 'TN Select · 東妮寢飾 Pro Bar' : 'TN Select · Tonia Nicole Pro Bar'}
               </p>
-              <h1 className="font-serif text-3xl sm:text-4xl font-normal tracking-tight">{pageTitle}</h1>
+              <h1 className="font-serif text-3xl sm:text-4xl font-normal tracking-tight">{zh ? '您的睡眠計畫' : 'Your Sleep Plan'}</h1>
+              <p className="text-cream/55 text-sm mt-1">{zh ? `已完成 ${doneCount} / 3 項` : `${doneCount} of 3 complete`}</p>
             </div>
             <button
-              onClick={() => navigate('/')}
+              onClick={startOver}
               className="text-cream/40 hover:text-cream/80 transition-colors text-sm flex items-center gap-1.5 mt-1 cursor-pointer"
             >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -389,294 +552,138 @@ export default function Results() {
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
             <ProfileSection answers={answers} zh={zh} />
           </motion.div>
+
+          {/* Plan tracker pills */}
+          <div className="flex flex-wrap gap-2 mt-5">
+            {SECTION_ORDER.map(id => {
+              const sec = ALL_SECTIONS.find(s => s.id === id)!
+              return (
+                <button
+                  key={id}
+                  onClick={() => scrollToSection(id)}
+                  className={`text-xs px-3 py-1.5 rounded-full border transition-colors cursor-pointer flex items-center gap-1.5 ${
+                    done[id] ? 'bg-cream/15 border-cream/30 text-cream' : 'border-cream/15 text-cream/45 hover:text-cream/70'
+                  }`}
+                >
+                  <span>{done[id] ? '✓' : '○'}</span>
+                  {tr(sec.label, lang)}
+                </button>
+              )
+            })}
+          </div>
         </div>
       </div>
 
       <main className="max-w-4xl mx-auto px-6 pb-16">
-        <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-5 pt-5">
+        <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6 pt-6">
 
-          {/* ══════════════════ SHEETS ══════════════════ */}
-          {product === 'sheets' && (
-            <>
-              <motion.div variants={itemVariants} className="glass-card p-0 overflow-hidden">
-                <div className="bg-sage/12 border-b border-sage/20 px-7 py-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">{cardLabel}</p>
-                    <h2 className="text-xl font-semibold text-charcoal tracking-tight">{sheet.name}</h2>
-                    {sheet.collection && <p className="text-xs text-charcoal/45 mt-0.5">{sheet.collection}</p>}
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="hidden sm:flex flex-col items-end gap-1.5">
-                      <span className="text-xs bg-charcoal/8 text-charcoal/55 px-3 py-1.5 rounded-full font-medium">
-                        {zh ? (MATERIAL_ZH[sheet.material] ?? sheet.material) : sheet.material} · {zh ? (WEAVE_ZH[sheet.weave] ?? sheet.weave) : (sheet.weave === 'N/A' ? 'Plain Weave' : `${sheet.weave} Weave`)}
-                      </span>
-                      {sheet.sku && (
-                        <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">{sheet.sku}</span>
-                      )}
+          {SECTION_ORDER.map(id => {
+            const sec = ALL_SECTIONS.find(s => s.id === id)!
+            return (
+              <motion.section key={id} id={`sec-${id}`} variants={itemVariants} className="scroll-mt-6">
+                {done[id] ? (
+                  <div className="space-y-2">
+                    {CARDS[id]}
+                    <div className="flex justify-end">
+                      <button
+                        onClick={() => navigate(`/quiz?product=${id}&edit=1`)}
+                        className="text-xs font-medium text-charcoal/45 hover:text-gold transition-colors flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                          <path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9l6.5-6.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
+                        </svg>
+                        {zh ? '修改我的答案' : 'Edit answers'}
+                      </button>
                     </div>
-                    <MatchRing score={score} zh={zh} />
                   </div>
-                </div>
-                <div className="px-7 py-6">
-                  <p className="text-charcoal/60 text-sm leading-relaxed mb-6">{zh && sheet.description_zh ? sheet.description_zh : sheet.description}</p>
-                  <div className="space-y-4 mb-6">
-                    <AttributeBar label={zh ? '透氣度' : 'Breathability'}    value={sheet.ratings.breathability} color="bg-sage"            descriptor={desc(sheet.ratings.breathability)} />
-                    <AttributeBar label={zh ? '吸濕排汗' : 'Moisture Wicking'} value={sheet.ratings.wicking}       color="bg-blue-400/70"    descriptor={desc(sheet.ratings.wicking)} />
-                    <AttributeBar label={zh ? '保暖度' : 'Warmth'}            value={sheet.ratings.warmth}         color="bg-orange-400/70"  descriptor={desc(sheet.ratings.warmth)} />
-                    <AttributeBar label={zh ? '柔軟度' : 'Softness'}          value={sheet.ratings.softness}       color="bg-purple-400/70"  descriptor={desc(sheet.ratings.softness)} />
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {(zh && sheet.best_for_zh ? sheet.best_for_zh : sheet.best_for).map(tag => (
-                      <span key={tag} className="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">{tag}</span>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-
-              {result.allSheets.length > 1 && (
-                <motion.div variants={itemVariants} className="glass-card p-5">
-                  <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/30 mb-3">
-                    {zh ? '也可考慮' : 'Also Consider'}
-                  </p>
-                  <div className="flex items-center gap-4">
-                    <div className="flex-1">
-                      <div className="flex items-baseline gap-2">
-                        <p className="font-medium text-charcoal text-sm">{result.allSheets[1].product.name}</p>
-                        {result.allSheets[1].product.sku && (
-                          <span className="font-mono text-[10px] text-charcoal/30 tracking-wider">{result.allSheets[1].product.sku}</span>
-                        )}
+                ) : (
+                  <button
+                    onClick={() => navigate(`/quiz?product=${id}`)}
+                    className="w-full text-left p-6 rounded-2xl border-2 border-dashed border-charcoal/15 bg-white/30 hover:border-gold/50 hover:bg-white/60 transition-all cursor-pointer"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-[10px] font-bold tracking-widest uppercase text-charcoal/35 mb-0.5">{tr(sec.label, lang)}</p>
+                        <p className="text-lg font-semibold text-charcoal mb-1">{zh ? '尚未診斷' : 'Not done yet'}</p>
+                        <p className="text-xs text-charcoal/50 leading-relaxed max-w-md">{tr(sec.desc, lang)}</p>
                       </div>
-                      <p className="text-xs text-charcoal/45 mt-0.5">
-                        {zh ? (MATERIAL_ZH[result.allSheets[1].product.material] ?? result.allSheets[1].product.material) : result.allSheets[1].product.material} — {zh && result.allSheets[1].product.description_zh ? result.allSheets[1].product.description_zh.split('。')[0] + '。' : result.allSheets[1].product.description.split('.')[0] + '.'}
-                      </p>
+                      <div className="flex items-center gap-1.5 text-gold text-sm font-semibold flex-shrink-0 ml-4">
+                        {zh ? '開始' : 'Start'}
+                        <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
+                          <path d="M2 6h8M8 4l2 2-2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </div>
                     </div>
-                    <div className="text-right flex-shrink-0">
-                      <div className="text-sm font-bold text-charcoal/40">{matchScore(result.allSheets[1].score)}%</div>
-                      <div className="text-xs text-charcoal/30">{zh ? '匹配度' : 'match'}</div>
-                    </div>
-                  </div>
-                </motion.div>
-              )}
-            </>
-          )}
-
-          {/* ══════════════════ COMFORTER ══════════════════ */}
-          {product === 'comforter' && (
-            <motion.div variants={itemVariants} className="glass-card p-0 overflow-hidden">
-              <div className="bg-gold/8 border-b border-gold/20 px-7 py-4 flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">{cardLabel}</p>
-                  <h2 className="text-xl font-semibold text-charcoal tracking-tight">{comforter.name}</h2>
-                  {comforter.collection && <p className="text-xs text-charcoal/45 mt-0.5">{comforter.collection}</p>}
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="hidden sm:flex flex-col items-end gap-1.5">
-                    <span className="text-xs bg-gold/15 text-gold px-3 py-1.5 rounded-full font-medium">
-                      {zh ? (FILL_ZH[comforter.fill] ?? comforter.fill) : comforter.fill} · {zh ? (WARMTH_ZH[comforter.attributes.warmth] ?? comforter.attributes.warmth) : comforter.attributes.warmth}
-                    </span>
-                    {comforter.sku && (
-                      <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">{comforter.sku}</span>
-                    )}
-                  </div>
-                  <MatchRing score={score} zh={zh} />
-                </div>
-              </div>
-              <div className="px-7 py-6">
-                <p className="text-charcoal/60 text-sm leading-relaxed mb-6">{zh && comforter.description_zh ? comforter.description_zh : comforter.description}</p>
-                <div className="space-y-4 mb-6">
-                  <AttributeBar label={zh ? '保暖度' : 'Warmth'}       value={comforter.ratings.warmth}        color="bg-orange-400/70" descriptor={desc(comforter.ratings.warmth)} />
-                  <AttributeBar label={zh ? '透氣度' : 'Breathability'} value={comforter.ratings.breathability} color="bg-sage"          descriptor={desc(comforter.ratings.breathability)} />
-                  <AttributeBar label={zh ? '蓬鬆度' : 'Fluffiness'}    value={comforter.ratings.fluffiness}    color="bg-purple-400/70" descriptor={desc(comforter.ratings.fluffiness)} />
-                </div>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {(zh && comforter.best_for_zh ? comforter.best_for_zh : comforter.best_for).map(tag => (
-                    <span key={tag} className="text-xs bg-gold/10 text-gold px-3 py-1 rounded-full font-medium">{tag}</span>
-                  ))}
-                </div>
-                <div className="flex gap-3 flex-wrap">
-                  <span className={`text-xs px-3 py-1 rounded-full font-medium ${comforter.attributes.hypoallergenic ? 'bg-sage/12 text-sage-dark' : 'bg-charcoal/6 text-charcoal/40'}`}>
-                    {comforter.attributes.hypoallergenic ? (zh ? '✓ 防蟎抗菌' : '✓ Hypoallergenic') : (zh ? '非低敏材質' : 'Non-hypoallergenic')}
-                  </span>
-                  <span className={`text-xs px-3 py-1 rounded-full font-medium ${comforter.attributes.washable ? 'bg-blue-400/12 text-blue-600/80' : 'bg-charcoal/6 text-charcoal/40'}`}>
-                    {comforter.attributes.washable ? (zh ? '✓ 可機洗' : '✓ Machine washable') : (zh ? '僅限乾洗' : 'Dry-clean only')}
-                  </span>
-                  <span className="text-xs bg-charcoal/6 text-charcoal/40 px-3 py-1 rounded-full font-medium">
-                    {zh ? (WEIGHT_ZH[comforter.attributes.weight] ?? comforter.attributes.weight) : `${comforter.attributes.weight} weight`}
-                  </span>
-                </div>
-              </div>
-            </motion.div>
-          )}
-
-          {/* ══════════════════ PILLOW ══════════════════ */}
-          {product === 'pillow' && (
-            <motion.div variants={itemVariants} className="glass-card p-0 overflow-hidden">
-              <div className="bg-sage/12 border-b border-sage/20 px-7 py-4 flex items-center justify-between">
-                <div>
-                  <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">{cardLabel}</p>
-                  <h2 className="text-xl font-semibold text-charcoal tracking-tight">{pillow.name}</h2>
-                  {pillow.collection && <p className="text-xs text-charcoal/45 mt-0.5">{pillow.collection}</p>}
-                </div>
-                <div className="flex items-center gap-3">
-                  <div className="hidden sm:flex flex-col items-end gap-1.5">
-                    <span className="text-xs bg-charcoal/8 text-charcoal/55 px-3 py-1.5 rounded-full font-medium">
-                      {zh ? (FILL_ZH[pillow.fill] ?? pillow.fill) : pillow.fill} · {zh
-                        ? { Firm: '硬', Medium: '中', Soft: '軟' }[pillow.attributes.firmness]
-                        : `${pillow.attributes.firmness} firmness`}
-                    </span>
-                    {pillow.sku && (
-                      <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">{pillow.sku}</span>
-                    )}
-                  </div>
-                  <MatchRing score={score} zh={zh} />
-                </div>
-              </div>
-              <div className="px-7 py-6">
-                <div className="flex items-end gap-6 mb-5">
-                  <LoftDiagram loft={pillow.attributes.loft} zh={zh} />
-                  <div className="text-sm text-charcoal/60 leading-relaxed flex-1">
-                    {tr(loftDesc[pillow.attributes.loft], lang)}
-                  </div>
-                </div>
-                <p className="text-sm text-charcoal/60 leading-relaxed mb-5">{zh && pillow.description_zh ? pillow.description_zh : pillow.description}</p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {(zh && pillow.best_for_zh ? pillow.best_for_zh : pillow.best_for).map(tag => (
-                    <span key={tag} className="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">{tag}</span>
-                  ))}
-                </div>
-                {pillow.attributes.adjustable && (
-                  <div className="flex items-center gap-2 pt-4 border-t border-charcoal/6">
-                    <div className="w-1.5 h-1.5 rounded-full bg-sage" />
-                    <span className="text-xs text-charcoal/50">
-                      {zh ? '可調整填充量，依喜好自訂枕頭高度' : 'Adjustable fill — customise loft to your preference'}
-                    </span>
-                  </div>
+                  </button>
                 )}
-              </div>
-            </motion.div>
-          )}
+              </motion.section>
+            )
+          })}
 
-          {/* ── Edit answers ─────────────────────────── */}
-          <motion.div variants={itemVariants} className="flex justify-end -mt-1">
-            <button
-              onClick={() => navigate(`/quiz?product=${product}&edit=1`)}
-              className="text-xs font-medium text-charcoal/45 hover:text-gold transition-colors flex items-center gap-1.5 cursor-pointer"
-            >
-              <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                <path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9l6.5-6.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
-              </svg>
-              {zh ? '修改我的答案' : 'Edit answers'}
-            </button>
-          </motion.div>
-
-          {/* ── Why This Works ───────────────────────── */}
-          <motion.div variants={itemVariants} className="glass-card p-6">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-6 h-6 rounded-full bg-sage/20 flex items-center justify-center flex-shrink-0">
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                  <path d="M2 6L5 9L10 3" stroke="#6A8E67" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </div>
-              <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40">
-                {zh ? '為什麼適合您' : 'Why This Works'}
-              </p>
-            </div>
-            <p className="text-sm text-charcoal/75 leading-relaxed">
-              {zh ? result.whyText_zh : result.whyText}
-            </p>
-          </motion.div>
-
-          {/* ── Save / finalize session ──────────────── */}
-          <motion.div variants={itemVariants} className="glass-card p-6">
-            {saved ? (
-              <div className="text-center py-2">
-                <div className="w-10 h-10 rounded-full bg-sage/20 flex items-center justify-center mx-auto mb-3">
-                  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                    <path d="M4 10L8 14L16 6" stroke="#6A8E67" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <p className="text-sm font-semibold text-charcoal mb-1">
-                  {zh ? `已儲存，${name} ！` : `Saved, ${name}!`}
-                </p>
-                <p className="text-xs text-charcoal/50 leading-relaxed">
-                  {email
-                    ? (zh ? `我們會將您的睡眠診斷結果寄送至 ${email}。` : `We'll send your sleep prescription to ${email}.`)
-                    : (zh ? '您的睡眠檔案已儲存。' : 'Your sleep profile has been saved.')}
-                </p>
-              </div>
-            ) : (
-              <>
-                <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-1">
-                  {zh ? '儲存您的睡眠檔案' : 'Save your sleep profile'}
-                </p>
-                <p className="text-sm text-charcoal/55 leading-relaxed mb-4">
-                  {zh
-                    ? '留下您的姓名以儲存診斷結果，並可選填 Email 以接收完整報告。'
-                    : 'Add your name to save this prescription — and an optional email to receive your full report.'}
-                </p>
-                <div className="grid sm:grid-cols-2 gap-3 mb-4">
-                  <div>
-                    <input
-                      type="text"
-                      value={name}
-                      onChange={e => { setName(e.target.value); if (nameError) setNameError(false) }}
-                      placeholder={zh ? '姓名（必填）' : 'Name (required)'}
-                      className={`w-full px-4 py-3 rounded-xl bg-white/60 border text-sm text-charcoal placeholder:text-charcoal/35 outline-none focus:border-gold transition-colors ${nameError ? 'border-red-300' : 'border-charcoal/12'}`}
-                    />
-                    {nameError && (
-                      <p className="text-xs text-red-400 mt-1 pl-1">{zh ? '請輸入您的姓名' : 'Please enter your name'}</p>
-                    )}
-                  </div>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    placeholder={zh ? 'Email（選填）' : 'Email (optional)'}
-                    className="w-full px-4 py-3 rounded-xl bg-white/60 border border-charcoal/12 text-sm text-charcoal placeholder:text-charcoal/35 outline-none focus:border-gold transition-colors"
-                  />
-                </div>
-                <motion.button
-                  onClick={handleFinalize}
-                  className="bg-charcoal text-cream px-8 py-3 rounded-xl text-sm font-medium hover:bg-charcoal/85 transition-colors shadow-sm inline-flex items-center gap-2 cursor-pointer"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.97 }}
-                >
-                  {zh ? '儲存我的檔案' : 'Save my profile'}
-                  <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-                    <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </motion.button>
-              </>
-            )}
-          </motion.div>
-
-          {/* ── Also Explore ─────────────────────────── */}
-          <motion.div variants={itemVariants} className="glass-card p-6 bg-sage/5">
-            <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-4">
-              {zh ? '探索其他品項' : 'Also Explore'}
-            </p>
-            <div className="grid sm:grid-cols-2 gap-4">
-              {otherSections.map(s => (
-                <button
-                  key={s.id}
-                  onClick={() => navigate(`/quiz?product=${s.id}`)}
-                  className="text-left p-4 rounded-xl border border-charcoal/10 bg-white/40 hover:border-gold/50 hover:bg-white/70 transition-all cursor-pointer"
-                >
-                  <p className="text-[10px] font-bold tracking-widest uppercase text-charcoal/35 mb-0.5">{tr(s.label, lang)}</p>
-                  <p className="text-base font-semibold text-charcoal mb-1">{s.chinese}</p>
-                  <p className="text-xs text-charcoal/50 leading-relaxed mb-3">{tr(s.desc, lang)}</p>
-                  <div className="flex items-center gap-1.5 text-gold text-xs font-semibold">
-                    {zh ? '開始' : 'Begin'}
-                    <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                      <path d="M2 6h8M8 4l2 2-2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          {/* ── Save (once, remembered) ── */}
+          {anyComplete && (
+            <motion.div variants={itemVariants} className="glass-card p-6">
+              {saved ? (
+                <div className="text-center py-2">
+                  <div className="w-10 h-10 rounded-full bg-sage/20 flex items-center justify-center mx-auto mb-3">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                      <path d="M4 10L8 14L16 6" stroke="#6A8E67" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                     </svg>
                   </div>
-                </button>
-              ))}
-            </div>
-          </motion.div>
+                  <p className="text-sm font-semibold text-charcoal mb-1">{zh ? `已儲存，${name}！` : `Saved, ${name}!`}</p>
+                  <p className="text-xs text-charcoal/50 leading-relaxed">
+                    {email
+                      ? (zh ? `我們會將您的睡眠計畫寄送至 ${email}。` : `We'll send your sleep plan to ${email}.`)
+                      : (zh ? '您的睡眠檔案已儲存。' : 'Your sleep profile has been saved.')}
+                  </p>
+                  <button onClick={() => setSaved(false)} className="text-xs text-charcoal/40 hover:text-gold mt-3 cursor-pointer">
+                    {zh ? '以最新答案重新儲存' : 'Re-save with latest answers'}
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-1">{zh ? '儲存您的睡眠計畫' : 'Save your sleep plan'}</p>
+                  <p className="text-sm text-charcoal/55 leading-relaxed mb-4">
+                    {zh
+                      ? '留下您的姓名以儲存目前的診斷結果，並可選填 Email 以接收完整報告。'
+                      : 'Add your name to save everything you’ve completed — and an optional email to receive your full report.'}
+                  </p>
+                  <div className="grid sm:grid-cols-2 gap-3 mb-4">
+                    <div>
+                      <input
+                        type="text"
+                        value={name}
+                        onChange={e => { setName(e.target.value); if (nameError) setNameError(false) }}
+                        placeholder={zh ? '姓名（必填）' : 'Name (required)'}
+                        className={`w-full px-4 py-3 rounded-xl bg-white/60 border text-sm text-charcoal placeholder:text-charcoal/35 outline-none focus:border-gold transition-colors ${nameError ? 'border-red-300' : 'border-charcoal/12'}`}
+                      />
+                      {nameError && <p className="text-xs text-red-400 mt-1 pl-1">{zh ? '請輸入您的姓名' : 'Please enter your name'}</p>}
+                    </div>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      placeholder={zh ? 'Email（選填）' : 'Email (optional)'}
+                      className="w-full px-4 py-3 rounded-xl bg-white/60 border border-charcoal/12 text-sm text-charcoal placeholder:text-charcoal/35 outline-none focus:border-gold transition-colors"
+                    />
+                  </div>
+                  <motion.button
+                    onClick={handleFinalize}
+                    className="bg-charcoal text-cream px-8 py-3 rounded-xl text-sm font-medium hover:bg-charcoal/85 transition-colors shadow-sm inline-flex items-center gap-2 cursor-pointer"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.97 }}
+                  >
+                    {zh ? '儲存我的計畫' : 'Save my plan'}
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
+                      <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </motion.button>
+                </>
+              )}
+            </motion.div>
+          )}
 
-          {/* ── Footer ───────────────────────────────── */}
+          {/* ── Footer ── */}
           <motion.div variants={itemVariants} className="text-center pt-2 pb-4">
             <p className="text-xs text-charcoal/25">
               TN Select · {zh ? '東妮寢飾 Pro Bar' : 'Tonia Nicole Pro Bar'} · {new Date().toLocaleDateString(zh ? 'zh-TW' : 'en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}
