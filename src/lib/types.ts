@@ -1,181 +1,96 @@
 import type { ReactNode } from 'react'
 
-// ---- Product Types ----
+// ─── Catalog (v2: real FET.com products) ─────────────────────────────────────
+//
+// A product is a live FET.com listing. Matching is set-based: for every quiz
+// question, `match` lists the answer values this product suits (taken from
+// FEAC's "List of matched products" columns). Bedding sets instead carry a
+// material tier + design style; the engine derives their answer matches from
+// MATERIAL_MATCH in engine.ts so the client only has to pick two dropdowns.
 
-export type TemperatureRating = 'Cooling' | 'Neutral' | 'Warming'
-export type WeaveName = 'Percale' | 'Sateen' | 'Jersey' | 'Waffle' | 'Plain' | 'Twill' | 'N/A'
-export type MaterialName =
-  | 'Cotton'
-  | 'Tencel Lyocell'
-  | 'Linen'
-  | 'Silk'
-  | 'Flannel'
-  | 'Nylon Fiber'
+export type ProductCategory = 'sheet' | 'comforter' | 'pillow'
 
-export interface SheetProduct {
-  product_id: string
-  name: string
-  sku?: string
-  collection?: string
-  material: MaterialName
-  weave: WeaveName
-  thread_count?: number
-  attributes: {
-    temperature: TemperatureRating
-    moisture_wicking: 'High' | 'Moderate' | 'Low'
-    softness: 'Ultra-Soft' | 'Smooth' | 'Crisp' | 'Textured'
-    durability: 'High' | 'Medium' | 'Low'
-    hypoallergenic: boolean
-    wrinkle_resistance: 'High' | 'Medium' | 'Low'
-    weave_tightness: 'Tight' | 'Medium' | 'Loose'
-  }
-  best_for: string[]
-  best_for_zh?: string[]
-  ratings: {
-    breathability: 1 | 2 | 3 | 4 | 5
-    wicking: 1 | 2 | 3 | 4 | 5
-    warmth: 1 | 2 | 3 | 4 | 5
-    softness: 1 | 2 | 3 | 4 | 5
-  }
-  description: string
-  description_zh?: string
-  weave_texture_image?: string
+export type BeddingMaterial = 'tencel80' | 'tencel60' | 'cotton60' | 'cotton40' | 'cotton500' | 'topcool'
+export type DesignStyle = 'Nature' | 'Minimal' | 'Playful' | 'Classic'
+
+/** question key → answer values this product should be recommended for */
+export type MatchSpec = Partial<Record<keyof QuizAnswers, string[]>>
+
+export interface Product {
+  id: string                 // FET.com SalePage id, e.g. "7013366"
+  category: ProductCategory
+  name_zh: string
+  name_en: string
+  type_zh: string            // 羽絨 / 乳膠 / 蠶絲 / 80支天絲…
+  type_en: string            // Down / Latex / Silk / 80S Tencel…
+  url: string                // FET.com product page
+  image_url: string          // main product photo (91App CDN)
+  price_twd?: number | null
+  bullets_zh: string[]
+  bullets_en: string[]
+  match: MatchSpec
+  material?: BeddingMaterial // sheets only
+  style?: DesignStyle        // sheets only
+  sort_order: number
+  active: boolean
 }
 
-export type LoftLevel = 'High' | 'Medium' | 'Low'
-export type FirmnessLevel = 'Firm' | 'Medium' | 'Soft'
-
-export interface PillowProduct {
-  product_id: string
-  name: string
-  sku?: string
-  collection?: string
-  fill: 'Down' | 'Memory Foam' | 'Latex' | 'Tech Fiber'
-  attributes: {
-    loft: LoftLevel
-    firmness: FirmnessLevel
-    hypoallergenic: boolean
-    temperature: TemperatureRating
-    adjustable: boolean
-  }
-  best_for: string[]
-  best_for_zh?: string[]
-  description: string
-  description_zh?: string
-}
-
-export interface ComforterProduct {
-  product_id: string
-  name: string
-  sku?: string
-  collection?: string
-  fill: 'Silk' | 'Wool' | 'Down' | 'Tech Fiber'
-  attributes: {
-    warmth: 'Summer' | 'All-Season' | 'Winter'
-    temperature: TemperatureRating
-    hypoallergenic: boolean
-    washable: boolean
-    weight: 'Light' | 'Medium' | 'Heavy'
-  }
-  best_for: string[]
-  best_for_zh?: string[]
-  description: string
-  description_zh?: string
-  ratings: {
-    warmth: 1 | 2 | 3 | 4 | 5
-    breathability: 1 | 2 | 3 | 4 | 5
-    fluffiness: 1 | 2 | 3 | 4 | 5
-  }
-}
-
-// ---- Quiz Types ----
+// ─── Quiz answers (v2 question set, 1020 spreadsheet) ───────────────────────
 
 export type NightHeat = 'Very Hot' | 'Warm' | 'Neutral' | 'Cold'
-export type SkinType = 'Allergic/Eczema' | 'Sensitive' | 'None'
+export type SkinType = 'SensitiveLux' | 'SensitiveRefined' | 'Everyday'
 export type CareLevel = 'Minimal' | 'Standard' | 'Careful'
 export type SensoryPref = 'Cooling' | 'Silky' | 'Classic'
+
 export type ComforterTemp = 'Always Cold' | 'Neutral' | 'Hot'
-export type ComforterFeel = 'Heavy' | 'Fluffy' | 'Smooth' | 'Practical'
-export type BreathingIssues = 'Yes' | 'No'
-export type SleepPosition = 'Side' | 'Back' | 'Stomach' | 'Combination'
-export type ShoulderWidth = 'Petite' | 'Average' | 'Broad'
+export type ComforterFeel = 'Heavy' | 'Fluffy' | 'Smooth'
+export type ComforterAllergy = 'Washable' | 'Natural' | 'None'
+export type ComforterScent = 'NoScent' | 'MildOk'
+export type ComforterUse = 'Budget' | 'Daily' | 'Luxury'
+
+export type SleepPosition = 'Side' | 'Back' | 'Stomach'
 export type PillowFeel = 'Sink' | 'Springy' | 'Contour' | 'Balanced'
-export type PillowPriority = 'Allergies' | 'Value' | 'Premium'
+export type ShoulderWidth = 'Petite' | 'Average' | 'Broad'
+export type PillowAllergy = 'Yes' | 'No'
+export type PillowTier = 'Effortless' | 'Enhanced' | 'Luxury'
 
 export interface QuizAnswers {
-  // Sheets & Materials
+  // Bedding sets
   nightHeat?: NightHeat
   skinType?: SkinType
   careLevel?: CareLevel
   sensoryPref?: SensoryPref
+  designStyle?: DesignStyle
   // Comforter
   comforterTemp?: ComforterTemp
   comforterFeel?: ComforterFeel
-  breathingIssues?: BreathingIssues
-  // Pillows
+  comforterAllergy?: ComforterAllergy
+  comforterScent?: ComforterScent
+  comforterUse?: ComforterUse
+  // Pillow
   sleepPosition?: SleepPosition
-  shoulderWidth?: ShoulderWidth
   pillowFeel?: PillowFeel
-  pillowPriority?: PillowPriority
+  shoulderWidth?: ShoulderWidth
+  pillowAllergy?: PillowAllergy
+  pillowTier?: PillowTier
 }
 
-// ---- Scoring rule (data-driven engine) ----
+// ─── Engine output ───────────────────────────────────────────────────────────
 
-export type ProductCategory = 'sheet' | 'comforter' | 'pillow'
-export type RuleOperator = 'eq' | 'neq' | 'gte' | 'lte' | 'gt' | 'lt'
-
-export interface ScoringRule {
-  question_key: string        // answer that triggers this rule (matches QuizAnswers key)
-  answer_value: string        // the option value, e.g. 'Very Hot'
-  target_category: ProductCategory
-  attribute_path: string      // dot path into the product, e.g. 'attributes.temperature', 'ratings.breathability', 'material'
-  operator: RuleOperator
-  compare_value: string       // compared numerically when both sides are numeric, else as string ('true'/'false' for booleans)
-  points: number
-  reason?: string
-  reason_zh?: string
-  // Optional second condition — rule only fires when this answer also matches.
-  also_question_key?: string | null
-  also_answer_value?: string | null
-  active?: boolean
-}
-
-// ---- Engine Types ----
-
-export interface ScoreReason {
-  reason: string
-  points: number
-}
-
-export interface ScoredSheet {
-  product: SheetProduct
+export interface ScoredProduct {
+  product: Product
   score: number
-  scoreBreakdown: ScoreReason[]
-}
-
-export interface ScoredPillow {
-  product: PillowProduct
-  score: number
-  scoreBreakdown: ScoreReason[]
-}
-
-export interface ScoredComforter {
-  product: ComforterProduct
-  score: number
-  scoreBreakdown: ScoreReason[]
+  maxScore: number           // sum of weights of the answered questions for this category
+  matched: (keyof QuizAnswers)[]
 }
 
 export interface RecommendationResult {
-  topSheet: ScoredSheet
-  topPillow: ScoredPillow
-  topComforter: ScoredComforter
-  allSheets: ScoredSheet[]
-  whyText: string
-  whyText_zh: string
-  bundleSuggestion: string
+  sheets: ScoredProduct[]
+  comforters: ScoredProduct[]
+  pillows: ScoredProduct[]
 }
 
-// ---- Quiz UI Types ----
+// ─── Quiz UI ─────────────────────────────────────────────────────────────────
 
 export interface IconOption<T extends string = string> {
   value: T

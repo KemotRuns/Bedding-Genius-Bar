@@ -9,8 +9,8 @@ const base = import.meta.env.BASE_URL
 const PRODUCT_DATA = [
   {
     id: 'sheets',
-    label:   { en: 'Sheets & Bedding', zh: '床組材質' },
-    chinese: '床組材質',
+    label:   { en: 'Bedding Sets', zh: '床組' },
+    chinese: '床組',
     desc: {
       en: 'The fabric against your skin for 8 hours controls moisture, temperature, and how your skin recovers. Find the weave that fits your body.',
       zh: '材質決定了你躺進被窩後的前10秒感受，以及整夜的體感溫度。找出最適合您的床單。',

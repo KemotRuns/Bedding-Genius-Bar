@@ -1,33 +1,31 @@
-import type { QuizAnswers } from './types'
-import { getRecommendation } from './engine'
+import type { QuizAnswers, ProductCategory } from './types'
+import { getRecommendation, CATEGORY_QUESTIONS } from './engine'
 import type { Catalog } from './engine'
 import { supabase, isSupabaseConfigured } from './supabase'
 
 // ── Storage keys ──────────────────────────────────────────────────────────────
 const SESSIONS_KEY = 'tn_sessions'       // full local history of finalized sessions
-const QUEUE_KEY    = 'tn_capture_queue'  // sessions awaiting POST to the remote endpoint
+const QUEUE_KEY    = 'tn_capture_queue'  // sessions awaiting delivery
 
-// Remote endpoint (Google Apps Script Web App URL). Empty → local-only capture.
+// Legacy Google Apps Script endpoint (empty → Supabase or local-only).
 const ENDPOINT = (import.meta.env.VITE_CAPTURE_ENDPOINT as string | undefined)?.trim() || ''
 
 // ── Section completeness ──────────────────────────────────────────────────────
-const SECTION_KEYS: Record<string, (keyof QuizAnswers)[]> = {
-  sheets:    ['nightHeat', 'skinType', 'careLevel', 'sensoryPref'],
-  comforter: ['comforterTemp', 'comforterFeel', 'breathingIssues'],
-  pillow:    ['sleepPosition', 'shoulderWidth', 'pillowFeel', 'pillowPriority'],
-}
+const SECTION_CATEGORY: Record<string, ProductCategory> = { sheets: 'sheet', comforter: 'comforter', pillow: 'pillow' }
 
-export function isSectionComplete(product: string, answers: QuizAnswers): boolean {
-  const keys = SECTION_KEYS[product]
-  if (!keys) return false
-  return keys.every(k => Boolean(answers[k]))
+export function isSectionComplete(section: string, answers: QuizAnswers): boolean {
+  const cat = SECTION_CATEGORY[section]
+  if (!cat) return false
+  return CATEGORY_QUESTIONS[cat].every(k => Boolean(answers[k]))
 }
 
 export function completedSections(answers: QuizAnswers): string[] {
-  return Object.keys(SECTION_KEYS).filter(s => isSectionComplete(s, answers))
+  return Object.keys(SECTION_CATEGORY).filter(s => isSectionComplete(s, answers))
 }
 
 // ── Session type ──────────────────────────────────────────────────────────────
+export interface RecommendedItem { id: string; name: string; name_zh: string; url: string }
+
 export interface CapturedSession {
   id: string
   createdAt: string
@@ -37,12 +35,9 @@ export interface CapturedSession {
   answers: QuizAnswers
   completedSections: string[]
   recommendation: {
-    sheet: string
-    sheetSku?: string
-    comforter: string
-    comforterSku?: string
-    pillow: string
-    pillowSku?: string
+    sheet?: RecommendedItem
+    comforter?: RecommendedItem
+    pillow?: RecommendedItem
   }
 }
 
@@ -50,33 +45,21 @@ export interface CapturedSession {
 function uid(): string {
   return 'tn-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8)
 }
-
 function read<T>(key: string, fallback: T): T {
-  try {
-    const raw = localStorage.getItem(key)
-    return raw ? (JSON.parse(raw) as T) : fallback
-  } catch {
-    return fallback
-  }
+  try { const raw = localStorage.getItem(key); return raw ? (JSON.parse(raw) as T) : fallback } catch { return fallback }
 }
-
 function write(key: string, value: unknown): void {
-  try {
-    localStorage.setItem(key, JSON.stringify(value))
-  } catch {
-    /* storage full or unavailable — fail silently */
-  }
+  try { localStorage.setItem(key, JSON.stringify(value)) } catch { /* storage unavailable */ }
 }
 
 // ── Build / save ──────────────────────────────────────────────────────────────
-export function buildSession(input: {
-  name: string
-  email?: string
-  lang: string
-  answers: QuizAnswers
-  catalog?: Catalog
-}): CapturedSession {
+export function buildSession(input: { name: string; email?: string; lang: string; answers: QuizAnswers; catalog?: Catalog }): CapturedSession {
   const rec = getRecommendation(input.answers, input.catalog)
+  const done = completedSections(input.answers)
+  const pick = (list: typeof rec.sheets): RecommendedItem | undefined => {
+    const top = list[0]
+    return top ? { id: top.product.id, name: top.product.name_en, name_zh: top.product.name_zh, url: top.product.url } : undefined
+  }
   return {
     id: uid(),
     createdAt: new Date().toISOString(),
@@ -84,27 +67,20 @@ export function buildSession(input: {
     email: input.email?.trim() || undefined,
     lang: input.lang,
     answers: input.answers,
-    completedSections: completedSections(input.answers),
+    completedSections: done,
     recommendation: {
-      sheet: rec.topSheet.product.name,
-      sheetSku: rec.topSheet.product.sku,
-      comforter: rec.topComforter.product.name,
-      comforterSku: rec.topComforter.product.sku,
-      pillow: rec.topPillow.product.name,
-      pillowSku: rec.topPillow.product.sku,
+      sheet:     done.includes('sheets')    ? pick(rec.sheets)     : undefined,
+      comforter: done.includes('comforter') ? pick(rec.comforters) : undefined,
+      pillow:    done.includes('pillow')    ? pick(rec.pillows)    : undefined,
     },
   }
 }
 
 export function saveSession(session: CapturedSession): void {
   const all = read<CapturedSession[]>(SESSIONS_KEY, [])
-  all.push(session)
-  write(SESSIONS_KEY, all)
-
+  all.push(session); write(SESSIONS_KEY, all)
   const queue = read<CapturedSession[]>(QUEUE_KEY, [])
-  queue.push(session)
-  write(QUEUE_KEY, queue)
-
+  queue.push(session); write(QUEUE_KEY, queue)
   void flushQueue()
 }
 
@@ -113,10 +89,7 @@ export function getSessions(): CapturedSession[] {
 }
 
 // ── Remote delivery (with offline retry queue) ────────────────────────────────
-// Returns true when the session was delivered, false to keep it queued.
 async function deliver(session: CapturedSession): Promise<boolean> {
-  // Primary path: insert into the Supabase `responses` table. Anon insert is
-  // permitted by RLS; we never .select() back (anon can't read responses).
   if (isSupabaseConfigured && supabase) {
     const { error } = await supabase.from('responses').insert({
       created_at: session.createdAt,
@@ -129,35 +102,23 @@ async function deliver(session: CapturedSession): Promise<boolean> {
     })
     return !error
   }
-
-  // Legacy fallback: Google Apps Script endpoint. text/plain avoids a CORS
-  // preflight; no-cors lets the opaque response resolve.
   if (ENDPOINT) {
     try {
-      await fetch(ENDPOINT, {
-        method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify(session),
-      })
+      await fetch(ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(session) })
       return true
-    } catch {
-      return false
-    }
+    } catch { return false }
   }
-
-  return false // nothing configured yet — keep queued for later
+  return false
 }
 
 export async function flushQueue(): Promise<void> {
   if (!isSupabaseConfigured && !ENDPOINT) return
   const queue = read<CapturedSession[]>(QUEUE_KEY, [])
   if (queue.length === 0) return
-
   const remaining: CapturedSession[] = []
   for (const session of queue) {
     const ok = await deliver(session).catch(() => false)
-    if (!ok) remaining.push(session) // offline / error → retry next time
+    if (!ok) remaining.push(session)
   }
   write(QUEUE_KEY, remaining)
 }

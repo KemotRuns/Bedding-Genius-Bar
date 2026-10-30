@@ -1,71 +1,67 @@
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { supabase } from '../../lib/supabase'
+import { imageUrlFor } from '../../lib/products'
+import type { ProductRow } from '../../lib/products'
+import { QUESTION_SEED, SECTION_LONG_TO_SHORT } from '../../lib/questionData'
+import type { ProductCategory } from '../../lib/types'
 
-interface ProductRow {
-  id: string
-  category: 'sheet' | 'comforter' | 'pillow'
-  code: string
-  name: string
-  name_zh: string | null
-  sku: string | null
-  collection: string | null
-  material: string | null
-  weave: string | null
-  thread_count: number | null
-  fill: string | null
-  description: string | null
-  description_zh: string | null
-  best_for: string[] | null
-  best_for_zh: string[] | null
-  attributes: Record<string, unknown>
-  ratings: Record<string, number>
-  sort_order: number
-  active: boolean
-}
+// ── Client-facing product editor ─────────────────────────────────────────────
+// Deliberately simple: paste the FET.com link, fill names + 3 bullets, then tick
+// the answers this product should be recommended for. Bedding sets pick a
+// material tier + design style instead of ticking answers.
 
 type Draft = Omit<ProductRow, 'id'> & { id?: string }
 
-const CATEGORIES = ['sheet', 'comforter', 'pillow'] as const
-const CAT_LABEL: Record<string, string> = { sheet: 'Sheets', comforter: 'Comforters', pillow: 'Pillows' }
+const CATEGORIES: ProductCategory[] = ['sheet', 'comforter', 'pillow']
+const CAT_LABEL: Record<ProductCategory, string> = { sheet: 'Bedding sets 床組', comforter: 'Comforters 棉被', pillow: 'Pillows 枕頭' }
+const CAT_SECTION: Record<ProductCategory, string> = { sheet: 'sheets', comforter: 'comforter', pillow: 'pillow' }
 
-const DEFAULTS: Record<string, Pick<Draft, 'attributes' | 'ratings' | 'material' | 'weave' | 'thread_count' | 'fill'>> = {
-  sheet: {
-    material: 'Cotton', weave: 'Plain', thread_count: null, fill: null,
-    attributes: { temperature: 'Neutral', moisture_wicking: 'Moderate', softness: 'Smooth', durability: 'Medium', hypoallergenic: false, wrinkle_resistance: 'Medium', weave_tightness: 'Medium' },
-    ratings: { breathability: 3, wicking: 3, warmth: 3, softness: 3 },
-  },
-  comforter: {
-    material: null, weave: null, thread_count: null, fill: 'Down',
-    attributes: { warmth: 'All-Season', temperature: 'Neutral', hypoallergenic: false, washable: false, weight: 'Medium' },
-    ratings: { warmth: 3, breathability: 3, fluffiness: 3 },
-  },
-  pillow: {
-    material: null, weave: null, thread_count: null, fill: 'Down',
-    attributes: { loft: 'Medium', firmness: 'Medium', hypoallergenic: false, temperature: 'Neutral', adjustable: false },
-    ratings: {},
-  },
+const MATERIALS: { value: string; label: string }[] = [
+  { value: 'tencel80',  label: '80S Tencel™ Lyocell · 80支天絲' },
+  { value: 'tencel60',  label: '60S Tencel™ Lyocell · 60支天絲' },
+  { value: 'cotton60',  label: '60S Cotton · 60支精梳棉' },
+  { value: 'cotton40',  label: '40S Cotton · 40支精梳棉' },
+  { value: 'cotton500', label: '500/600TC High-count Cotton · 高織數棉' },
+  { value: 'topcool',   label: 'TopCool cooling fibre · TopCool 涼感' },
+]
+const STYLES: { value: string; label: string }[] = [
+  { value: 'Nature',  label: 'Nature-inspired · 自然風格' },
+  { value: 'Minimal', label: 'Minimalist & solid · 簡約風格' },
+  { value: 'Playful', label: 'Playful & thematic · 主題童趣' },
+  { value: 'Classic', label: 'Classic luxury · 經典奢華' },
+]
+const TYPE_PRESETS: Record<ProductCategory, { zh: string; en: string }[]> = {
+  sheet: [],
+  comforter: [{ zh: '羽絨', en: 'Down' }, { zh: '蠶絲', en: 'Silk' }, { zh: '羊毛', en: 'Wool' }, { zh: '科技纖維', en: 'Synthetic Fiber' }],
+  pillow: [{ zh: '羽絨', en: 'Down' }, { zh: '乳膠', en: 'Latex' }, { zh: '記憶棉', en: 'Memory Foam' }, { zh: '科技纖維', en: 'Synthetic Fiber' }, { zh: '凝膠', en: 'Gel' }],
 }
 
-function blankDraft(category: 'sheet' | 'comforter' | 'pillow'): Draft {
+function blankDraft(category: ProductCategory): Draft {
   return {
-    category, code: '', name: '', name_zh: '', sku: '', collection: '',
-    description: '', description_zh: '', best_for: [], best_for_zh: [],
+    category, name_zh: '', name_en: '', type_zh: '', type_en: '', url: '', image_url: '', price_twd: null,
+    bullets_zh: [], bullets_en: [], match: {}, material: category === 'sheet' ? 'tencel80' : null, style: category === 'sheet' ? 'Nature' : null,
     sort_order: 999, active: true,
-    ...DEFAULTS[category],
   }
 }
-
 const lines = (arr: string[] | null) => (arr ?? []).join('\n')
 const toArr = (s: string) => s.split('\n').map(x => x.trim()).filter(Boolean)
+const idFromUrl = (url: string) => url.match(/SalePage\/Index\/(\d+)/)?.[1] ?? ''
 
 export default function ProductsPanel() {
   const [rows, setRows] = useState<ProductRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [cat, setCat] = useState<'all' | 'sheet' | 'comforter' | 'pillow'>('all')
+  const [cat, setCat] = useState<'all' | ProductCategory>('all')
   const [draft, setDraft] = useState<Draft | null>(null)
   const [saving, setSaving] = useState(false)
 
+  async function load() {
+    if (!supabase) return
+    const { data, error } = await supabase.from('products').select('*').order('category').order('sort_order')
+    if (error) setError(error.message)
+    else { setError(''); setRows((data ?? []) as ProductRow[]) }
+    setLoading(false)
+  }
   useEffect(() => {
     let cancelled = false
     ;(async () => {
@@ -79,59 +75,46 @@ export default function ProductsPanel() {
     return () => { cancelled = true }
   }, [])
 
-  async function reload() {
-    if (!supabase) return
-    setLoading(true)
-    const { data, error } = await supabase.from('products').select('*').order('category').order('sort_order')
-    if (error) setError(error.message)
-    else { setError(''); setRows((data ?? []) as ProductRow[]) }
-    setLoading(false)
-  }
-
-  const filtered = useMemo(() => rows.filter(r => cat === 'all' || r.category === cat), [rows, cat])
+  const filtered = useMemo(() => rows.filter(r => cat === 'all' || (r.category as ProductCategory) === cat), [rows, cat])
 
   async function save() {
     if (!supabase || !draft) return
-    if (!draft.code.trim() || !draft.name.trim()) { setError('Code and name are required.'); return }
-    setSaving(true)
-    setError('')
+    const id = draft.id ?? idFromUrl(draft.url)
+    if (!draft.url.trim() || !id) { setError('Please paste a valid FET.com product link (…/SalePage/Index/12345).'); return }
+    if (!draft.name_zh.trim()) { setError('Chinese product name is required.'); return }
+    setSaving(true); setError('')
     const payload = {
+      id,
       category: draft.category,
-      code: draft.code.trim(),
-      name: draft.name.trim(),
-      name_zh: draft.name_zh?.trim() || null,
-      sku: draft.sku?.trim() || null,
-      collection: draft.collection?.trim() || null,
-      material: draft.material?.trim() || null,
-      weave: draft.weave?.trim() || null,
-      thread_count: draft.thread_count ?? null,
-      fill: draft.fill?.trim() || null,
-      description: draft.description?.trim() || null,
-      description_zh: draft.description_zh?.trim() || null,
-      best_for: draft.best_for ?? [],
-      best_for_zh: draft.best_for_zh ?? [],
-      attributes: draft.attributes,
-      ratings: draft.ratings,
+      name_zh: draft.name_zh.trim(),
+      name_en: draft.name_en.trim() || draft.name_zh.trim(),
+      type_zh: draft.type_zh?.trim() || null,
+      type_en: draft.type_en?.trim() || null,
+      url: draft.url.trim(),
+      image_url: draft.image_url?.trim() || imageUrlFor(draft.url.trim()),
+      price_twd: draft.price_twd ?? null,
+      bullets_zh: draft.bullets_zh ?? [],
+      bullets_en: draft.bullets_en ?? [],
+      match: draft.category === 'sheet' ? {} : (draft.match ?? {}),
+      material: draft.category === 'sheet' ? draft.material : null,
+      style: draft.category === 'sheet' ? draft.style : null,
       sort_order: Number(draft.sort_order) || 0,
       active: draft.active,
     }
-    const res = draft.id
-      ? await supabase.from('products').update(payload).eq('id', draft.id)
-      : await supabase.from('products').insert(payload)
+    const res = await supabase.from('products').upsert(payload)
     setSaving(false)
     if (res.error) { setError(res.error.message); return }
     setDraft(null)
-    await reload()
+    setLoading(true); await load()
   }
 
   async function remove(row: ProductRow) {
     if (!supabase) return
-    if (!confirm(`Delete "${row.name}" permanently?`)) return
+    if (!confirm(`Delete "${row.name_zh}" permanently? (You can also just set it to Hidden.)`)) return
     const { error } = await supabase.from('products').delete().eq('id', row.id)
     if (error) { alert(error.message); return }
     setRows(prev => prev.filter(r => r.id !== row.id))
   }
-
   async function toggleActive(row: ProductRow) {
     if (!supabase) return
     const { error } = await supabase.from('products').update({ active: !row.active }).eq('id', row.id)
@@ -139,74 +122,117 @@ export default function ProductsPanel() {
     setRows(prev => prev.map(r => r.id === row.id ? { ...r, active: !r.active } : r))
   }
 
-  // ── Editor form ──
+  // ── Editor ──
   if (draft) {
     const set = <K extends keyof Draft>(k: K, v: Draft[K]) => setDraft(d => d ? { ...d, [k]: v } : d)
-    const setAttr = (k: string, v: unknown) => setDraft(d => d ? { ...d, attributes: { ...d.attributes, [k]: v } } : d)
-    const setRating = (k: string, v: number) => setDraft(d => d ? { ...d, ratings: { ...d.ratings, [k]: v } } : d)
+    const toggleMatch = (q: string, value: string) => setDraft(d => {
+      if (!d) return d
+      const cur = new Set(d.match?.[q] ?? [])
+      if (cur.has(value)) cur.delete(value); else cur.add(value)
+      return { ...d, match: { ...(d.match ?? {}), [q]: [...cur] } }
+    })
+    const dcat = draft.category as ProductCategory
+    const sectionQs = QUESTION_SEED.filter(q => SECTION_LONG_TO_SHORT[q.section] === CAT_SECTION[dcat])
+    const preview = draft.image_url?.trim() || imageUrlFor(draft.url)
 
     return (
       <div className="max-w-3xl">
         <button onClick={() => setDraft(null)} className="text-sm text-charcoal/50 hover:text-charcoal mb-4 cursor-pointer">← Back to products</button>
         <h2 className="font-serif text-2xl text-charcoal mb-1">{draft.id ? 'Edit product' : 'New product'}</h2>
-        <p className="text-xs text-charcoal/40 mb-6 uppercase tracking-wider">{CAT_LABEL[draft.category]}</p>
-
+        <p className="text-xs text-charcoal/40 mb-6 uppercase tracking-wider">{CAT_LABEL[dcat]}</p>
         {error && <p className="text-sm text-red-500 mb-4">{error}</p>}
 
-        <div className="grid sm:grid-cols-2 gap-4">
-          <Field label="Code *"><input className={inputCls} value={draft.code} onChange={e => set('code', e.target.value)} /></Field>
-          <Field label="SKU"><input className={inputCls} value={draft.sku ?? ''} onChange={e => set('sku', e.target.value)} /></Field>
-          <Field label="Name *"><input className={inputCls} value={draft.name} onChange={e => set('name', e.target.value)} /></Field>
-          <Field label="Name (中)"><input className={inputCls} value={draft.name_zh ?? ''} onChange={e => set('name_zh', e.target.value)} /></Field>
-          <Field label="Collection"><input className={inputCls} value={draft.collection ?? ''} onChange={e => set('collection', e.target.value)} /></Field>
-          <Field label="Sort order"><input type="number" className={inputCls} value={draft.sort_order} onChange={e => set('sort_order', Number(e.target.value))} /></Field>
-          {draft.category === 'sheet' && <>
-            <Field label="Material"><input className={inputCls} value={draft.material ?? ''} onChange={e => set('material', e.target.value)} /></Field>
-            <Field label="Weave"><input className={inputCls} value={draft.weave ?? ''} onChange={e => set('weave', e.target.value)} /></Field>
-            <Field label="Thread count"><input type="number" className={inputCls} value={draft.thread_count ?? ''} onChange={e => set('thread_count', e.target.value ? Number(e.target.value) : null)} /></Field>
-          </>}
-          {(draft.category === 'comforter' || draft.category === 'pillow') &&
-            <Field label="Fill"><input className={inputCls} value={draft.fill ?? ''} onChange={e => set('fill', e.target.value)} /></Field>}
-        </div>
+        {/* 1. Link */}
+        <Section n="1" title="FET.com product link">
+          <input className={inputCls} placeholder="https://www.fet.com.tw/SalePage/Index/12345" value={draft.url} disabled={Boolean(draft.id)}
+            onChange={e => set('url', e.target.value)} />
+          <p className="text-xs text-charcoal/40 mt-1.5">The product photo is taken from this page automatically. {draft.id ? 'The link cannot be changed after saving; add a new product instead.' : ''}</p>
+          {preview && (
+            <div className="flex items-center gap-4 mt-3">
+              <img src={preview} alt="" className="w-24 h-24 rounded-xl border border-charcoal/10 object-cover bg-white" onError={e => { (e.currentTarget as HTMLImageElement).style.opacity = '0.2' }} />
+              <div className="text-xs text-charcoal/50">
+                <p>Photo preview. To use a different photo, paste an image address below.</p>
+                <input className={`${inputCls} mt-2`} placeholder="Optional: custom image URL" value={draft.image_url ?? ''} onChange={e => set('image_url', e.target.value)} />
+              </div>
+            </div>
+          )}
+        </Section>
 
-        <Field label="Description" className="mt-4"><textarea className={`${inputCls} min-h-[80px]`} value={draft.description ?? ''} onChange={e => set('description', e.target.value)} /></Field>
-        <Field label="Description (中)" className="mt-4"><textarea className={`${inputCls} min-h-[80px]`} value={draft.description_zh ?? ''} onChange={e => set('description_zh', e.target.value)} /></Field>
-
-        <div className="grid sm:grid-cols-2 gap-4 mt-4">
-          <Field label="Best for (one per line)"><textarea className={`${inputCls} min-h-[96px]`} value={lines(draft.best_for)} onChange={e => set('best_for', toArr(e.target.value))} /></Field>
-          <Field label="Best for 中 (one per line)"><textarea className={`${inputCls} min-h-[96px]`} value={lines(draft.best_for_zh)} onChange={e => set('best_for_zh', toArr(e.target.value))} /></Field>
-        </div>
-
-        {/* Attributes (drive scoring) */}
-        <p className="text-xs font-semibold uppercase tracking-wider text-charcoal/40 mt-6 mb-2">Attributes</p>
-        <div className="grid sm:grid-cols-2 gap-3">
-          {Object.entries(draft.attributes).map(([k, v]) => (
-            <Field key={k} label={k}>
-              {typeof v === 'boolean'
-                ? <select className={inputCls} value={String(v)} onChange={e => setAttr(k, e.target.value === 'true')}>
-                    <option value="true">true</option><option value="false">false</option>
+        {/* 2. Names */}
+        <Section n="2" title="Names & type">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Field label="Product name 中文 *"><input className={inputCls} value={draft.name_zh} onChange={e => set('name_zh', e.target.value)} /></Field>
+            <Field label="Product name English"><input className={inputCls} value={draft.name_en} onChange={e => set('name_en', e.target.value)} /></Field>
+            {draft.category === 'sheet' ? (
+              <>
+                <Field label="Material tier 材質">
+                  <select className={inputCls} value={draft.material ?? ''} onChange={e => set('material', e.target.value)}>
+                    {MATERIALS.map(m => <option key={m.value} value={m.value}>{m.label}</option>)}
                   </select>
-                : <input className={inputCls} value={String(v ?? '')} onChange={e => setAttr(k, e.target.value)} />}
-            </Field>
-          ))}
-        </div>
-
-        {/* Ratings */}
-        {Object.keys(draft.ratings).length > 0 && <>
-          <p className="text-xs font-semibold uppercase tracking-wider text-charcoal/40 mt-6 mb-2">Ratings (1–5)</p>
-          <div className="grid sm:grid-cols-4 gap-3">
-            {Object.entries(draft.ratings).map(([k, v]) => (
-              <Field key={k} label={k}>
-                <input type="number" min={1} max={5} className={inputCls} value={v} onChange={e => setRating(k, Number(e.target.value))} />
-              </Field>
-            ))}
+                </Field>
+                <Field label="Design style 風格">
+                  <select className={inputCls} value={draft.style ?? ''} onChange={e => set('style', e.target.value)}>
+                    {STYLES.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
+                  </select>
+                </Field>
+              </>
+            ) : (
+              <>
+                <Field label="Type 類型 中文">
+                  <input className={inputCls} list={`types-zh-${dcat}`} value={draft.type_zh ?? ''} onChange={e => {
+                    const preset = TYPE_PRESETS[dcat].find(t => t.zh === e.target.value)
+                    setDraft(d => d ? { ...d, type_zh: e.target.value, type_en: preset ? preset.en : d.type_en } : d)
+                  }} />
+                  <datalist id={`types-zh-${dcat}`}>{TYPE_PRESETS[dcat].map(t => <option key={t.zh} value={t.zh} />)}</datalist>
+                </Field>
+                <Field label="Type English"><input className={inputCls} value={draft.type_en ?? ''} onChange={e => set('type_en', e.target.value)} /></Field>
+              </>
+            )}
+            <Field label="Sort order (lower shows first on ties)"><input type="number" className={inputCls} value={draft.sort_order} onChange={e => set('sort_order', Number(e.target.value))} /></Field>
+            <Field label="Price NT$ (optional, not shown to customers)"><input type="number" className={inputCls} value={draft.price_twd ?? ''} onChange={e => set('price_twd', e.target.value ? Number(e.target.value) : null)} /></Field>
           </div>
-        </>}
+        </Section>
+
+        {/* 3. Bullets */}
+        <Section n="3" title="Selling points (one per line, 3 recommended)">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <Field label="中文"><textarea className={`${inputCls} min-h-[110px]`} value={lines(draft.bullets_zh)} onChange={e => set('bullets_zh', toArr(e.target.value))} /></Field>
+            <Field label="English"><textarea className={`${inputCls} min-h-[110px]`} value={lines(draft.bullets_en)} onChange={e => set('bullets_en', toArr(e.target.value))} /></Field>
+          </div>
+        </Section>
+
+        {/* 4. Matching */}
+        {draft.category === 'sheet' ? (
+          <Section n="4" title="When to recommend">
+            <p className="text-sm text-charcoal/55">Bedding sets are matched automatically from the material tier and design style above. Nothing else to set.</p>
+          </Section>
+        ) : (
+          <Section n="4" title="Recommend this product when the customer answers…">
+            <p className="text-xs text-charcoal/45 mb-4">Tick every answer this product suits. The more ticks a product collects from a customer's answers, the higher it ranks.</p>
+            <div className="space-y-5">
+              {sectionQs.map(q => (
+                <div key={q.id}>
+                  <p className="text-xs font-semibold text-charcoal/60 mb-2">{q.admin_label} <span className="font-normal text-charcoal/35">· {q.question_zh}</span></p>
+                  <div className="flex flex-wrap gap-2">
+                    {q.options.map(o => {
+                      const on = draft.match?.[q.id]?.includes(o.value) ?? false
+                      return (
+                        <button key={o.value} type="button" onClick={() => toggleMatch(q.id, o.value)}
+                          className={`text-xs px-3 py-1.5 rounded-full border transition-colors cursor-pointer ${on ? 'bg-sage/15 border-sage text-sage-dark font-medium' : 'border-charcoal/15 text-charcoal/55 hover:bg-white/60'}`}>
+                          {on ? '✓ ' : ''}{o.label_zh} · {o.label}
+                        </button>
+                      )
+                    })}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Section>
+        )}
 
         <label className="flex items-center gap-2 text-sm text-charcoal/70 mt-6 cursor-pointer">
           <input type="checkbox" checked={draft.active} onChange={e => set('active', e.target.checked)} /> Active (shown in the app)
         </label>
-
         <div className="flex items-center gap-3 mt-6">
           <button onClick={save} disabled={saving} className="bg-charcoal text-cream px-6 py-2.5 rounded-xl text-sm font-medium hover:bg-charcoal/85 disabled:opacity-50 cursor-pointer">{saving ? 'Saving…' : 'Save'}</button>
           <button onClick={() => setDraft(null)} className="text-sm text-charcoal/50 hover:text-charcoal cursor-pointer">Cancel</button>
@@ -227,46 +253,49 @@ export default function ProductsPanel() {
         ))}
         <div className="flex-1" />
         <select className="text-sm px-3 py-2 rounded-xl border border-charcoal/15 bg-white/70 text-charcoal/70 cursor-pointer"
-          onChange={e => { if (e.target.value) { setDraft(blankDraft(e.target.value as 'sheet')); e.target.value = '' } }} defaultValue="">
+          onChange={e => { if (e.target.value) { setError(''); setDraft(blankDraft(e.target.value as ProductCategory)); e.target.value = '' } }} defaultValue="">
           <option value="" disabled>+ Add product…</option>
-          {CATEGORIES.map(c => <option key={c} value={c}>New {CAT_LABEL[c].slice(0, -1)}</option>)}
+          {CATEGORIES.map(c => <option key={c} value={c}>New: {CAT_LABEL[c]}</option>)}
         </select>
       </div>
 
       {loading ? <p className="text-charcoal/40 text-sm py-12 text-center">Loading…</p>
         : error ? <p className="text-red-500 text-sm py-12 text-center">{error}</p>
+        : rows.length === 0 ? <p className="text-charcoal/40 text-sm py-12 text-center">No products in the database yet. The app is using the built-in catalog.</p>
         : (
           <div className="glass-card overflow-hidden">
             <table className="w-full text-sm">
               <thead>
                 <tr className="text-left text-[11px] uppercase tracking-wider text-charcoal/40 border-b border-charcoal/10">
-                  <th className="px-4 py-3 font-semibold">Code</th>
-                  <th className="px-4 py-3 font-semibold">Name</th>
-                  <th className="px-4 py-3 font-semibold">Category</th>
-                  <th className="px-4 py-3 font-semibold">Collection</th>
-                  <th className="px-4 py-3 font-semibold">Active</th>
+                  <th className="px-4 py-3 font-semibold w-14"></th>
+                  <th className="px-4 py-3 font-semibold">Product</th>
+                  <th className="px-4 py-3 font-semibold">Type</th>
+                  <th className="px-4 py-3 font-semibold">Status</th>
                   <th className="px-4 py-3 font-semibold text-right"></th>
                 </tr>
               </thead>
               <tbody>
                 {filtered.map(r => (
-                  <Fragment key={r.id}>
-                    <tr className="border-b border-charcoal/6 hover:bg-white/40">
-                      <td className="px-4 py-3 font-mono text-xs text-charcoal/50">{r.code}</td>
-                      <td className="px-4 py-3 text-charcoal font-medium">{r.name}{r.name_zh ? <span className="text-charcoal/40 font-normal"> · {r.name_zh}</span> : null}</td>
-                      <td className="px-4 py-3 text-charcoal/50">{CAT_LABEL[r.category]}</td>
-                      <td className="px-4 py-3 text-charcoal/50">{r.collection || '—'}</td>
-                      <td className="px-4 py-3">
-                        <button onClick={() => toggleActive(r)} className={`text-xs px-2 py-1 rounded-full cursor-pointer ${r.active ? 'bg-sage/15 text-sage-dark' : 'bg-charcoal/8 text-charcoal/40'}`}>
-                          {r.active ? 'Active' : 'Hidden'}
-                        </button>
-                      </td>
-                      <td className="px-4 py-3 text-right whitespace-nowrap">
-                        <button onClick={() => { setError(''); setDraft({ ...r }) }} className="text-xs text-charcoal/50 hover:text-charcoal cursor-pointer mr-3">Edit</button>
-                        <button onClick={() => remove(r)} className="text-xs text-red-400 hover:text-red-600 cursor-pointer">Delete</button>
-                      </td>
-                    </tr>
-                  </Fragment>
+                  <tr key={r.id} className="border-b border-charcoal/6 hover:bg-white/40">
+                    <td className="px-4 py-2"><img src={r.image_url || imageUrlFor(r.url)} alt="" className="w-10 h-10 rounded-lg object-cover border border-charcoal/8 bg-white" /></td>
+                    <td className="px-4 py-3">
+                      <p className="text-charcoal font-medium leading-snug">{r.name_zh}</p>
+                      <p className="text-xs text-charcoal/40">{r.name_en}{r.price_twd ? ` · NT$${r.price_twd.toLocaleString()}` : ''}</p>
+                    </td>
+                    <td className="px-4 py-3 text-charcoal/50 text-xs">
+                      {r.category === 'sheet'
+                        ? `${MATERIALS.find(m => m.value === r.material)?.label.split(' · ')[0] ?? r.material} · ${STYLES.find(s => s.value === r.style)?.label.split(' · ')[0] ?? r.style}`
+                        : `${r.type_zh ?? ''} ${r.type_en ?? ''}`}
+                    </td>
+                    <td className="px-4 py-3">
+                      <button onClick={() => toggleActive(r)} className={`text-xs px-2 py-1 rounded-full cursor-pointer ${r.active ? 'bg-sage/15 text-sage-dark' : 'bg-charcoal/8 text-charcoal/40'}`}>{r.active ? 'Active' : 'Hidden'}</button>
+                    </td>
+                    <td className="px-4 py-3 text-right whitespace-nowrap">
+                      <a href={r.url} target="_blank" rel="noopener noreferrer" className="text-xs text-charcoal/40 hover:text-gold mr-3">FET ↗</a>
+                      <button onClick={() => { setError(''); setDraft({ ...r }) }} className="text-xs text-charcoal/50 hover:text-charcoal cursor-pointer mr-3">Edit</button>
+                      <button onClick={() => remove(r)} className="text-xs text-red-400 hover:text-red-600 cursor-pointer">Delete</button>
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </table>
@@ -276,7 +305,7 @@ export default function ProductsPanel() {
   )
 }
 
-const inputCls = 'w-full px-3 py-2 rounded-lg bg-white/70 border border-charcoal/12 text-sm text-charcoal outline-none focus:border-gold transition-colors'
+const inputCls = 'w-full px-3 py-2 rounded-lg bg-white/70 border border-charcoal/12 text-sm text-charcoal outline-none focus:border-gold transition-colors disabled:opacity-60'
 
 function Field({ label, children, className = '' }: { label: string; children: React.ReactNode; className?: string }) {
   return (
@@ -284,5 +313,13 @@ function Field({ label, children, className = '' }: { label: string; children: R
       <span className="block text-xs font-medium text-charcoal/50 mb-1">{label}</span>
       {children}
     </label>
+  )
+}
+function Section({ n, title, children }: { n: string; title: string; children: React.ReactNode }) {
+  return (
+    <div className="glass-card p-5 mb-4">
+      <p className="text-xs font-semibold uppercase tracking-wider text-charcoal/40 mb-3"><span className="text-gold mr-2">{n}</span>{title}</p>
+      {children}
+    </div>
   )
 }

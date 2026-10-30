@@ -7,7 +7,8 @@
 | `main` | **Stable / Live** | — | v1.1 — 7-question quiz, 3-product results (sheets, pillow, comforter) |
 | `develop` | Integration | main | Mirror of main. Merge features here before promoting to main. |
 | `feature/v1.2-advisory-questions` | In Review | main | 11 advisory questions split into 3 labeled sections. Not yet merged. |
-| `feature/v1.3-product-sections` | In Progress | v1.2 | Landing with 3 product entry points; per-product quiz and results flows |
+| `feature/v1.3-product-sections` | Done (superseded) | v1.2 | Landing with 3 product entry points; per-product quiz, unified Sleep Plan, Supabase + full admin |
+| `feature/v2-fet-catalog` | **In Progress** | v1.3 | v2: real FET.com catalog with photos + links, FEAC's 1020 question set, set-based matching, products-only admin |
 
 ---
 
@@ -36,6 +37,15 @@
 - Built on top of v1.2 question structure
 
 ---
+
+### v2 — `feature/v2-fet-catalog` *(2026-10-30, from FEAC feedback 10-20)*
+- **Catalog swap**: 45 live FET.com listings (15 bedding sets, 13 comforters, 17 pillows) in `src/data/catalog.json`, each with FET link, photo (91App CDN, derived from the link), bilingual name, type, 3 selling points, price
+- **Questions** (`src/lib/questionData.ts`, in code by design): 5 per section — bedding adds *design style*; comforter adds *odour* + *household/budget*, allergy has 3 answers; pillow adds *allergy* + *series/budget*; Combination sleeper and Practical comforter removed
+- **Engine** (`src/lib/engine.ts`): set-based matching. Pillows/comforters carry `match` = answers they suit (from FEAC's "List of matched products"); bedding sets carry `material` + `style` and derive matches from `MATERIAL_MATCH`. Per-question weights; match % = weighted criteria satisfied / answered. Ties → `sort_order` (seeded cheapest-first)
+- **Results**: photo, bilingual name, type chip, bullets, "View on FET.com", "Why this fits you" chips, runner-up with thumbnail; attribute bars removed
+- **Admin**: Products + Responses only. Product editor = paste FET link (photo auto), names, type, bullets, tick "recommend when…" answers (bedding: material + style dropdowns). Questions/Scoring panels and DB tables removed
+- **Supabase**: `supabase/schema.sql` is now v2 (drops v1 question/rule tables, recreates `products`); `seed.sql` regenerated via `npx tsx scripts/gen-seed.ts`
+- Removed: `products/pillows/comforters.json`, `scoringRules.ts`, old results components, `QuestionsPanel`, `ScoringPanel`
 
 ## Branching Workflow
 

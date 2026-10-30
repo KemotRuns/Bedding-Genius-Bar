@@ -2,175 +2,129 @@ import { motion, AnimatePresence } from 'framer-motion'
 import GlassCard from '../ui/GlassCard'
 import type { QuizAnswers } from '../../lib/types'
 import { useLang } from '../../lib/LanguageContext'
-import { tr } from '../../lib/i18n'
 
-interface SidebarProps {
-  answers: QuizAnswers
+interface SidebarProps { answers: QuizAnswers; total: number }
+
+type T = { en: string; zh: string }
+// Live-analysis copy per answer. Keep understated: it narrates what the engine
+// is now favouring, never a promise about a specific SKU.
+const INSIGHTS: Partial<Record<keyof QuizAnswers, Record<string, T>>> = {
+  nightHeat: {
+    'Very Hot': { en: 'Hot sleeper noted. TopCool cooling fibre moves to the top.', zh: '易熱體質已記錄，TopCool 涼感纖維提升為首選。' },
+    Warm:       { en: 'Runs warm. Tencel™ Lyocell is favoured for breathability.', zh: '偏熱體質，天絲™萊賽爾因透氣性優先推薦。' },
+    Neutral:    { en: 'Balanced temperature. Tencel™ and cotton both stay in play.', zh: '體溫適中，天絲™與棉質皆保留在推薦中。' },
+    Cold:       { en: 'Runs cold. Cotton weaves are scoring higher.', zh: '偏冷體質，棉質織物分數提升。' },
+  },
+  skinType: {
+    SensitiveLux:     { en: 'Sensitive skin, silkiest touch: 80S Tencel™ leads.', zh: '敏感肌膚、極致絲滑：80支天絲™領先。' },
+    SensitiveRefined: { en: 'Sensitive skin, refined feel: 60S Tencel™ is favoured.', zh: '敏感肌膚、細膩手感：60支天絲™優先。' },
+    Everyday:         { en: 'Everyday natural comfort: combed cotton stays strong.', zh: '天然親膚日常之選：精梳棉保持高分。' },
+  },
+  careLevel: {
+    Minimal:  { en: 'Easy care. Wash-and-go fibres are boosted.', zh: '偏好簡易保養，易洗快乾材質加分。' },
+    Standard: { en: 'Standard care. Most materials remain available.', zh: '標準保養習慣，大多數材質仍保留。' },
+    Careful:  { en: 'Happy to care for fine fabrics: high-count cotton stays in the running.', zh: '願意細心保養，高織數棉繼續保留。' },
+  },
+  sensoryPref: {
+    Cooling: { en: 'Cool-to-touch preference: TopCool is the primary match.', zh: '偏好清涼觸感，TopCool 為主要配對。' },
+    Silky:   { en: 'Silky preference: 80S Tencel™ scores highest.', zh: '偏好絲滑膚觸，80支天絲™評分最高。' },
+    Classic: { en: 'Soft cotton feel: cotton weaves are your primary match.', zh: '偏好柔質棉感，棉質織物為主要配對。' },
+  },
+  designStyle: {
+    Nature:  { en: 'Nature-inspired style selected. Botanical prints only.', zh: '已選自然風格，僅推薦花草植物圖樣。' },
+    Minimal: { en: 'Minimalist style selected. Solid colours and clean lines.', zh: '已選簡約風格，僅推薦素色與幾何。' },
+    Playful: { en: 'Playful style selected. Themed and character prints.', zh: '已選主題童趣風格，推薦特殊主題圖樣。' },
+    Classic: { en: 'Classic luxury selected. Embroidery, lace and jacquard.', zh: '已選經典奢華，推薦刺繡、蕾絲與緹花。' },
+  },
+  comforterTemp: {
+    'Always Cold': { en: 'Cold sleeper. Winter-weight down and graphene fills lead.', zh: '怕冷體質，冬被（羽絨、石墨烯）優先推薦。' },
+    Neutral:       { en: 'Comfortable sleeper. Silk, wool and down winter weights all fit.', zh: '體溫適中，蠶絲、羊毛、羽絨冬被皆適合。' },
+    Hot:           { en: 'Warm sleeper. All-season and lightweight fills are favoured.', zh: '偏熱體質，四季被與輕量填充優先。' },
+  },
+  comforterFeel: {
+    Heavy:  { en: 'Heavy, wrapped feel: wool and graphene fibre score highest.', zh: '偏好厚重包裹感，羊毛與石墨烯纖維評分最高。' },
+    Fluffy: { en: 'Light and fluffy: down comforters lead.', zh: '偏好輕盈蓬鬆，羽絨被領先。' },
+    Smooth: { en: 'Body-hugging and breathable: silk is favoured.', zh: '偏好貼身透氣，蠶絲被優先推薦。' },
+  },
+  comforterAllergy: {
+    Washable: { en: 'Allergy-sensitive, washable required: antibacterial fibre fills only.', zh: '過敏體質、要求可水洗：僅推薦抗菌科技纖維。' },
+    Natural:  { en: 'Allergy-sensitive, natural preferred: silk moves to the top.', zh: '過敏體質、偏好天然：蠶絲提升為首選。' },
+    None:     { en: 'No allergy concerns. The full range is available.', zh: '無過敏問題，所有填充物皆在選項中。' },
+  },
+  comforterScent: {
+    NoScent: { en: 'Scent-free only: silk and synthetic fills are favoured.', zh: '拒絕異味，蠶絲與科技纖維優先。' },
+    MildOk:  { en: 'Mild natural scent is fine: wool and down stay in the running.', zh: '可接受些微天然氣味，羊毛與羽絨保留。' },
+  },
+  comforterUse: {
+    Budget: { en: 'Practical household: washable fibre comforters lead.', zh: '實用導向，可水洗科技纖維被領先。' },
+    Daily:  { en: 'Daily upgrade: wool and classic down are favoured.', zh: '日常升級，羊毛與經典羽絨優先。' },
+    Luxury: { en: 'Premium choice: top-grade silk and down lead.', zh: '頂級之選，頂級蠶絲與羽絨領先。' },
+  },
+  sleepPosition: {
+    Side:    { en: 'Side sleeper. Pillow height will be matched to your shoulder width.', zh: '側睡習慣，枕高將依肩寬配對。' },
+    Back:    { en: 'Back sleeper. Ergonomic contour pillows are favoured.', zh: '仰睡習慣，人體工學枕優先推薦。' },
+    Stomach: { en: 'Stomach sleeper. Only thin, soft pillows remain.', zh: '趴睡習慣，僅保留薄軟枕型。' },
+  },
+  pillowFeel: {
+    Sink:     { en: 'Sink-in feel: down pillows score highest.', zh: '偏好深陷包覆，羽絨枕評分最高。' },
+    Springy:  { en: 'Springy support: latex is your match.', zh: '偏好回彈支撐，乳膠枕最適合您。' },
+    Contour:  { en: 'Pressure relief: memory foam is recommended.', zh: '偏好針對性釋壓，記憶枕為首選。' },
+    Balanced: { en: 'Balanced resilience: synthetic fibre pillows fit well.', zh: '偏好均衡柔軟彈性，科技纖維枕適合您。' },
+  },
+  shoulderWidth: {
+    Petite:  { en: 'Narrower frame: low pillows (8–10 cm).', zh: '窄肩體型，低枕（8–10 cm）。' },
+    Average: { en: 'Average build: medium pillows (11–14 cm).', zh: '標準肩寬，中枕（11–14 cm）。' },
+    Broad:   { en: 'Broad shoulders: high pillows (15 cm+).', zh: '寬肩體型，高枕（15 cm 以上）。' },
+  },
+  pillowAllergy: {
+    Yes: { en: 'Sensitivities noted. Anti-mite, washable pillows are prioritised.', zh: '過敏需求已記錄，防螨可水洗枕優先。' },
+    No:  { en: 'No sensitivities. Down and natural latex stay in play.', zh: '無過敏問題，羽絨與天然乳膠保留。' },
+  },
+  pillowTier: {
+    Effortless: { en: 'Effortless Comfort series.', zh: '簡單舒適系列。' },
+    Enhanced:   { en: 'Enhanced Support series.', zh: '功能進階系列。' },
+    Luxury:     { en: 'Luxury Hotel Feel series.', zh: '奢華飯店體驗系列。' },
+  },
 }
 
-interface Insight {
-  key: string
-  text: string
-}
-
-function buildInsights(answers: QuizAnswers, zh: boolean): Insight[] {
-  const insights: Insight[] = []
-
-  if (answers.nightHeat) {
-    const map: Record<string, { en: string; zh: string }> = {
-      'Very Hot': { en: 'Night sweats detected. Cooling fibres (Nylon, Tencel, Silk) are ranked highest.', zh: '偵測到盜汗傾向，涼感纖維（尼龍、天絲、蠶絲）已列為優先推薦。' },
-      'Warm':     { en: 'You run warm. Cooling and breathable materials are moving up.', zh: '偏熱體質，涼感透氣材質已提升排名。' },
-      'Neutral':  { en: 'Balanced temperature — a wide range of fabrics works well for you.', zh: '體溫適中，大多數材質均適合您。' },
-      'Cold':     { en: 'You run cold. Warming materials (Flannel, Cotton) are scoring higher.', zh: '偏冷體質，保暖材質（法蘭絨、棉）已提升分數。' },
-    }
-    insights.push({ key: 'nightHeat', text: tr(map[answers.nightHeat], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.skinType) {
-    const map: Record<string, { en: string; zh: string }> = {
-      'Allergic/Eczema': { en: 'Eczema or allergies noted. Only hypoallergenic materials remain in your top picks.', zh: '過敏或濕疹需求已記錄，僅低敏材質保留在推薦清單中。' },
-      'Sensitive':       { en: 'Sensitive skin noted. Hypoallergenic and ultra-smooth fabrics are favoured.', zh: '敏感肌需求已記錄，低敏與超柔材質優先推薦。' },
-      'None':            { en: 'No skin concerns — the full fabric range is available to you.', zh: '無皮膚問題，所有材質均在選項中。' },
-    }
-    insights.push({ key: 'skinType', text: tr(map[answers.skinType], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.careLevel) {
-    const map: Record<string, { en: string; zh: string }> = {
-      'Minimal':  { en: 'Minimal care preference. Wrinkle-resistant, durable fabrics are boosted.', zh: '偏好簡易保養，抗皺耐用材質已提升排名。' },
-      'Standard': { en: 'Standard care noted. Most options remain available.', zh: '標準保養習慣，大多數選項仍保留。' },
-      'Careful':  { en: 'You\'re happy to care for delicate fabrics — Silk and Tencel stay in the running.', zh: '願意細心保養，蠶絲與天絲繼續保留在推薦清單中。' },
-    }
-    insights.push({ key: 'careLevel', text: tr(map[answers.careLevel], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.sensoryPref) {
-    const map: Record<string, { en: string; zh: string }> = {
-      'Cooling': { en: 'Cool & crisp preference. Nylon and breathable weaves are now top picks.', zh: '偏好清涼觸感，尼龍及透氣織物已成為首選。' },
-      'Silky':   { en: 'Silky smooth preference. Silk and Tencel are scoring highest.', zh: '偏好絲滑觸感，蠶絲與天絲評分最高。' },
-      'Classic': { en: 'Classic comfort preference. Cotton weaves are your primary match.', zh: '偏好經典棉質感，棉質織物為您的最佳搭配。' },
-    }
-    insights.push({ key: 'sensoryPref', text: tr(map[answers.sensoryPref], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.comforterTemp) {
-    const map: Record<string, { en: string; zh: string }> = {
-      'Always Cold': { en: 'Cold sleeper — Winter-weight comforters (Down, Wool) are prioritised.', zh: '怕冷體質，冬被（羽絨、羊毛）優先推薦。' },
-      'Neutral':     { en: 'Comfortable sleeper — All-season weight is your sweet spot.', zh: '體溫適中，四季被是您的最佳選擇。' },
-      'Hot':         { en: 'Hot sleeper — lightweight and cooling fills are recommended.', zh: '偏熱體質，輕薄涼感填充物優先推薦。' },
-    }
-    insights.push({ key: 'comforterTemp', text: tr(map[answers.comforterTemp], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.comforterFeel) {
-    const map: Record<string, { en: string; zh: string }> = {
-      'Heavy':     { en: 'Heavy wrapped feel — Wool comforter scores highest for you.', zh: '偏好厚實包覆感，羊毛被為您評分最高。' },
-      'Fluffy':    { en: 'Light fluffy feel — Down comforter scores highest.', zh: '偏好輕盈蓬鬆感，羽絨被為您評分最高。' },
-      'Smooth':    { en: 'Smooth and light — Silk comforter is recommended.', zh: '偏好輕薄順滑，蠶絲被為您首選推薦。' },
-      'Practical': { en: 'Easy care priority — Tech Fiber comforter is your best fit.', zh: '重視易洗易乾，科技纖維被最適合您。' },
-    }
-    insights.push({ key: 'comforterFeel', text: tr(map[answers.comforterFeel], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.breathingIssues === 'Yes') {
-    insights.push({
-      key: 'breathingIssues',
-      text: zh ? '呼吸敏感需求已記錄，可機洗低敏填充物為必要條件。' : 'Breathing sensitivities noted. Washable, hypoallergenic fills are essential.',
-    })
-  }
-
-  if (answers.sleepPosition) {
-    const map: Record<string, { en: string; zh: string }> = {
-      'Side':        { en: 'Side sleeper — pillow loft will be matched to your shoulder width.', zh: '側睡習慣，枕頭高度將依您的肩寬進行配對。' },
-      'Back':        { en: 'Back sleeper — medium loft keeps your spine in neutral alignment.', zh: '仰睡習慣，中等枕高能維持脊椎自然對齊。' },
-      'Stomach':     { en: 'Stomach sleeper — only low-loft pillows prevent neck strain for you.', zh: '趴睡習慣，僅低枕能避免頸椎受壓。' },
-      'Combination': { en: 'Combination sleeper — adjustable or medium-loft pillows are your match.', zh: '多種睡姿，可調整或中等枕高為您的最佳選擇。' },
-    }
-    insights.push({ key: 'sleepPosition', text: tr(map[answers.sleepPosition], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.shoulderWidth) {
-    const map: Record<string, { en: string; zh: string }> = {
-      'Petite':  { en: 'Narrower frame — medium loft fills your shoulder gap without overfilling.', zh: '窄肩體型，中等枕高能填補肩頸空間而不過高。' },
-      'Average': { en: 'Average build — medium-to-high loft is your pillow sweet spot.', zh: '標準肩寬，中至高枕是您的理想枕高範圍。' },
-      'Broad':   { en: 'Broad shoulders — high loft is essential to fill the ear-to-shoulder gap.', zh: '寬肩體型，高枕為填補耳肩間距所必需。' },
-    }
-    insights.push({ key: 'shoulderWidth', text: tr(map[answers.shoulderWidth], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.pillowFeel) {
-    const map: Record<string, { en: string; zh: string }> = {
-      'Sink':     { en: 'Cushioned sink-in feel — Down pillow scores highest.', zh: '偏好陷入包覆感，羽絨枕評分最高。' },
-      'Springy':  { en: 'Responsive support — Latex pillow is your match.', zh: '偏好彈力回彈，乳膠枕最適合您。' },
-      'Contour':  { en: 'Pressure-relieving contour — Memory Foam is recommended.', zh: '偏好貼合頸部，記憶棉枕為首選推薦。' },
-      'Balanced': { en: 'Balanced feel — Tech Fiber pillow is a great all-round choice.', zh: '偏好均衡輕盈，科技纖維枕為全方位優質選擇。' },
-    }
-    insights.push({ key: 'pillowFeel', text: tr(map[answers.pillowFeel], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.pillowPriority) {
-    const map: Record<string, { en: string; zh: string }> = {
-      'Allergies': { en: 'Allergy protection is key — Latex and Tech Fiber are prioritised.', zh: '防過敏為首要需求，乳膠枕與科技纖維枕優先推薦。' },
-      'Value':     { en: 'Value-focused — Tech Fiber offers the best comfort per dollar.', zh: '重視CP值，科技纖維枕提供最佳舒適性價比。' },
-      'Premium':   { en: 'Premium priority — Down and Latex are your top options.', zh: '追求優質體驗，羽絨枕與乳膠枕為您的頂級之選。' },
-    }
-    insights.push({ key: 'pillowPriority', text: tr(map[answers.pillowPriority], zh ? 'zh' : 'en') })
-  }
-
-  return insights
-}
-
-export default function Sidebar({ answers }: SidebarProps) {
+export default function Sidebar({ answers, total }: SidebarProps) {
   const { lang } = useLang()
   const zh = lang === 'zh'
-  const insights = buildInsights(answers, zh)
-  const count = Object.keys(answers).length
-  const total = 11
+  const insights: { key: string; text: string }[] = []
+  for (const k of Object.keys(answers) as (keyof QuizAnswers)[]) {
+    const v = answers[k]
+    const t = v ? INSIGHTS[k]?.[v] : undefined
+    if (t) insights.push({ key: k, text: zh ? t.zh : t.en })
+  }
+  const count = insights.length
 
   return (
     <GlassCard className="p-6 lg:sticky lg:top-24">
       <div className="flex items-center gap-2 mb-4">
         <div className="w-2 h-2 rounded-full bg-sage animate-pulse" />
-        <p className="text-xs font-semibold text-charcoal/50 tracking-widest uppercase">
-          {zh ? '即時分析' : 'Live Analysis'}
-        </p>
+        <p className="text-xs font-semibold text-charcoal/50 tracking-widest uppercase">{zh ? '即時分析' : 'Live Analysis'}</p>
       </div>
-
       {count === 0 ? (
         <p className="text-sm text-charcoal/40 leading-relaxed">
-          {zh
-            ? '您的每個回答都會即時優化您的診斷結果。'
-            : 'Your answers will shape your prescription in real-time as you go.'}
+          {zh ? '您的每個回答都會即時調整推薦結果。' : 'Your answers shape the recommendation in real time as you go.'}
         </p>
       ) : (
         <div className="space-y-3">
           <AnimatePresence mode="popLayout">
-            {insights.map((insight) => (
-              <motion.div
-                key={insight.key}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.3 }}
-                className="border-l-2 border-sage/40 pl-3"
-              >
-                <p className="text-sm text-charcoal/70 leading-relaxed">{insight.text}</p>
+            {insights.map(i => (
+              <motion.div key={i.key} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.3 }} className="border-l-2 border-sage/40 pl-3">
+                <p className="text-sm text-charcoal/70 leading-relaxed">{i.text}</p>
               </motion.div>
             ))}
           </AnimatePresence>
         </div>
       )}
-
       {count > 0 && (
         <div className="mt-6 pt-4 border-t border-charcoal/8">
           <p className="text-xs text-charcoal/35">
-            {zh
-              ? count < total
-                ? `正在比較 ${Math.max(2, total - count * 2)} 個候選品項…`
-                : '分析完成，正在生成您的診斷結果。'
-              : count < total
-              ? `Refining across ${Math.max(2, total - count * 2)} candidates…`
-              : 'Analysis complete — generating your prescription.'}
+            {count < total
+              ? (zh ? `已回答 ${count} / ${total} 題…` : `${count} of ${total} answered…`)
+              : (zh ? '分析完成，正在產生您的推薦。' : 'Analysis complete. Generating your recommendation.')}
           </p>
         </div>
       )}

@@ -1,7 +1,7 @@
 # Supabase setup
 
-This app uses Supabase for: storing user responses, serving the product catalog
-+ questions + scoring rules, and powering the admin panel (Phase 2).
+This app uses Supabase for: storing user responses, serving the product catalog,
+and powering the products-only admin panel.
 
 ## 1. Create the project
 1. Go to [supabase.com](https://supabase.com) → **New project**.
@@ -11,8 +11,8 @@ This app uses Supabase for: storing user responses, serving the product catalog
 ## 2. Create the schema
 1. Dashboard → **SQL Editor → New query**.
 2. Paste the entire contents of [`supabase/schema.sql`](../supabase/schema.sql) and **Run**.
-3. You should see the tables under **Table Editor**: `products`, `questions`,
-   `question_options`, `scoring_rules`, `responses`, `admins`.
+3. You should see the tables under **Table Editor**: `products`, `responses`, `admins`.
+   (v2: questions and scoring rules live in code, not in the database.)
 
 ## 3. Get the API keys
 1. Dashboard → **Project Settings → API**.
@@ -32,19 +32,15 @@ VITE_SUPABASE_ANON_KEY=eyJhbGc...your-anon-key...
 Restart `npm run dev` so Vite picks up the vars. For Netlify, add the same two
 variables under **Site settings → Environment variables**.
 
-## 5. Seed the catalog & scoring rules
-Run [`supabase/seed.sql`](../supabase/seed.sql) in the SQL Editor. It loads the
-17 products and 101 scoring rules the app reads at runtime (and that the admin
-panel will edit). It's safe to re-run — it resets `products` + `scoring_rules`
-and leaves `responses` untouched.
+## 5. Seed the catalog
+Run [`supabase/seed.sql`](../supabase/seed.sql) in the SQL Editor. It upserts the
+45 FET.com products (bedding sets, comforters, pillows) the app reads at runtime
+and that the client edits in `/admin`. Safe to re-run; leaves `responses` untouched.
 
-> Regenerate it any time the bundled JSON/rules change: `npx tsx scripts/gen-seed.ts`.
+> Regenerate it any time `src/data/catalog.json` changes: `npx tsx scripts/gen-seed.ts`.
 
-After seeding, the app automatically loads the catalog from Supabase; until then
-it falls back to the bundled data, so nothing breaks if the seed hasn't run yet.
-
-_(Questions are still served from code for now — moving them into the DB is the
-next sub-step, ahead of the admin panel.)_
+After seeding, the app loads the catalog from Supabase; until then it falls back
+to the bundled data, so nothing breaks if the seed hasn't run yet.
 
 ## 6. Create an admin user (Phase 2)
 1. Dashboard → **Authentication → Users → Add user** (email + password).
@@ -54,7 +50,3 @@ next sub-step, ahead of the admin panel.)_
    insert into admins (user_id, email) values ('<paste-uid>', 'you@example.com');
    ```
 4. That account can now log into `/admin`.
-
----
-
-**What I need from you to proceed:** the **Project URL** and **anon key** from step 3.

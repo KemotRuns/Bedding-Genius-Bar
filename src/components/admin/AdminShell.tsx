@@ -1,20 +1,18 @@
 import { useState } from 'react'
 import ResponsesPanel from './ResponsesPanel'
 import ProductsPanel from './ProductsPanel'
-import QuestionsPanel from './QuestionsPanel'
-import ScoringPanel from './ScoringPanel'
 
-type Tab = 'responses' | 'products' | 'questions' | 'scoring'
+// v2: the client manages products only. Questions, flow and matching weights
+// live in code and come back to Brainiak for changes.
+type Tab = 'products' | 'responses'
 
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'responses', label: 'Responses' },
-  { id: 'products', label: 'Products' },
-  { id: 'questions', label: 'Questions' },
-  { id: 'scoring', label: 'Scoring rules' },
+  { id: 'products', label: 'Products 商品' },
+  { id: 'responses', label: 'Responses 回覆' },
 ]
 
 export default function AdminShell({ email, onSignOut }: { email?: string; onSignOut: () => void }) {
-  const [tab, setTab] = useState<Tab>('responses')
+  const [tab, setTab] = useState<Tab>('products')
 
   return (
     <div className="min-h-screen bg-cream">
@@ -32,25 +30,17 @@ export default function AdminShell({ email, onSignOut }: { email?: string; onSig
           </div>
           <nav className="flex gap-1">
             {TABS.map(t => (
-              <button
-                key={t.id}
-                onClick={() => setTab(t.id)}
-                className={`text-sm px-4 py-2.5 rounded-t-lg transition-colors cursor-pointer ${
-                  tab === t.id ? 'bg-cream text-charcoal font-medium' : 'text-cream/60 hover:text-cream'
-                }`}
-              >
+              <button key={t.id} onClick={() => setTab(t.id)}
+                className={`text-sm px-4 py-2.5 rounded-t-lg transition-colors cursor-pointer ${tab === t.id ? 'bg-cream text-charcoal font-medium' : 'text-cream/60 hover:text-cream'}`}>
                 {t.label}
               </button>
             ))}
           </nav>
         </div>
       </header>
-
       <main className="max-w-6xl mx-auto px-6 py-8">
-        {tab === 'responses' && <ResponsesPanel />}
         {tab === 'products' && <ProductsPanel />}
-        {tab === 'questions' && <QuestionsPanel />}
-        {tab === 'scoring' && <ScoringPanel />}
+        {tab === 'responses' && <ResponsesPanel />}
       </main>
     </div>
   )

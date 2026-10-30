@@ -9,13 +9,15 @@ interface ResponseRow {
   lang: string | null
   answers: Record<string, string>
   completed_sections: string[]
-  recommendation: { sheet?: string; comforter?: string; pillow?: string }
+  recommendation: { sheet?: Rec | string; comforter?: Rec | string; pillow?: Rec | string }
 }
+type Rec = { id: string; name: string; name_zh: string; url: string }
+const recName = (r?: Rec | string) => (typeof r === 'string' ? r : r?.name_zh ?? '')
 
 const ANSWER_KEYS = [
-  'nightHeat', 'skinType', 'careLevel', 'sensoryPref',
-  'comforterTemp', 'comforterFeel', 'breathingIssues',
-  'sleepPosition', 'shoulderWidth', 'pillowFeel', 'pillowPriority',
+  'nightHeat', 'skinType', 'careLevel', 'sensoryPref', 'designStyle',
+  'comforterTemp', 'comforterFeel', 'comforterAllergy', 'comforterScent', 'comforterUse',
+  'sleepPosition', 'pillowFeel', 'shoulderWidth', 'pillowAllergy', 'pillowTier',
 ]
 
 function csvCell(v: unknown): string {
@@ -28,7 +30,7 @@ function toCsv(rows: ResponseRow[]): string {
   const lines = rows.map(r => [
     r.created_at, r.name ?? '', r.email ?? '', r.lang ?? '',
     (r.completed_sections ?? []).join(' | '),
-    r.recommendation?.sheet ?? '', r.recommendation?.comforter ?? '', r.recommendation?.pillow ?? '',
+    recName(r.recommendation?.sheet), recName(r.recommendation?.comforter), recName(r.recommendation?.pillow),
     ...ANSWER_KEYS.map(k => r.answers?.[k] ?? ''),
   ].map(csvCell).join(','))
   return [header.join(','), ...lines].join('\n')
@@ -146,7 +148,7 @@ export default function ResponsesPanel() {
                         <td className="px-4 py-3 text-charcoal/60">{r.email || '—'}</td>
                         <td className="px-4 py-3 text-charcoal/50">{(r.completed_sections ?? []).join(', ') || '—'}</td>
                         <td className="px-4 py-3 text-charcoal/60">
-                          <span className="text-xs">{[r.recommendation?.sheet, r.recommendation?.comforter, r.recommendation?.pillow].filter(Boolean).join(' · ') || '—'}</span>
+                          <span className="text-xs">{[recName(r.recommendation?.sheet), recName(r.recommendation?.comforter), recName(r.recommendation?.pillow)].filter(Boolean).join(' · ') || '—'}</span>
                         </td>
                         <td className="px-4 py-3 whitespace-nowrap text-right">
                           <button onClick={() => setExpanded(expanded === r.id ? null : r.id)} className="text-xs text-charcoal/45 hover:text-charcoal cursor-pointer mr-3">

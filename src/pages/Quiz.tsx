@@ -17,7 +17,7 @@ const SECTION_MAP: Record<string, string> = {
 }
 
 const SECTION_TITLE_BILINGUAL: Record<string, { en: string; zh: string }> = {
-  sheets:    { en: 'Sheets & Bedding', zh: '床組材質' },
+  sheets:    { en: 'Bedding Sets', zh: '床組' },
   comforter: { en: 'Comforter',        zh: '棉被' },
   pillow:    { en: 'Pillow',           zh: '枕頭' },
 }
@@ -254,8 +254,8 @@ export default function Quiz() {
                     </div>
                     <p className="text-charcoal/50 text-sm mb-6">
                       {zh
-                        ? `完成！您的${sectionTitleObj.zh}診斷已準備好。`
-                        : `All done — your ${sectionTitleObj.en.toLowerCase()} prescription is ready.`}
+                        ? `完成！您的${sectionTitleObj.zh}推薦已準備好。`
+                        : `All done. Your ${sectionTitleObj.en.toLowerCase()} recommendation is ready.`}
                     </p>
                     <motion.button
                       onClick={handleSubmit}
@@ -264,7 +264,7 @@ export default function Quiz() {
                       whileTap={{ scale: 0.97 }}
                       transition={{ ease: apple }}
                     >
-                      {editParam ? (zh ? '更新結果' : 'Update results') : (zh ? '查看診斷結果' : 'Get My Prescription')}
+                      {editParam ? (zh ? '更新結果' : 'Update results') : (zh ? '查看推薦結果' : 'See my recommendation')}
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
                         <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
@@ -290,7 +290,7 @@ export default function Quiz() {
 
           {/* ── Sidebar ─────────────────────────────── */}
           <aside className="hidden lg:block mt-8">
-            <Sidebar answers={answers} />
+            <Sidebar answers={answers} total={sectionQuestions.length} />
           </aside>
 
         </div>

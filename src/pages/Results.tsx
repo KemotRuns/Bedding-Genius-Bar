@@ -1,306 +1,193 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { getRecommendation } from '../lib/engine'
+import { getRecommendation, matchPercent } from '../lib/engine'
 import { useCatalog } from '../lib/CatalogContext'
-import type { QuizAnswers, RecommendationResult, SheetProduct, PillowProduct, ComforterProduct, NightHeat } from '../lib/types'
+import type { QuizAnswers, ScoredProduct } from '../lib/types'
 import { useLang } from '../lib/LanguageContext'
 import { tr } from '../lib/i18n'
 import { buildSession, saveSession, isSectionComplete } from '../lib/session'
 
 const SECTION_ORDER = ['sheets', 'comforter', 'pillow'] as const
-
-// ── Helpers ──────────────────────────────────────────────────────────────────
+type SectionId = typeof SECTION_ORDER[number]
 
 const apple = [0.22, 1, 0.36, 1] as const
+const itemVariants = { hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: apple } } }
+const containerVariants = { hidden: {}, show: { transition: { staggerChildren: 0.1 } } }
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 18 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: apple } },
-}
-
-const containerVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.1 } },
-}
-
-function matchScore(score: number): number {
-  return Math.min(100, Math.max(60, Math.round(60 + (score / 18) * 40)))
-}
-
-const ALL_SECTIONS = [
-  {
-    id: 'sheets',
-    label:   { en: 'Sheets & Bedding', zh: '床組材質' },
-    chinese: '床組材質',
-    desc:    { en: 'Find your ideal fabric for temperature control and skin comfort.', zh: '找出最適合您體溫調節與膚感的床單材質。' },
-  },
-  {
-    id: 'comforter',
-    label:   { en: 'Comforter', zh: '棉被' },
-    chinese: '棉被',
-    desc:    { en: 'Match your comforter\'s fill and warmth to how you sleep.', zh: '依睡眠習慣選出最適合您的棉被填充與保暖度。' },
-  },
-  {
-    id: 'pillow',
-    label:   { en: 'Pillow', zh: '枕頭' },
-    chinese: '枕頭',
-    desc:    { en: 'Align loft and firmness to your sleep position for pain-free mornings.', zh: '依睡姿選對枕頭高度與硬度，告別晨間頸痛。' },
-  },
-]
-
-const CARD_LABELS: Record<string, { en: string; zh: string }> = {
-  sheets:    { en: 'Sheet Prescription',    zh: '床組推薦' },
-  comforter: { en: 'Comforter Prescription', zh: '棉被推薦' },
-  pillow:    { en: 'Pillow Prescription',    zh: '枕頭推薦' },
-}
-
-const FILL_ZH: Record<string, string> = {
-  Silk: '蠶絲', Wool: '羊毛', Down: '羽絨', 'Tech Fiber': '科技纖維',
-  'Memory Foam': '記憶棉', Latex: '乳膠',
-}
-const WARMTH_ZH: Record<string, string> = {
-  'All-Season': '四季被', Winter: '冬被', Summer: '夏被',
-}
-const WEIGHT_ZH: Record<string, string> = {
-  Light: '輕量', Medium: '中等', Heavy: '厚重',
-}
-const MATERIAL_ZH: Record<string, string> = {
-  Cotton: '棉', 'Tencel Lyocell': '天絲', Linen: '亞麻',
-  Silk: '蠶絲', Flannel: '法蘭絨', 'Nylon Fiber': '尼龍纖維',
-}
-const WEAVE_ZH: Record<string, string> = {
-  Percale: '平織', Sateen: '緞紋', Plain: '平紋', 'N/A': '平紋',
+const SECTIONS: Record<SectionId, { label: { en: string; zh: string }; desc: { en: string; zh: string }; cardLabel: { en: string; zh: string }; accent: string }> = {
+  sheets:    { label: { en: 'Bedding Sets', zh: '床組' }, desc: { en: 'Find your ideal fabric and design for temperature control and skin comfort.', zh: '找出最適合您體溫調節、膚感與風格的床組。' }, cardLabel: { en: 'Bedding Set Recommendation', zh: '床組推薦' }, accent: 'sage' },
+  comforter: { label: { en: 'Comforter', zh: '棉被' }, desc: { en: 'Match your comforter\'s fill and warmth to how you sleep.', zh: '依睡眠習慣選出最適合您的棉被填充與保暖度。' }, cardLabel: { en: 'Comforter Recommendation', zh: '棉被推薦' }, accent: 'gold' },
+  pillow:    { label: { en: 'Pillow', zh: '枕頭' }, desc: { en: 'Align height and feel to your sleep position for pain-free mornings.', zh: '依睡姿選對枕頭高度與觸感，告別晨間頸痛。' }, cardLabel: { en: 'Pillow Recommendation', zh: '枕頭推薦' }, accent: 'sage' },
 }
 
 // ── Sub-components ────────────────────────────────────────────────────────────
-
-function ProfileBadge({ icon, label }: { icon: React.ReactNode; label: string }) {
-  return (
-    <div className="flex flex-col items-center gap-1.5 px-4 py-3 bg-white/50 backdrop-blur-sm border border-white/60 rounded-2xl">
-      <div className="text-sage-dark">{icon}</div>
-      <span className="text-xs font-medium text-charcoal/70 text-center leading-tight">{label}</span>
-    </div>
-  )
-}
-
-function AttributeBar({ label, value, color, descriptor }: {
-  label: string; value: 1 | 2 | 3 | 4 | 5; color: string; descriptor: string
-}) {
-  const pct = (value / 5) * 100
-  return (
-    <div className="grid grid-cols-[120px_1fr_64px] items-center gap-4">
-      <span className="text-sm text-charcoal/55 text-right">{label}</span>
-      <div className="h-2 bg-charcoal/8 rounded-full overflow-hidden">
-        <motion.div
-          className={`h-full rounded-full ${color}`}
-          initial={{ width: 0 }}
-          animate={{ width: `${pct}%` }}
-          transition={{ duration: 0.6, ease: apple, delay: 0.2 }}
-        />
-      </div>
-      <span className="text-xs font-semibold text-charcoal/50">{descriptor}</span>
-    </div>
-  )
-}
 
 function MatchRing({ score, zh }: { score: number; zh: boolean }) {
   const radius = 28
   const circumference = 2 * Math.PI * radius
   const dash = (score / 100) * circumference
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className="flex flex-col items-center gap-1 flex-shrink-0">
       <div className="relative w-20 h-20">
         <svg className="w-full h-full -rotate-90" viewBox="0 0 72 72">
           <circle cx="36" cy="36" r={radius} fill="none" stroke="rgba(26,26,26,0.08)" strokeWidth="5" />
-          <motion.circle
-            cx="36" cy="36" r={radius}
-            fill="none" stroke="#C49A6C" strokeWidth="5" strokeLinecap="round"
-            strokeDasharray={circumference}
-            initial={{ strokeDashoffset: circumference }}
-            animate={{ strokeDashoffset: circumference - dash }}
-            transition={{ duration: 1, ease: apple, delay: 0.4 }}
-          />
+          <motion.circle cx="36" cy="36" r={radius} fill="none" stroke="#C49A6C" strokeWidth="5" strokeLinecap="round"
+            strokeDasharray={circumference} initial={{ strokeDashoffset: circumference }} animate={{ strokeDashoffset: circumference - dash }}
+            transition={{ duration: 1, ease: apple, delay: 0.4 }} />
         </svg>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <span className="text-lg font-bold text-charcoal">{score}%</span>
-        </div>
+        <div className="absolute inset-0 flex items-center justify-center"><span className="text-lg font-bold text-charcoal">{score}%</span></div>
       </div>
       <span className="text-xs text-charcoal/40 font-medium tracking-wide">{zh ? '匹配' : 'Match'}</span>
     </div>
   )
 }
 
-function LoftDiagram({ loft, zh }: { loft: 'Low' | 'Medium' | 'High'; zh: boolean }) {
-  const heights: Record<string, number> = { Low: 12, Medium: 22, High: 34 }
-  const h = heights[loft]
-  const label = zh
-    ? { High: '高枕', Medium: '中枕', Low: '低枕' }[loft]
-    : `${loft} Loft`
+function ProductImage({ src, alt, className = '' }: { src: string; alt: string; className?: string }) {
+  const [failed, setFailed] = useState(false)
+  if (!src || failed) {
+    return <div className={`bg-charcoal/5 flex items-center justify-center text-charcoal/25 text-xs ${className}`}>No photo</div>
+  }
+  return <img src={src} alt={alt} loading="lazy" onError={() => setFailed(true)} className={`object-cover ${className}`} />
+}
+
+function ShopButton({ url, zh, small = false }: { url: string; zh: boolean; small?: boolean }) {
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div className="relative w-24" style={{ height: 44 }}>
-        <motion.div
-          className="absolute bottom-0 left-0 right-0 bg-sage/25 border-2 border-sage/40 rounded-xl"
-          initial={{ height: 0 }}
-          animate={{ height: h }}
-          transition={{ duration: 0.6, ease: apple, delay: 0.3 }}
-        />
-        <div className="absolute bottom-0 left-0 right-0 h-px bg-charcoal/20" />
-      </div>
-      <span className="text-xs font-semibold text-charcoal/60 uppercase tracking-widest">{label}</span>
-    </div>
+    <a href={url} target="_blank" rel="noopener noreferrer"
+      className={`inline-flex items-center gap-2 rounded-xl font-medium transition-colors cursor-pointer ${small
+        ? 'text-xs px-3 py-1.5 border border-charcoal/15 text-charcoal/60 hover:border-gold hover:text-gold'
+        : 'text-sm px-5 py-2.5 bg-charcoal text-cream hover:bg-charcoal/85 shadow-sm'}`}>
+      {zh ? '前往 FET.com 選購' : 'View on FET.com'}
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M5 2H12V9M12 2L3 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+    </a>
   )
 }
+
+function Chip({ children, tone = 'neutral' }: { children: React.ReactNode; tone?: 'neutral' | 'sage' | 'gold' }) {
+  const cls = tone === 'sage' ? 'bg-sage/12 text-sage-dark' : tone === 'gold' ? 'bg-gold/15 text-gold' : 'bg-charcoal/8 text-charcoal/55'
+  return <span className={`text-xs px-3 py-1 rounded-full font-medium ${cls}`}>{children}</span>
+}
+
+// ── Prescription card ────────────────────────────────────────────────────────
+
+function ProductCard({ section, top, runnerUp, answers, zh }: {
+  section: SectionId; top: ScoredProduct; runnerUp?: ScoredProduct; answers: QuizAnswers; zh: boolean
+}) {
+  const { questions } = useCatalog()
+  const meta = SECTIONS[section]
+  const p = top.product
+  const accentBg = meta.accent === 'gold' ? 'bg-gold/8 border-gold/20' : 'bg-sage/12 border-sage/20'
+  const tone = meta.accent === 'gold' ? 'gold' : 'sage'
+  const name = zh ? p.name_zh : p.name_en
+  const altName = zh ? p.name_en : p.name_zh
+  const bullets = zh ? p.bullets_zh : p.bullets_en
+
+  // "Why this fits": the option labels of every criterion this product satisfied.
+  const matchedLabels = top.matched.map(q => {
+    const qc = questions.find(x => x.id === q)
+    const opt = qc?.options.find(o => o.value === answers[q])
+    return opt ? (zh && opt.label_zh ? opt.label_zh : opt.label) : null
+  }).filter((x): x is string => Boolean(x))
+
+  return (
+    <>
+      <div className="glass-card p-0 overflow-hidden">
+        <div className={`${accentBg} border-b px-7 py-4 flex items-center justify-between gap-4`}>
+          <div className="min-w-0">
+            <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">{zh ? meta.cardLabel.zh : meta.cardLabel.en}</p>
+            <h2 className="text-xl font-semibold text-charcoal tracking-tight leading-snug">{name}</h2>
+            {altName && <p className="text-xs text-charcoal/45 mt-0.5 truncate">{altName}</p>}
+          </div>
+          <MatchRing score={matchPercent(top)} zh={zh} />
+        </div>
+        <div className="px-7 py-6">
+          <div className="flex flex-col sm:flex-row gap-6">
+            <a href={p.url} target="_blank" rel="noopener noreferrer" className="flex-shrink-0 block w-full sm:w-44">
+              <ProductImage src={p.image_url} alt={name} className="w-full aspect-square rounded-xl border border-charcoal/8 bg-white" />
+            </a>
+            <div className="flex-1 min-w-0">
+              <div className="flex flex-wrap gap-2 mb-4">
+                {(zh ? p.type_zh : p.type_en) && <Chip tone={tone}>{zh ? p.type_zh : p.type_en}</Chip>}
+                {p.style && <Chip>{{ Nature: zh ? '自然風格' : 'Nature-inspired', Minimal: zh ? '簡約風格' : 'Minimalist', Playful: zh ? '主題童趣' : 'Playful', Classic: zh ? '經典奢華' : 'Classic luxury' }[p.style]}</Chip>}
+              </div>
+              {bullets.length > 0 && (
+                <ul className="space-y-2 mb-5">
+                  {bullets.map((b, i) => (
+                    <li key={i} className="flex items-start gap-2.5 text-sm text-charcoal/70 leading-relaxed">
+                      <svg className="mt-1 flex-shrink-0" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7L6 10L11 4" stroke="#567A53" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                      <span>{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+              <ShopButton url={p.url} zh={zh} />
+            </div>
+          </div>
+          {matchedLabels.length > 0 && (
+            <div className="mt-6 pt-5 border-t border-charcoal/6">
+              <p className="text-[11px] font-semibold tracking-widest uppercase text-charcoal/35 mb-2">{zh ? '符合您的需求' : 'Why this fits you'}</p>
+              <div className="flex flex-wrap gap-2">{matchedLabels.map(l => <Chip key={l} tone="sage">{l}</Chip>)}</div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {runnerUp && runnerUp.score > 0 && (
+        <div className="glass-card p-5 mt-4">
+          <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/30 mb-3">{zh ? '也可考慮' : 'Also consider'}</p>
+          <div className="flex items-center gap-4">
+            <a href={runnerUp.product.url} target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
+              <ProductImage src={runnerUp.product.image_url} alt={zh ? runnerUp.product.name_zh : runnerUp.product.name_en} className="w-16 h-16 rounded-lg border border-charcoal/8 bg-white" />
+            </a>
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-charcoal text-sm leading-snug">{zh ? runnerUp.product.name_zh : runnerUp.product.name_en}</p>
+              <p className="text-xs text-charcoal/45 mt-0.5">{zh ? runnerUp.product.type_zh : runnerUp.product.type_en}</p>
+              <div className="mt-2"><ShopButton url={runnerUp.product.url} zh={zh} small /></div>
+            </div>
+            <div className="text-right flex-shrink-0">
+              <div className="text-sm font-bold text-charcoal/40">{matchPercent(runnerUp)}%</div>
+              <div className="text-xs text-charcoal/30">{zh ? '匹配度' : 'match'}</div>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  )
+}
+
+// ── Profile badges (header) ──────────────────────────────────────────────────
+
+const PROFILE_KEYS: (keyof QuizAnswers)[] = ['nightHeat', 'skinType', 'designStyle', 'comforterTemp', 'comforterFeel', 'sleepPosition', 'shoulderWidth', 'pillowFeel']
 
 function ProfileSection({ answers, zh }: { answers: QuizAnswers; zh: boolean }) {
-  const badges: { icon: React.ReactNode; label: string }[] = []
-
-  if (answers.nightHeat) {
-    const m = {
-      'Very Hot': { en: 'Hot sleeper',   zh: '極易出汗' },
-      Warm:       { en: 'Runs warm',     zh: '偏熱體質' },
-      Neutral:    { en: 'Comfortable',   zh: '體溫適中' },
-      Cold:       { en: 'Runs cold',     zh: '偏冷體質' },
-    }
-    const key = answers.nightHeat as keyof typeof m
-    badges.push({ icon: <TempIcon temp={answers.nightHeat as NightHeat} />, label: tr(m[key], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.skinType && answers.skinType !== 'None') {
-    const m = {
-      Sensitive:       { en: 'Sensitive skin',    zh: '敏感肌' },
-      'Allergic/Eczema': { en: 'Eczema / Allergic', zh: '過敏／濕疹' },
-    }
-    const key = answers.skinType as keyof typeof m
-    badges.push({ icon: <ShieldIcon />, label: tr(m[key], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.sleepPosition) {
-    const m = {
-      Side:        { en: 'Side sleeper',    zh: '側睡' },
-      Back:        { en: 'Back sleeper',    zh: '仰睡' },
-      Stomach:     { en: 'Stomach sleeper', zh: '趴睡' },
-      Combination: { en: 'Combo sleeper',   zh: '多種睡姿' },
-    }
-    const key = answers.sleepPosition as keyof typeof m
-    badges.push({ icon: <BedIcon />, label: tr(m[key], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.shoulderWidth) {
-    const m = {
-      Petite:  { en: 'Narrower (S/XS)', zh: '窄肩 (S/XS)' },
-      Average: { en: 'Average (M/L)',   zh: '標準肩 (M/L)' },
-      Broad:   { en: 'Broader (XL+)',   zh: '寬肩 (XL+)' },
-    }
-    const key = answers.shoulderWidth as keyof typeof m
-    badges.push({ icon: <BodyIcon />, label: tr(m[key], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.comforterFeel) {
-    const m = {
-      Heavy:     { en: 'Heavy comforter', zh: '厚實棉被' },
-      Fluffy:    { en: 'Fluffy comforter', zh: '蓬鬆棉被' },
-      Smooth:    { en: 'Smooth & light',  zh: '輕薄順滑' },
-      Practical: { en: 'Easy care',       zh: '易於清洗' },
-    }
-    const key = answers.comforterFeel as keyof typeof m
-    badges.push({ icon: <WashIcon />, label: tr(m[key], zh ? 'zh' : 'en') })
-  }
-
-  if (answers.pillowFeel) {
-    const m = {
-      Sink:     { en: 'Cushioned pillow',   zh: '包覆感枕頭' },
-      Springy:  { en: 'Springy pillow',     zh: '彈力枕頭' },
-      Contour:  { en: 'Contouring pillow',  zh: '貼合枕頭' },
-      Balanced: { en: 'Balanced pillow',    zh: '均衡枕頭' },
-    }
-    const key = answers.pillowFeel as keyof typeof m
-    badges.push({ icon: <PersonIcon />, label: tr(m[key], zh ? 'zh' : 'en') })
-  }
-
+  const { questions } = useCatalog()
+  const badges = PROFILE_KEYS.map(k => {
+    const v = answers[k]; if (!v) return null
+    const opt = questions.find(q => q.id === k)?.options.find(o => o.value === v)
+    return opt ? (zh && opt.label_zh ? opt.label_zh : opt.label) : null
+  }).filter((x): x is string => Boolean(x))
   if (badges.length === 0) return null
-
   return (
     <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-      {badges.map((b, i) => <ProfileBadge key={i} icon={b.icon} label={b.label} />)}
+      {badges.map(b => <span key={b} className="text-xs font-medium text-charcoal/75 px-3.5 py-2 bg-white/50 backdrop-blur-sm border border-white/60 rounded-2xl">{b}</span>)}
     </div>
   )
 }
 
-// ── Inline SVG icons ──────────────────────────────────────────────────────────
-
-const TempIcon = ({ temp }: { temp: NightHeat }) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    {temp === 'Cold'
-      ? <><line x1="10" y1="2" x2="10" y2="18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-          <line x1="4" y1="10" x2="16" y2="10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-          <circle cx="10" cy="10" r="2" fill="currentColor"/></>
-      : temp === 'Very Hot'
-      ? <><path d="M10 3C10 3 13.5 7 13.5 11C13.5 12.8 12.8 13.8 11.8 14.5C12 13.5 11.8 12.5 11 11.5C11 11.5 10 12.5 9 11.5C8 10.5 8 9 8 9C8 9 6.5 11 8 13.5C7 12.8 6.5 11.5 6.5 11C6.5 7 10 3 10 3Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
-          <path d="M10 18C12 18 13.5 16.5 13.5 14.5C13.5 12.5 10 10 10 10C10 10 6.5 12.5 6.5 14.5C6.5 16.5 8 18 10 18Z" stroke="currentColor" strokeWidth="1.5"/></>
-      : <><rect x="7.5" y="3" width="5" height="11" rx="2.5" stroke="currentColor" strokeWidth="1.5"/>
-          <circle cx="10" cy="15" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
-          <rect x="9" y="5" width="2" height="7" rx="1" fill="currentColor"/></>
-    }
-  </svg>
-)
-const PersonIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <circle cx="10" cy="5" r="3" stroke="currentColor" strokeWidth="1.5"/>
-    <path d="M5 18v-6a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-  </svg>
-)
-const BedIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <rect x="2" y="8" width="16" height="8" rx="2" stroke="currentColor" strokeWidth="1.5"/>
-    <path d="M2 12h16" stroke="currentColor" strokeWidth="1.5"/>
-    <rect x="4" y="5" width="5" height="4" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
-    <rect x="11" y="5" width="5" height="4" rx="1.5" stroke="currentColor" strokeWidth="1.5"/>
-  </svg>
-)
-const ShieldIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <path d="M10 2L3 5v7c0 4 3.5 6 7 7s7-3 7-7V5l-7-3z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
-  </svg>
-)
-const WashIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" strokeWidth="1.5"/>
-    <circle cx="10" cy="12" r="3.5" stroke="currentColor" strokeWidth="1.5"/>
-    <line x1="6" y1="7" x2="9" y2="7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <circle cx="12" cy="7" r="1" fill="currentColor"/>
-    <circle cx="14" cy="7" r="1" fill="currentColor"/>
-  </svg>
-)
-const BodyIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-    <circle cx="10" cy="4" r="2.5" stroke="currentColor" strokeWidth="1.5"/>
-    <path d="M10 7v8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M10 10l-4 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M10 10l4 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M10 15l-2 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M10 15l2 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-  </svg>
-)
-
-// ── Dev fallback ──────────────────────────────────────────────────────────────
-
+// ── Dev fallback (no quiz in session) ────────────────────────────────────────
 const DUMMY_ANSWERS: QuizAnswers = {
-  nightHeat: 'Warm', skinType: 'Sensitive', careLevel: 'Minimal',
-  sensoryPref: 'Silky', comforterTemp: 'Neutral', comforterFeel: 'Smooth',
-  breathingIssues: 'No', sleepPosition: 'Side', shoulderWidth: 'Average',
-  pillowFeel: 'Balanced', pillowPriority: 'Value',
+  nightHeat: 'Warm', skinType: 'SensitiveLux', careLevel: 'Standard', sensoryPref: 'Silky', designStyle: 'Nature',
+  comforterTemp: 'Neutral', comforterFeel: 'Smooth', comforterAllergy: 'Natural', comforterScent: 'NoScent', comforterUse: 'Luxury',
+  sleepPosition: 'Side', shoulderWidth: 'Average', pillowFeel: 'Contour', pillowAllergy: 'Yes', pillowTier: 'Enhanced',
 }
 
-// ── Main Page ─────────────────────────────────────────────────────────────────
+// ── Page ─────────────────────────────────────────────────────────────────────
 
 export default function Results() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { lang } = useLang()
   const zh = lang === 'zh'
-
   const product = searchParams.get('product') ?? 'sheets'
   const { catalog } = useCatalog()
 
@@ -308,18 +195,10 @@ export default function Results() {
     const raw = sessionStorage.getItem('quiz_answers')
     return raw ? JSON.parse(raw) as QuizAnswers : DUMMY_ANSWERS
   })
-  const result: RecommendationResult = useMemo(() => getRecommendation(answers, catalog), [answers, catalog])
+  const result = useMemo(() => getRecommendation(answers, catalog), [answers, catalog])
+  const ranked: Record<SectionId, ScoredProduct[]> = { sheets: result.sheets, comforter: result.comforters, pillow: result.pillows }
 
-  const sheet     = result.topSheet.product    as SheetProduct
-  const pillow    = result.topPillow.product   as PillowProduct
-  const comforter = result.topComforter.product as ComforterProduct
-
-  const scoreSheet     = matchScore(result.topSheet.score)
-  const scoreComforter = matchScore(result.topComforter.score)
-  const scorePillow    = matchScore(result.topPillow.score)
-
-  // Per-section completion → unified plan.
-  const done: Record<string, boolean> = {
+  const done: Record<SectionId, boolean> = {
     sheets: isSectionComplete('sheets', answers),
     comforter: isSectionComplete('comforter', answers),
     pillow: isSectionComplete('pillow', answers),
@@ -327,27 +206,8 @@ export default function Results() {
   const doneCount = SECTION_ORDER.filter(id => done[id]).length
   const anyComplete = doneCount > 0
 
-  // Bilingual rating descriptor.
-  const descriptors: Record<number, { en: string; zh: string }> = {
-    1: { en: 'Minimal',  zh: '極低' },
-    2: { en: 'Low',      zh: '低' },
-    3: { en: 'Moderate', zh: '中等' },
-    4: { en: 'High',     zh: '高' },
-    5: { en: 'Excellent', zh: '極佳' },
-  }
-  const desc = (v: 1 | 2 | 3 | 4 | 5) => tr(descriptors[v], lang)
-
-  const loftDesc = {
-    High:   { en: 'Fills the gap between ear and shoulder — ideal for side sleepers with broad frames.', zh: '填補耳朵到肩膀外側的空間，適合側睡的寬肩者。' },
-    Medium: { en: 'Keeps your neck in neutral alignment whether you sleep on your back or side.',        zh: '讓頸椎保持自然對齊，適合仰睡或側睡。' },
-    Low:    { en: 'Prevents neck arching — the only safe loft for stomach sleepers.',                    zh: '避免頸椎過度後仰，趴睡者的最佳選擇。' },
-  }
-
-  // ── Save (remembered across the session) ──
-  const savedInit = (() => {
-    try { return JSON.parse(sessionStorage.getItem('tn_saved') || 'null') as { name: string; email: string } | null }
-    catch { return null }
-  })()
+  // ── Save ──
+  const savedInit = (() => { try { return JSON.parse(sessionStorage.getItem('tn_saved') || 'null') as { name: string; email: string } | null } catch { return null } })()
   const [name, setName] = useState(savedInit?.name ?? '')
   const [email, setEmail] = useState(savedInit?.email ?? '')
   const [saved, setSaved] = useState(Boolean(savedInit))
@@ -359,259 +219,75 @@ export default function Results() {
     try { sessionStorage.setItem('tn_saved', JSON.stringify({ name: name.trim(), email: email.trim() })) } catch { /* ignore */ }
     setSaved(true)
   }
-
   function startOver() {
     try { sessionStorage.removeItem('quiz_answers'); sessionStorage.removeItem('tn_saved') } catch { /* ignore */ }
     navigate('/')
   }
+  function scrollToSection(id: string) { document.getElementById(`sec-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
 
-  function scrollToSection(id: string) {
-    document.getElementById(`sec-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  }
-
-  // On arrival, scroll to the section the user just finished (?product=…).
   useEffect(() => {
     const el = document.getElementById(`sec-${product}`)
     if (el) { const t = setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'start' }), 200); return () => clearTimeout(t) }
   }, [product])
 
-  // ── Per-section prescription cards ──
-  const CARDS: Record<string, React.ReactNode> = {
-    sheets: (
-      <>
-        <div className="glass-card p-0 overflow-hidden">
-          <div className="bg-sage/12 border-b border-sage/20 px-7 py-4 flex items-center justify-between">
-            <div>
-              <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">{tr(CARD_LABELS.sheets, lang)}</p>
-              <h2 className="text-xl font-semibold text-charcoal tracking-tight">{sheet.name}</h2>
-              {sheet.collection && <p className="text-xs text-charcoal/45 mt-0.5">{sheet.collection}</p>}
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="hidden sm:flex flex-col items-end gap-1.5">
-                <span className="text-xs bg-charcoal/8 text-charcoal/55 px-3 py-1.5 rounded-full font-medium">
-                  {zh ? (MATERIAL_ZH[sheet.material] ?? sheet.material) : sheet.material} · {zh ? (WEAVE_ZH[sheet.weave] ?? sheet.weave) : (sheet.weave === 'N/A' ? 'Plain Weave' : `${sheet.weave} Weave`)}
-                </span>
-                {sheet.sku && <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">{sheet.sku}</span>}
-              </div>
-              <MatchRing score={scoreSheet} zh={zh} />
-            </div>
-          </div>
-          <div className="px-7 py-6">
-            <p className="text-charcoal/60 text-sm leading-relaxed mb-6">{zh && sheet.description_zh ? sheet.description_zh : sheet.description}</p>
-            <div className="space-y-4 mb-6">
-              <AttributeBar label={zh ? '透氣度' : 'Breathability'}    value={sheet.ratings.breathability} color="bg-sage"           descriptor={desc(sheet.ratings.breathability)} />
-              <AttributeBar label={zh ? '吸濕排汗' : 'Moisture Wicking'} value={sheet.ratings.wicking}       color="bg-blue-400/70"   descriptor={desc(sheet.ratings.wicking)} />
-              <AttributeBar label={zh ? '保暖度' : 'Warmth'}            value={sheet.ratings.warmth}         color="bg-orange-400/70" descriptor={desc(sheet.ratings.warmth)} />
-              <AttributeBar label={zh ? '柔軟度' : 'Softness'}          value={sheet.ratings.softness}       color="bg-purple-400/70" descriptor={desc(sheet.ratings.softness)} />
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {(zh && sheet.best_for_zh ? sheet.best_for_zh : sheet.best_for).map(tag => (
-                <span key={tag} className="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">{tag}</span>
-              ))}
-            </div>
-          </div>
-        </div>
-        {result.allSheets.length > 1 && (
-          <div className="glass-card p-5 mt-4">
-            <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/30 mb-3">{zh ? '也可考慮' : 'Also Consider'}</p>
-            <div className="flex items-center gap-4">
-              <div className="flex-1">
-                <div className="flex items-baseline gap-2">
-                  <p className="font-medium text-charcoal text-sm">{result.allSheets[1].product.name}</p>
-                  {result.allSheets[1].product.sku && <span className="font-mono text-[10px] text-charcoal/30 tracking-wider">{result.allSheets[1].product.sku}</span>}
-                </div>
-                <p className="text-xs text-charcoal/45 mt-0.5">
-                  {zh ? (MATERIAL_ZH[result.allSheets[1].product.material] ?? result.allSheets[1].product.material) : result.allSheets[1].product.material} — {zh && result.allSheets[1].product.description_zh ? result.allSheets[1].product.description_zh.split('。')[0] + '。' : result.allSheets[1].product.description.split('.')[0] + '.'}
-                </p>
-              </div>
-              <div className="text-right flex-shrink-0">
-                <div className="text-sm font-bold text-charcoal/40">{matchScore(result.allSheets[1].score)}%</div>
-                <div className="text-xs text-charcoal/30">{zh ? '匹配度' : 'match'}</div>
-              </div>
-            </div>
-          </div>
-        )}
-      </>
-    ),
-    comforter: (
-      <div className="glass-card p-0 overflow-hidden">
-        <div className="bg-gold/8 border-b border-gold/20 px-7 py-4 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">{tr(CARD_LABELS.comforter, lang)}</p>
-            <h2 className="text-xl font-semibold text-charcoal tracking-tight">{comforter.name}</h2>
-            {comforter.collection && <p className="text-xs text-charcoal/45 mt-0.5">{comforter.collection}</p>}
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex flex-col items-end gap-1.5">
-              <span className="text-xs bg-gold/15 text-gold px-3 py-1.5 rounded-full font-medium">
-                {zh ? (FILL_ZH[comforter.fill] ?? comforter.fill) : comforter.fill} · {zh ? (WARMTH_ZH[comforter.attributes.warmth] ?? comforter.attributes.warmth) : comforter.attributes.warmth}
-              </span>
-              {comforter.sku && <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">{comforter.sku}</span>}
-            </div>
-            <MatchRing score={scoreComforter} zh={zh} />
-          </div>
-        </div>
-        <div className="px-7 py-6">
-          <p className="text-charcoal/60 text-sm leading-relaxed mb-6">{zh && comforter.description_zh ? comforter.description_zh : comforter.description}</p>
-          <div className="space-y-4 mb-6">
-            <AttributeBar label={zh ? '保暖度' : 'Warmth'}       value={comforter.ratings.warmth}        color="bg-orange-400/70" descriptor={desc(comforter.ratings.warmth)} />
-            <AttributeBar label={zh ? '透氣度' : 'Breathability'} value={comforter.ratings.breathability} color="bg-sage"          descriptor={desc(comforter.ratings.breathability)} />
-            <AttributeBar label={zh ? '蓬鬆度' : 'Fluffiness'}    value={comforter.ratings.fluffiness}    color="bg-purple-400/70" descriptor={desc(comforter.ratings.fluffiness)} />
-          </div>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {(zh && comforter.best_for_zh ? comforter.best_for_zh : comforter.best_for).map(tag => (
-              <span key={tag} className="text-xs bg-gold/10 text-gold px-3 py-1 rounded-full font-medium">{tag}</span>
-            ))}
-          </div>
-          <div className="flex gap-3 flex-wrap">
-            <span className={`text-xs px-3 py-1 rounded-full font-medium ${comforter.attributes.hypoallergenic ? 'bg-sage/12 text-sage-dark' : 'bg-charcoal/6 text-charcoal/40'}`}>
-              {comforter.attributes.hypoallergenic ? (zh ? '✓ 防蟎抗菌' : '✓ Hypoallergenic') : (zh ? '非低敏材質' : 'Non-hypoallergenic')}
-            </span>
-            <span className={`text-xs px-3 py-1 rounded-full font-medium ${comforter.attributes.washable ? 'bg-blue-400/12 text-blue-600/80' : 'bg-charcoal/6 text-charcoal/40'}`}>
-              {comforter.attributes.washable ? (zh ? '✓ 可機洗' : '✓ Machine washable') : (zh ? '僅限乾洗' : 'Dry-clean only')}
-            </span>
-            <span className="text-xs bg-charcoal/6 text-charcoal/40 px-3 py-1 rounded-full font-medium">
-              {zh ? (WEIGHT_ZH[comforter.attributes.weight] ?? comforter.attributes.weight) : `${comforter.attributes.weight} weight`}
-            </span>
-          </div>
-        </div>
-      </div>
-    ),
-    pillow: (
-      <div className="glass-card p-0 overflow-hidden">
-        <div className="bg-sage/12 border-b border-sage/20 px-7 py-4 flex items-center justify-between">
-          <div>
-            <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">{tr(CARD_LABELS.pillow, lang)}</p>
-            <h2 className="text-xl font-semibold text-charcoal tracking-tight">{pillow.name}</h2>
-            {pillow.collection && <p className="text-xs text-charcoal/45 mt-0.5">{pillow.collection}</p>}
-          </div>
-          <div className="flex items-center gap-3">
-            <div className="hidden sm:flex flex-col items-end gap-1.5">
-              <span className="text-xs bg-charcoal/8 text-charcoal/55 px-3 py-1.5 rounded-full font-medium">
-                {zh ? (FILL_ZH[pillow.fill] ?? pillow.fill) : pillow.fill} · {zh
-                  ? { Firm: '硬', Medium: '中', Soft: '軟' }[pillow.attributes.firmness]
-                  : `${pillow.attributes.firmness} firmness`}
-              </span>
-              {pillow.sku && <span className="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">{pillow.sku}</span>}
-            </div>
-            <MatchRing score={scorePillow} zh={zh} />
-          </div>
-        </div>
-        <div className="px-7 py-6">
-          <div className="flex items-end gap-6 mb-5">
-            <LoftDiagram loft={pillow.attributes.loft} zh={zh} />
-            <div className="text-sm text-charcoal/60 leading-relaxed flex-1">{tr(loftDesc[pillow.attributes.loft], lang)}</div>
-          </div>
-          <p className="text-sm text-charcoal/60 leading-relaxed mb-5">{zh && pillow.description_zh ? pillow.description_zh : pillow.description}</p>
-          <div className="flex flex-wrap gap-2 mb-4">
-            {(zh && pillow.best_for_zh ? pillow.best_for_zh : pillow.best_for).map(tag => (
-              <span key={tag} className="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">{tag}</span>
-            ))}
-          </div>
-          {pillow.attributes.adjustable && (
-            <div className="flex items-center gap-2 pt-4 border-t border-charcoal/6">
-              <div className="w-1.5 h-1.5 rounded-full bg-sage" />
-              <span className="text-xs text-charcoal/50">{zh ? '可調整填充量，依喜好自訂枕頭高度' : 'Adjustable fill — customise loft to your preference'}</span>
-            </div>
-          )}
-        </div>
-      </div>
-    ),
-  }
-
   return (
-    <motion.div
-      className="min-h-screen bg-cream"
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.35 }}
-    >
+    <motion.div className="min-h-screen bg-cream" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}>
       {/* ── Header ── */}
       <div className="bg-gradient-to-br from-charcoal via-charcoal/95 to-gold text-cream">
         <div className="max-w-4xl mx-auto px-6 py-10">
           <div className="flex items-start justify-between mb-6">
             <div>
-              <p className="text-gold-light text-xs font-semibold tracking-[0.25em] uppercase mb-1">
-                {zh ? 'TN Select · 東妮寢飾 Pro Bar' : 'TN Select · Tonia Nicole Pro Bar'}
-              </p>
+              <p className="text-gold-light text-xs font-semibold tracking-[0.25em] uppercase mb-1">{zh ? 'TN Select · 東妮寢飾 Pro Bar' : 'TN Select · Tonia Nicole Pro Bar'}</p>
               <h1 className="font-serif text-3xl sm:text-4xl font-normal tracking-tight">{zh ? '您的睡眠計畫' : 'Your Sleep Plan'}</h1>
               <p className="text-cream/55 text-sm mt-1">{zh ? `已完成 ${doneCount} / 3 項` : `${doneCount} of 3 complete`}</p>
             </div>
-            <button
-              onClick={startOver}
-              className="text-cream/40 hover:text-cream/80 transition-colors text-sm flex items-center gap-1.5 mt-1 cursor-pointer"
-            >
-              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-                <path d="M11 7H3M3 7L6 4M3 7L6 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
+            <button onClick={startOver} className="text-cream/40 hover:text-cream/80 transition-colors text-sm flex items-center gap-1.5 mt-1 cursor-pointer">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11 7H3M3 7L6 4M3 7L6 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
               {zh ? '重新開始' : 'Start over'}
             </button>
           </div>
-
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
             <ProfileSection answers={answers} zh={zh} />
           </motion.div>
-
-          {/* Plan tracker pills */}
           <div className="flex flex-wrap gap-2 mt-5">
-            {SECTION_ORDER.map(id => {
-              const sec = ALL_SECTIONS.find(s => s.id === id)!
-              return (
-                <button
-                  key={id}
-                  onClick={() => scrollToSection(id)}
-                  className={`text-xs px-3 py-1.5 rounded-full border transition-colors cursor-pointer flex items-center gap-1.5 ${
-                    done[id] ? 'bg-cream/15 border-cream/30 text-cream' : 'border-cream/15 text-cream/45 hover:text-cream/70'
-                  }`}
-                >
-                  <span>{done[id] ? '✓' : '○'}</span>
-                  {tr(sec.label, lang)}
-                </button>
-              )
-            })}
+            {SECTION_ORDER.map(id => (
+              <button key={id} onClick={() => scrollToSection(id)}
+                className={`text-xs px-3 py-1.5 rounded-full border transition-colors cursor-pointer flex items-center gap-1.5 ${done[id] ? 'bg-cream/15 border-cream/30 text-cream' : 'border-cream/15 text-cream/45 hover:text-cream/70'}`}>
+                <span>{done[id] ? '✓' : '○'}</span>{tr(SECTIONS[id].label, lang)}
+              </button>
+            ))}
           </div>
         </div>
       </div>
 
       <main className="max-w-4xl mx-auto px-6 pb-16">
         <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6 pt-6">
-
           {SECTION_ORDER.map(id => {
-            const sec = ALL_SECTIONS.find(s => s.id === id)!
+            const sec = SECTIONS[id]
+            const list = ranked[id]
             return (
               <motion.section key={id} id={`sec-${id}`} variants={itemVariants} className="scroll-mt-6">
-                {done[id] ? (
+                {done[id] && list[0] ? (
                   <div className="space-y-2">
-                    {CARDS[id]}
+                    <ProductCard section={id} top={list[0]} runnerUp={list[1]} answers={answers} zh={zh} />
                     <div className="flex justify-end">
-                      <button
-                        onClick={() => navigate(`/quiz?product=${id}&edit=1`)}
-                        className="text-xs font-medium text-charcoal/45 hover:text-gold transition-colors flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                          <path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9l6.5-6.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/>
-                        </svg>
+                      <button onClick={() => navigate(`/quiz?product=${id}&edit=1`)} className="text-xs font-medium text-charcoal/45 hover:text-gold transition-colors flex items-center gap-1.5 cursor-pointer">
+                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9l6.5-6.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/></svg>
                         {zh ? '修改我的答案' : 'Edit answers'}
                       </button>
                     </div>
                   </div>
                 ) : (
-                  <button
-                    onClick={() => navigate(`/quiz?product=${id}`)}
-                    className="w-full text-left p-6 rounded-2xl border-2 border-dashed border-charcoal/15 bg-white/30 hover:border-gold/50 hover:bg-white/60 transition-all cursor-pointer"
-                  >
+                  <button onClick={() => navigate(`/quiz?product=${id}`)} className="w-full text-left p-6 rounded-2xl border-2 border-dashed border-charcoal/15 bg-white/30 hover:border-gold/50 hover:bg-white/60 transition-all cursor-pointer">
                     <div className="flex items-center justify-between">
                       <div>
                         <p className="text-[10px] font-bold tracking-widest uppercase text-charcoal/35 mb-0.5">{tr(sec.label, lang)}</p>
-                        <p className="text-lg font-semibold text-charcoal mb-1">{zh ? '尚未診斷' : 'Not done yet'}</p>
+                        <p className="text-lg font-semibold text-charcoal mb-1">{zh ? '尚未完成' : 'Not done yet'}</p>
                         <p className="text-xs text-charcoal/50 leading-relaxed max-w-md">{tr(sec.desc, lang)}</p>
                       </div>
                       <div className="flex items-center gap-1.5 text-gold text-sm font-semibold flex-shrink-0 ml-4">
                         {zh ? '開始' : 'Start'}
-                        <svg width="14" height="14" viewBox="0 0 12 12" fill="none">
-                          <path d="M2 6h8M8 4l2 2-2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
+                        <svg width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 6h8M8 4l2 2-2 2" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                       </div>
                     </div>
                   </button>
@@ -620,76 +296,49 @@ export default function Results() {
             )
           })}
 
-          {/* ── Save (once, remembered) ── */}
+          {/* ── Save ── */}
           {anyComplete && (
             <motion.div variants={itemVariants} className="glass-card p-6">
               {saved ? (
                 <div className="text-center py-2">
                   <div className="w-10 h-10 rounded-full bg-sage/20 flex items-center justify-center mx-auto mb-3">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-                      <path d="M4 10L8 14L16 6" stroke="#6A8E67" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8 14L16 6" stroke="#6A8E67" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>
                   <p className="text-sm font-semibold text-charcoal mb-1">{zh ? `已儲存，${name}！` : `Saved, ${name}!`}</p>
                   <p className="text-xs text-charcoal/50 leading-relaxed">
-                    {email
-                      ? (zh ? `我們會將您的睡眠計畫寄送至 ${email}。` : `We'll send your sleep plan to ${email}.`)
-                      : (zh ? '您的睡眠檔案已儲存。' : 'Your sleep profile has been saved.')}
+                    {email ? (zh ? `我們會將您的睡眠計畫寄送至 ${email}。` : `We'll send your sleep plan to ${email}.`) : (zh ? '您的睡眠檔案已儲存。' : 'Your sleep profile has been saved.')}
                   </p>
-                  <button onClick={() => setSaved(false)} className="text-xs text-charcoal/40 hover:text-gold mt-3 cursor-pointer">
-                    {zh ? '以最新答案重新儲存' : 'Re-save with latest answers'}
-                  </button>
+                  <button onClick={() => setSaved(false)} className="text-xs text-charcoal/40 hover:text-gold mt-3 cursor-pointer">{zh ? '以最新答案重新儲存' : 'Re-save with latest answers'}</button>
                 </div>
               ) : (
                 <>
                   <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-1">{zh ? '儲存您的睡眠計畫' : 'Save your sleep plan'}</p>
                   <p className="text-sm text-charcoal/55 leading-relaxed mb-4">
-                    {zh
-                      ? '留下您的姓名以儲存目前的診斷結果，並可選填 Email 以接收完整報告。'
-                      : 'Add your name to save everything you’ve completed — and an optional email to receive your full report.'}
+                    {zh ? '留下您的姓名以儲存目前的推薦結果，並可選填 Email 以接收完整報告。' : 'Add your name to save everything you\'ve completed, and an optional email to receive your full report.'}
                   </p>
                   <div className="grid sm:grid-cols-2 gap-3 mb-4">
                     <div>
-                      <input
-                        type="text"
-                        value={name}
-                        onChange={e => { setName(e.target.value); if (nameError) setNameError(false) }}
-                        placeholder={zh ? '姓名（必填）' : 'Name (required)'}
-                        className={`w-full px-4 py-3 rounded-xl bg-white/60 border text-sm text-charcoal placeholder:text-charcoal/35 outline-none focus:border-gold transition-colors ${nameError ? 'border-red-300' : 'border-charcoal/12'}`}
-                      />
+                      <input type="text" value={name} onChange={e => { setName(e.target.value); if (nameError) setNameError(false) }} placeholder={zh ? '姓名（必填）' : 'Name (required)'}
+                        className={`w-full px-4 py-3 rounded-xl bg-white/60 border text-sm text-charcoal placeholder:text-charcoal/35 outline-none focus:border-gold transition-colors ${nameError ? 'border-red-300' : 'border-charcoal/12'}`} />
                       {nameError && <p className="text-xs text-red-400 mt-1 pl-1">{zh ? '請輸入您的姓名' : 'Please enter your name'}</p>}
                     </div>
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={e => setEmail(e.target.value)}
-                      placeholder={zh ? 'Email（選填）' : 'Email (optional)'}
-                      className="w-full px-4 py-3 rounded-xl bg-white/60 border border-charcoal/12 text-sm text-charcoal placeholder:text-charcoal/35 outline-none focus:border-gold transition-colors"
-                    />
+                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder={zh ? 'Email（選填）' : 'Email (optional)'}
+                      className="w-full px-4 py-3 rounded-xl bg-white/60 border border-charcoal/12 text-sm text-charcoal placeholder:text-charcoal/35 outline-none focus:border-gold transition-colors" />
                   </div>
-                  <motion.button
-                    onClick={handleFinalize}
-                    className="bg-charcoal text-cream px-8 py-3 rounded-xl text-sm font-medium hover:bg-charcoal/85 transition-colors shadow-sm inline-flex items-center gap-2 cursor-pointer"
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.97 }}
-                  >
+                  <motion.button onClick={handleFinalize} className="bg-charcoal text-cream px-8 py-3 rounded-xl text-sm font-medium hover:bg-charcoal/85 transition-colors shadow-sm inline-flex items-center gap-2 cursor-pointer" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
                     {zh ? '儲存我的計畫' : 'Save my plan'}
-                    <svg width="15" height="15" viewBox="0 0 16 16" fill="none">
-                      <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                    <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </motion.button>
                 </>
               )}
             </motion.div>
           )}
 
-          {/* ── Footer ── */}
           <motion.div variants={itemVariants} className="text-center pt-2 pb-4">
             <p className="text-xs text-charcoal/25">
               TN Select · {zh ? '東妮寢飾 Pro Bar' : 'Tonia Nicole Pro Bar'} · {new Date().toLocaleDateString(zh ? 'zh-TW' : 'en-GB', { year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           </motion.div>
-
         </motion.div>
       </main>
     </motion.div>

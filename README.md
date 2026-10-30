@@ -1,73 +1,33 @@
-# React + TypeScript + Vite
+# TN Select — Tonia Nicole Pro Bar
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Kiosk / web sleep-consultation tool for Far Eastern Apparel (FEAC)'s Tonia Nicole bedding brand.
+A customer picks a product section (bedding set, comforter, pillow), answers 5 questions, and gets a
+recommended FET.com product with photo, selling points and a link, plus a runner-up.
+Bilingual EN / 繁體中文.
 
-Currently, two official plugins are available:
+## Stack
+React 19 · TypeScript · Vite · Tailwind 3 · Framer Motion · Supabase (products + responses + admin auth).
+Falls back to the bundled catalog (`src/data/catalog.json`) when Supabase is not configured or unreachable.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
-
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Run
+```bash
+cp .env.example .env.local   # add VITE_SUPABASE_URL + VITE_SUPABASE_ANON_KEY (optional)
+npm install
+npm run dev                  # http://localhost:5173
+npm run build                # dist/ (Netlify deploys main)
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Where things live
+| What | Where | Who edits |
+|---|---|---|
+| Products (names, link, photo, bullets, when to recommend) | Supabase `products` via `/admin`, seed in `src/data/catalog.json` | Client (FEAC) |
+| Questions & answer options | `src/lib/questionData.ts` | Brainiak |
+| Matching weights, bedding material rules | `src/lib/engine.ts` | Brainiak |
+| Results page layout | `src/pages/Results.tsx` | Brainiak |
+| Live-analysis sidebar copy | `src/components/quiz/Sidebar.tsx` | Brainiak |
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Updating the catalog seed
+Edit `src/data/catalog.json`, then `npx tsx scripts/gen-seed.ts` and run `supabase/seed.sql` in the
+Supabase SQL editor (upserts by FET id; leaves responses untouched). Schema: `supabase/schema.sql`.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+See `BRANCHES.md` for version history and `docs/supabase-setup.md` for backend setup.

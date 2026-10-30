@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TN Select — Sleep Plan (report page)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+@import "https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600&display=swap";*,:before,:after,::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:#3b82f680;--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }*,:before,:after{box-sizing:border-box;border:0 solid #e5e7eb}:before,:after{--tw-content:""}html,:host{-webkit-text-size-adjust:100%;tab-size:4;font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent;font-family:Inter,system-ui,sans-serif;line-height:1.5}body{line-height:inherit;margin:0}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;-webkit-text-decoration:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,samp,pre{font-feature-settings:normal;font-variation-settings:normal;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace;font-size:1em}small{font-size:80%}sub,sup{vertical-align:baseline;font-size:75%;line-height:0;position:relative}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-feature-settings:inherit;font-variation-settings:inherit;font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:#0000;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button{height:auto}::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dl,dd,h1,h2,h3,h4,h5,h6,hr,figure,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}ol,ul,menu{margin:0;padding:0;list-style:none}dialog{padding:0}textarea{resize:vertical}input::-moz-placeholder{opacity:1;color:#9ca3af}textarea::-moz-placeholder{opacity:1;color:#9ca3af}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}button,[role=button]{cursor:pointer}:disabled{cursor:default}img,svg,video,canvas,audio,iframe,embed,object{vertical-align:middle;display:block}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}body{color:#2a1f14;-webkit-font-smoothing:antialiased;background-color:#faf7f0;margin:0;font-family:Inter,sans-serif}#root{min-height:100svh}.glass-card{--tw-shadow:0 4px 24px #0000000f, inset 0 1px 0 #fffc;--tw-shadow-colored:0 4px 24px var(--tw-shadow-color), inset 0 1px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000), var(--tw-ring-shadow,0 0 #0000), var(--tw-shadow);--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);background-color:#fff9;border-width:1px;border-color:#fffc;border-radius:1rem}.glass-card-hover{transition-property:all;transition-duration:.3s;transition-timing-function:cubic-bezier(.4,0,.2,1)}.glass-card-hover:hover{--tw-shadow:0 8px 32px #0000001a, inset 0 1px 0 #ffffffe6;--tw-shadow-colored:0 8px 32px var(--tw-shadow-color), inset 0 1px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000), var(--tw-ring-shadow,0 0 #0000), var(--tw-shadow);background-color:#ffffffbf;border-color:#ffffffe6}.pointer-events-none{pointer-events:none}.visible{visibility:visible}.static{position:static}.fixed{position:fixed}.absolute{position:absolute}.relative{position:relative}.inset-0{inset:0}.bottom-0{bottom:0}.bottom-1\/4{bottom:25%}.bottom-3{bottom:.75rem}.left-0{left:0}.right-0{right:0}.right-3{right:.75rem}.right-4{right:1rem}.top-0{top:0}.top-1\/4{top:25%}.top-4{top:1rem}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-0\.5{margin-bottom:.125rem}.mb-1{margin-bottom:.25rem}.mb-2{margin-bottom:.5rem}.mb-3{margin-bottom:.75rem}.mb-4{margin-bottom:1rem}.mb-5{margin-bottom:1.25rem}.mb-6{margin-bottom:1.5rem}.mb-8{margin-bottom:2rem}.ml-4{margin-left:1rem}.mr-3{margin-right:.75rem}.mt-0\.5{margin-top:.125rem}.mt-1{margin-top:.25rem}.mt-2{margin-top:.5rem}.mt-3{margin-top:.75rem}.mt-4{margin-top:1rem}.mt-5{margin-top:1.25rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.block{display:block}.flex{display:flex}.inline-flex{display:inline-flex}.table{display:table}.grid{display:grid}.hidden{display:none}.h-1{height:.25rem}.h-1\.5{height:.375rem}.h-10{height:2.5rem}.h-2{height:.5rem}.h-20{height:5rem}.h-28{height:7rem}.h-48{height:12rem}.h-5{height:1.25rem}.h-64{height:16rem}.h-8{height:2rem}.h-80{height:20rem}.h-9{height:2.25rem}.h-full{height:100%}.h-px{height:1px}.min-h-\[64px\]{min-height:64px}.min-h-\[80px\]{min-height:80px}.min-h-\[96px\]{min-height:96px}.min-h-screen{min-height:100vh}.w-1\.5{width:.375rem}.w-10{width:2.5rem}.w-2{width:.5rem}.w-20{width:5rem}.w-24{width:6rem}.w-28{width:7rem}.w-4{width:1rem}.w-5{width:1.25rem}.w-64{width:16rem}.w-8{width:2rem}.w-80{width:20rem}.w-9{width:2.25rem}.w-auto{width:auto}.w-full{width:100%}.min-w-\[200px\]{min-width:200px}.max-w-2xl{max-width:42rem}.max-w-3xl{max-width:48rem}.max-w-4xl{max-width:56rem}.max-w-6xl{max-width:72rem}.max-w-\[320px\]{max-width:320px}.max-w-md{max-width:28rem}.max-w-sm{max-width:24rem}.flex-1{flex:1}.flex-shrink-0{flex-shrink:0}.-rotate-90{--tw-rotate:-90deg;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}.scale-\[0\.6\]{--tw-scale-x:.6;--tw-scale-y:.6;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}@keyframes blob{0%,to{transform:translate(0)scale(1)}33%{transform:translate(40px,-30px)scale(1.08)}66%{transform:translate(-25px,20px)scale(.96)}}.animate-blob{animation:12s ease-in-out infinite blob}.animate-blob-delay{animation:12s ease-in-out 4s infinite blob}@keyframes pulse{50%{opacity:.5}}.animate-pulse{animation:2s cubic-bezier(.4,0,.6,1) infinite pulse}.cursor-none{cursor:none}.cursor-not-allowed{cursor:not-allowed}.cursor-pointer{cursor:pointer}.select-none{-webkit-user-select:none;user-select:none}.scroll-mt-24{scroll-margin-top:6rem}.scroll-mt-6{scroll-margin-top:1.5rem}.grid-cols-1{grid-template-columns:repeat(1,minmax(0,1fr))}.grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.grid-cols-\[120px_1fr_64px\]{grid-template-columns:120px 1fr 64px}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-start{align-items:flex-start}.items-end{align-items:flex-end}.items-center{align-items:center}.items-baseline{align-items:baseline}.justify-end{justify-content:flex-end}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-0\.5{gap:.125rem}.gap-1{gap:.25rem}.gap-1\.5{gap:.375rem}.gap-2{gap:.5rem}.gap-3{gap:.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.gap-x-6{-moz-column-gap:1.5rem;column-gap:1.5rem}.gap-y-1\.5{row-gap:.375rem}.space-y-2>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.5rem * var(--tw-space-y-reverse))}.space-y-3>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(.75rem * var(--tw-space-y-reverse))}.space-y-4>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6>:not([hidden])~:not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.divide-y>:not([hidden])~:not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px * calc(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px * var(--tw-divide-y-reverse))}.self-start{align-self:flex-start}.overflow-hidden{overflow:hidden}.overflow-x-auto{overflow-x:auto}.truncate{text-overflow:ellipsis;white-space:nowrap;overflow:hidden}.whitespace-nowrap{white-space:nowrap}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:.5rem}.rounded-md{border-radius:.375rem}.rounded-xl{border-radius:.75rem}.rounded-t-lg{border-top-left-radius:.5rem;border-top-right-radius:.5rem}.border{border-width:1px}.border-2{border-width:2px}.border-b{border-bottom-width:1px}.border-l-2{border-left-width:2px}.border-t{border-top-width:1px}.border-dashed{border-style:dashed}.\!border-sage{--tw-border-opacity:1!important;border-color:rgb(122 154 119/var(--tw-border-opacity,1))!important}.border-charcoal{--tw-border-opacity:1;border-color:rgb(42 31 20/var(--tw-border-opacity,1))}.border-charcoal\/10{border-color:#2a1f141a}.border-charcoal\/15{border-color:#2a1f1426}.border-charcoal\/20{border-color:#2a1f1433}.border-cream\/15{border-color:#faf7f026}.border-cream\/30{border-color:#faf7f04d}.border-gold\/20{border-color:#c49a6c33}.border-gold\/40{border-color:#c49a6c66}.border-red-300{--tw-border-opacity:1;border-color:rgb(252 165 165/var(--tw-border-opacity,1))}.border-sage{--tw-border-opacity:1;border-color:rgb(122 154 119/var(--tw-border-opacity,1))}.border-sage\/20{border-color:#7a9a7733}.border-sage\/40{border-color:#7a9a7766}.border-white\/60{border-color:#fff9}.border-white\/70{border-color:#ffffffb3}.border-white\/80{border-color:#fffc}.bg-blue-400\/70{background-color:#60a5fab3}.bg-charcoal{--tw-bg-opacity:1;background-color:rgb(42 31 20/var(--tw-bg-opacity,1))}.bg-charcoal\/10{background-color:#2a1f141a}.bg-charcoal\/20{background-color:#2a1f1433}.bg-charcoal\/40{background-color:#2a1f1466}.bg-cream{--tw-bg-opacity:1;background-color:rgb(250 247 240/var(--tw-bg-opacity,1))}.bg-cream\/15{background-color:#faf7f026}.bg-gold\/10{background-color:#c49a6c1a}.bg-gold\/15{background-color:#c49a6c26}.bg-orange-400\/70{background-color:#fb923cb3}.bg-purple-400\/70{background-color:#c084fcb3}.bg-sage{--tw-bg-opacity:1;background-color:rgb(122 154 119/var(--tw-bg-opacity,1))}.bg-sage\/10{background-color:#7a9a771a}.bg-sage\/15{background-color:#7a9a7726}.bg-sage\/20{background-color:#7a9a7733}.bg-sage\/25{background-color:#7a9a7740}.bg-sage\/5{background-color:#7a9a770d}.bg-white\/30{background-color:#ffffff4d}.bg-white\/50{background-color:#ffffff80}.bg-white\/60{background-color:#fff9}.bg-white\/70{background-color:#ffffffb3}.bg-white\/85{background-color:#ffffffd9}.bg-gradient-to-br{background-image:linear-gradient(to bottom right, var(--tw-gradient-stops))}.from-charcoal{--tw-gradient-from:#2a1f14 var(--tw-gradient-from-position);--tw-gradient-to:#2a1f1400 var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}.via-charcoal\/95{--tw-gradient-to:#2a1f1400 var(--tw-gradient-to-position);--tw-gradient-stops:var(--tw-gradient-from), #2a1f14f2 var(--tw-gradient-via-position), var(--tw-gradient-to)}.to-gold{--tw-gradient-to:#c49a6c var(--tw-gradient-to-position)}.p-0{padding:0}.p-1{padding:.25rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.p-7{padding:1.75rem}.p-8{padding:2rem}.px-1{padding-left:.25rem;padding-right:.25rem}.px-10{padding-left:2.5rem;padding-right:2.5rem}.px-2{padding-left:.5rem;padding-right:.5rem}.px-2\.5{padding-left:.625rem;padding-right:.625rem}.px-3{padding-left:.75rem;padding-right:.75rem}.px-4{padding-left:1rem;padding-right:1rem}.px-6{padding-left:1.5rem;padding-right:1.5rem}.px-7{padding-left:1.75rem;padding-right:1.75rem}.px-8{padding-left:2rem;padding-right:2rem}.py-1{padding-top:.25rem;padding-bottom:.25rem}.py-1\.5{padding-top:.375rem;padding-bottom:.375rem}.py-10{padding-top:2.5rem;padding-bottom:2.5rem}.py-12{padding-top:3rem;padding-bottom:3rem}.py-2{padding-top:.5rem;padding-bottom:.5rem}.py-2\.5{padding-top:.625rem;padding-bottom:.625rem}.py-3{padding-top:.75rem;padding-bottom:.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.py-8{padding-top:2rem;padding-bottom:2rem}.pb-16{padding-bottom:4rem}.pb-24{padding-bottom:6rem}.pb-4{padding-bottom:1rem}.pl-1{padding-left:.25rem}.pl-3{padding-left:.75rem}.pt-10{padding-top:2.5rem}.pt-2{padding-top:.5rem}.pt-20{padding-top:5rem}.pt-4{padding-top:1rem}.pt-5{padding-top:1.25rem}.pt-6{padding-top:1.5rem}.pt-8{padding-top:2rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.font-mono{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace}.font-serif{font-family:Playfair Display,Georgia,serif}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-\[10px\]{font-size:10px}.text-\[11px\]{font-size:11px}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:.75rem;line-height:1rem}.font-bold{font-weight:700}.font-light{font-weight:300}.font-medium{font-weight:500}.font-normal{font-weight:400}.font-semibold{font-weight:600}.uppercase{text-transform:uppercase}.leading-relaxed{line-height:1.625}.leading-snug{line-height:1.375}.leading-tight{line-height:1.25}.tracking-\[0\.22em\]{letter-spacing:.22em}.tracking-\[0\.25em\]{letter-spacing:.25em}.tracking-tight{letter-spacing:-.025em}.tracking-wide{letter-spacing:.025em}.tracking-wider{letter-spacing:.05em}.tracking-widest{letter-spacing:.1em}.text-blue-600\/80{color:#2563ebcc}.text-charcoal{--tw-text-opacity:1;color:rgb(42 31 20/var(--tw-text-opacity,1))}.text-charcoal\/25{color:#2a1f1440}.text-charcoal\/30{color:#2a1f144d}.text-charcoal\/35{color:#2a1f1459}.text-charcoal\/40{color:#2a1f1466}.text-charcoal\/45{color:#2a1f1473}.text-charcoal\/50{color:#2a1f1480}.text-charcoal\/55{color:#2a1f148c}.text-charcoal\/60{color:#2a1f1499}.text-charcoal\/70{color:#2a1f14b3}.text-charcoal\/75{color:#2a1f14bf}.text-charcoal\/80{color:#2a1f14cc}.text-cream{--tw-text-opacity:1;color:rgb(250 247 240/var(--tw-text-opacity,1))}.text-cream\/40{color:#faf7f066}.text-cream\/45{color:#faf7f073}.text-cream\/50{color:#faf7f080}.text-cream\/55{color:#faf7f08c}.text-cream\/60{color:#faf7f099}.text-cream\/70{color:#faf7f0b3}.text-gold{--tw-text-opacity:1;color:rgb(196 154 108/var(--tw-text-opacity,1))}.text-gold-light{--tw-text-opacity:1;color:rgb(232 213 183/var(--tw-text-opacity,1))}.text-red-400{--tw-text-opacity:1;color:rgb(248 113 113/var(--tw-text-opacity,1))}.text-red-500{--tw-text-opacity:1;color:rgb(239 68 68/var(--tw-text-opacity,1))}.text-sage-dark{--tw-text-opacity:1;color:rgb(86 122 83/var(--tw-text-opacity,1))}.underline{text-decoration-line:underline}.underline-offset-2{text-underline-offset:2px}.shadow-glass{--tw-shadow:0 4px 24px #0000000f, inset 0 1px 0 #fffc;--tw-shadow-colored:0 4px 24px var(--tw-shadow-color), inset 0 1px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000), var(--tw-ring-shadow,0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 #0000000d;--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000), var(--tw-ring-shadow,0 0 #0000), var(--tw-shadow)}.outline-none{outline-offset:2px;outline:2px solid #0000}.ring-2{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow,0 0 #0000)}.ring-sage\/30{--tw-ring-color:#7a9a774d}.blur-3xl{--tw-blur:blur(64px);filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.filter{filter:var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)}.backdrop-blur-md{--tw-backdrop-blur:blur(12px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.backdrop-blur-sm{--tw-backdrop-blur:blur(4px);-webkit-backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);backdrop-filter:var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)}.transition{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke,opacity,box-shadow,transform,filter,-webkit-backdrop-filter,backdrop-filter;transition-duration:.15s;transition-timing-function:cubic-bezier(.4,0,.2,1)}.transition-all{transition-property:all;transition-duration:.15s;transition-timing-function:cubic-bezier(.4,0,.2,1)}.transition-colors{transition-property:color,background-color,border-color,text-decoration-color,fill,stroke;transition-duration:.15s;transition-timing-function:cubic-bezier(.4,0,.2,1)}.duration-200{transition-duration:.2s}.placeholder\:text-charcoal\/35::placeholder{color:#2a1f1459}.last\:border-0:last-child{border-width:0}.hover\:border-gold:hover{--tw-border-opacity:1;border-color:rgb(196 154 108/var(--tw-border-opacity,1))}.hover\:border-gold\/50:hover{border-color:#c49a6c80}.hover\:bg-charcoal\/85:hover{background-color:#2a1f14d9}.hover\:bg-white\/40:hover{background-color:#fff6}.hover\:bg-white\/60:hover{background-color:#fff9}.hover\:text-charcoal:hover{--tw-text-opacity:1;color:rgb(42 31 20/var(--tw-text-opacity,1))}.hover\:text-charcoal\/60:hover{color:#2a1f1499}.hover\:text-charcoal\/70:hover{color:#2a1f14b3}.hover\:text-cream:hover{--tw-text-opacity:1;color:rgb(250 247 240/var(--tw-text-opacity,1))}.hover\:text-cream\/70:hover{color:#faf7f0b3}.hover\:text-cream\/80:hover{color:#faf7f0cc}.hover\:text-gold:hover{--tw-text-opacity:1;color:rgb(196 154 108/var(--tw-text-opacity,1))}.hover\:text-red-600:hover{--tw-text-opacity:1;color:rgb(220 38 38/var(--tw-text-opacity,1))}.hover\:underline:hover{text-decoration-line:underline}.hover\:shadow-glass-hover:hover{--tw-shadow:0 8px 32px #0000001a, inset 0 1px 0 #ffffffe6;--tw-shadow-colored:0 8px 32px var(--tw-shadow-color), inset 0 1px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow,0 0 #0000), var(--tw-ring-shadow,0 0 #0000), var(--tw-shadow)}.focus\:border-gold:focus{--tw-border-opacity:1;border-color:rgb(196 154 108/var(--tw-border-opacity,1))}.disabled\:opacity-40:disabled{opacity:.4}.disabled\:opacity-50:disabled{opacity:.5}.group:hover .group-hover\:text-charcoal\/70{color:#2a1f14b3}.group:hover .group-hover\:text-gold{--tw-text-opacity:1;color:rgb(196 154 108/var(--tw-text-opacity,1))}@media (width>=640px){.sm\:inline{display:inline}.sm\:flex{display:flex}.sm\:grid-cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.sm\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.sm\:justify-start{justify-content:flex-start}.sm\:text-3xl{font-size:1.875rem;line-height:2.25rem}.sm\:text-4xl{font-size:2.25rem;line-height:2.5rem}}@media (width>=768px){.md\:block{display:block}.md\:hidden{display:none}}@media (width>=1024px){.lg\:sticky{position:sticky}.lg\:top-24{top:6rem}.lg\:col-span-2{grid-column:span 2/span 2}.lg\:block{display:block}.lg\:grid{display:grid}.lg\:grid-cols-3{grid-template-columns:repeat(3,minmax(0,1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4,minmax(0,1fr))}.lg\:items-start{align-items:flex-start}.lg\:gap-16{gap:4rem}}
+  </style>
+</head>
+<body>
+<div class="min-h-screen bg-cream">
+
+  <!-- ══ Header ══ -->
+  <div class="bg-gradient-to-br from-charcoal via-charcoal/95 to-gold text-cream">
+    <div class="max-w-4xl mx-auto px-6 py-10">
+      <div class="flex items-start justify-between mb-6">
+        <div>
+          <p class="text-gold-light text-xs font-semibold tracking-[0.25em] uppercase mb-1">TN Select · Tonia Nicole Pro Bar</p>
+          <h1 class="font-serif text-3xl sm:text-4xl font-normal tracking-tight">Your Sleep Plan</h1>
+          <p class="text-cream/55 text-sm mt-1">3 of 3 complete</p>
+        </div>
+        <button class="text-cream/40 hover:text-cream/80 transition-colors text-sm flex items-center gap-1.5 mt-1">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M11 7H3M3 7L6 4M3 7L6 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Start over
+        </button>
+      </div>
+
+      <!-- Profile badges -->
+      <div class="flex flex-wrap gap-2 justify-center sm:justify-start">
+        <div class="flex flex-col items-center gap-1.5 px-4 py-3 bg-white/50 backdrop-blur-sm border border-white/60 rounded-2xl">
+          <div class="text-sage-dark"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="7.5" y="3" width="5" height="11" rx="2.5" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="15" r="2.5" stroke="currentColor" stroke-width="1.5"/><rect x="9" y="5" width="2" height="7" rx="1" fill="currentColor"/></svg></div>
+          <span class="text-xs font-medium text-charcoal/70 text-center leading-tight">Runs warm</span>
+        </div>
+        <div class="flex flex-col items-center gap-1.5 px-4 py-3 bg-white/50 backdrop-blur-sm border border-white/60 rounded-2xl">
+          <div class="text-sage-dark"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L3 5v7c0 4 3.5 6 7 7s7-3 7-7V5l-7-3z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+          <span class="text-xs font-medium text-charcoal/70 text-center leading-tight">Sensitive skin</span>
+        </div>
+        <div class="flex flex-col items-center gap-1.5 px-4 py-3 bg-white/50 backdrop-blur-sm border border-white/60 rounded-2xl">
+          <div class="text-sage-dark"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="2" y="8" width="16" height="8" rx="2" stroke="currentColor" stroke-width="1.5"/><path d="M2 12h16" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="5" width="5" height="4" rx="1.5" stroke="currentColor" stroke-width="1.5"/><rect x="11" y="5" width="5" height="4" rx="1.5" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <span class="text-xs font-medium text-charcoal/70 text-center leading-tight">Side sleeper</span>
+        </div>
+        <div class="flex flex-col items-center gap-1.5 px-4 py-3 bg-white/50 backdrop-blur-sm border border-white/60 rounded-2xl">
+          <div class="text-sage-dark"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="4" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 7v8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 10l-4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 10l4 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 15l-2 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><path d="M10 15l2 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <span class="text-xs font-medium text-charcoal/70 text-center leading-tight">Average (M/L)</span>
+        </div>
+        <div class="flex flex-col items-center gap-1.5 px-4 py-3 bg-white/50 backdrop-blur-sm border border-white/60 rounded-2xl">
+          <div class="text-sage-dark"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="4" width="14" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/><circle cx="10" cy="12" r="3.5" stroke="currentColor" stroke-width="1.5"/></svg></div>
+          <span class="text-xs font-medium text-charcoal/70 text-center leading-tight">Smooth &amp; light</span>
+        </div>
+        <div class="flex flex-col items-center gap-1.5 px-4 py-3 bg-white/50 backdrop-blur-sm border border-white/60 rounded-2xl">
+          <div class="text-sage-dark"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="5" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M5 18v-6a3 3 0 0 1 3-3h4a3 3 0 0 1 3 3v6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <span class="text-xs font-medium text-charcoal/70 text-center leading-tight">Balanced pillow</span>
+        </div>
+      </div>
+
+      <!-- Tracker pills -->
+      <div class="flex flex-wrap gap-2 mt-5">
+        <button class="text-xs px-3 py-1.5 rounded-full border transition-colors flex items-center gap-1.5 bg-cream/15 border-cream/30 text-cream"><span>✓</span> Sheets &amp; Bedding</button>
+        <button class="text-xs px-3 py-1.5 rounded-full border transition-colors flex items-center gap-1.5 bg-cream/15 border-cream/30 text-cream"><span>✓</span> Comforter</button>
+        <button class="text-xs px-3 py-1.5 rounded-full border transition-colors flex items-center gap-1.5 bg-cream/15 border-cream/30 text-cream"><span>✓</span> Pillow</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="max-w-4xl mx-auto px-6 pb-16">
+    <div class="space-y-6 pt-6">
+
+      <!-- ══ SHEETS ══ -->
+      <section class="scroll-mt-6">
+        <div class="space-y-2">
+          <div class="glass-card p-0 overflow-hidden">
+            <div class="bg-sage/12 border-b border-sage/20 px-7 py-4 flex items-center justify-between">
+              <div>
+                <p class="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">Sheet Prescription</p>
+                <h2 class="text-xl font-semibold text-charcoal tracking-tight">Silk 22MM</h2>
+                <p class="text-xs text-charcoal/45 mt-0.5">Prestige</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="hidden sm:flex flex-col items-end gap-1.5">
+                  <span class="text-xs bg-charcoal/8 text-charcoal/55 px-3 py-1.5 rounded-full font-medium">Silk · Plain Weave</span>
+                  <span class="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">TN-SK-22M</span>
+                </div>
+                <!-- Match ring 88% -->
+                <div class="flex flex-col items-center gap-1">
+                  <div class="relative w-20 h-20">
+                    <svg class="w-full h-full -rotate-90" viewBox="0 0 72 72">
+                      <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(26,26,26,0.08)" stroke-width="5"/>
+                      <circle cx="36" cy="36" r="28" fill="none" stroke="#C49A6C" stroke-width="5" stroke-linecap="round" stroke-dasharray="175.93" stroke-dashoffset="21.1"/>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center"><span class="text-lg font-bold text-charcoal">88%</span></div>
+                  </div>
+                  <span class="text-xs text-charcoal/40 font-medium tracking-wide">Match</span>
+                </div>
+              </div>
+            </div>
+            <div class="px-7 py-6">
+              <p class="text-charcoal/60 text-sm leading-relaxed mb-6">22-momme mulberry silk — Tonia Nicole's premium grade. Naturally hypoallergenic protein fibre that regulates temperature, reduces friction on hair and skin, and is recommended by dermatologists for eczema-prone sleepers.</p>
+              <div class="space-y-4 mb-6">
+                <div class="grid grid-cols-[120px_1fr_64px] items-center gap-4"><span class="text-sm text-charcoal/55 text-right">Breathability</span><div class="h-2 bg-charcoal/8 rounded-full overflow-hidden"><div class="h-full rounded-full bg-sage" style="width:80%"></div></div><span class="text-xs font-semibold text-charcoal/50">High</span></div>
+                <div class="grid grid-cols-[120px_1fr_64px] items-center gap-4"><span class="text-sm text-charcoal/55 text-right">Moisture Wicking</span><div class="h-2 bg-charcoal/8 rounded-full overflow-hidden"><div class="h-full rounded-full bg-blue-400/70" style="width:60%"></div></div><span class="text-xs font-semibold text-charcoal/50">Moderate</span></div>
+                <div class="grid grid-cols-[120px_1fr_64px] items-center gap-4"><span class="text-sm text-charcoal/55 text-right">Warmth</span><div class="h-2 bg-charcoal/8 rounded-full overflow-hidden"><div class="h-full rounded-full bg-orange-400/70" style="width:60%"></div></div><span class="text-xs font-semibold text-charcoal/50">Moderate</span></div>
+                <div class="grid grid-cols-[120px_1fr_64px] items-center gap-4"><span class="text-sm text-charcoal/55 text-right">Softness</span><div class="h-2 bg-charcoal/8 rounded-full overflow-hidden"><div class="h-full rounded-full bg-purple-400/70" style="width:100%"></div></div><span class="text-xs font-semibold text-charcoal/50">Excellent</span></div>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <span class="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">Sensitive Skin</span>
+                <span class="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">Allergic/Eczema</span>
+                <span class="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">Hair &amp; Skin Care</span>
+                <span class="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">Luxury</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Also consider -->
+          <div class="glass-card p-5 mt-4">
+            <p class="text-xs font-semibold tracking-widest uppercase text-charcoal/30 mb-3">Also Consider</p>
+            <div class="flex items-center gap-4">
+              <div class="flex-1">
+                <div class="flex items-baseline gap-2">
+                  <p class="font-medium text-charcoal text-sm">Topcell™ Lyocell</p>
+                  <span class="font-mono text-[10px] text-charcoal/30 tracking-wider">TN-TC-HG</span>
+                </div>
+                <p class="text-xs text-charcoal/45 mt-0.5">Tencel Lyocell — Tonia Nicole's signature Topcell™ uses pine-pulp Lyocell with Faser-Lock™ British technology.</p>
+              </div>
+              <div class="text-right flex-shrink-0"><div class="text-sm font-bold text-charcoal/40">81%</div><div class="text-xs text-charcoal/30">match</div></div>
+            </div>
+          </div>
+
+          <div class="flex justify-end">
+            <button class="text-xs font-medium text-charcoal/45 hover:text-gold transition-colors flex items-center gap-1.5">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9l6.5-6.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              Edit answers
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ COMFORTER ══ -->
+      <section class="scroll-mt-6">
+        <div class="space-y-2">
+          <div class="glass-card p-0 overflow-hidden">
+            <div class="bg-gold/8 border-b border-gold/20 px-7 py-4 flex items-center justify-between">
+              <div>
+                <p class="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">Comforter Prescription</p>
+                <h2 class="text-xl font-semibold text-charcoal tracking-tight">Silk Comforter</h2>
+                <p class="text-xs text-charcoal/45 mt-0.5">Prestige</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="hidden sm:flex flex-col items-end gap-1.5">
+                  <span class="text-xs bg-gold/15 text-gold px-3 py-1.5 rounded-full font-medium">Silk · All-Season</span>
+                  <span class="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">TN-SK-CM-AS</span>
+                </div>
+                <div class="flex flex-col items-center gap-1">
+                  <div class="relative w-20 h-20">
+                    <svg class="w-full h-full -rotate-90" viewBox="0 0 72 72">
+                      <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(26,26,26,0.08)" stroke-width="5"/>
+                      <circle cx="36" cy="36" r="28" fill="none" stroke="#C49A6C" stroke-width="5" stroke-linecap="round" stroke-dasharray="175.93" stroke-dashoffset="28.1"/>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center"><span class="text-lg font-bold text-charcoal">84%</span></div>
+                  </div>
+                  <span class="text-xs text-charcoal/40 font-medium tracking-wide">Match</span>
+                </div>
+              </div>
+            </div>
+            <div class="px-7 py-6">
+              <p class="text-charcoal/60 text-sm leading-relaxed mb-6">Mulberry silk fill with a naturally protein-rich structure that regulates temperature in all seasons. Lightweight, hypoallergenic, and breathable — the preferred choice for sensitive skin.</p>
+              <div class="space-y-4 mb-6">
+                <div class="grid grid-cols-[120px_1fr_64px] items-center gap-4"><span class="text-sm text-charcoal/55 text-right">Warmth</span><div class="h-2 bg-charcoal/8 rounded-full overflow-hidden"><div class="h-full rounded-full bg-orange-400/70" style="width:60%"></div></div><span class="text-xs font-semibold text-charcoal/50">Moderate</span></div>
+                <div class="grid grid-cols-[120px_1fr_64px] items-center gap-4"><span class="text-sm text-charcoal/55 text-right">Breathability</span><div class="h-2 bg-charcoal/8 rounded-full overflow-hidden"><div class="h-full rounded-full bg-sage" style="width:100%"></div></div><span class="text-xs font-semibold text-charcoal/50">Excellent</span></div>
+                <div class="grid grid-cols-[120px_1fr_64px] items-center gap-4"><span class="text-sm text-charcoal/55 text-right">Fluffiness</span><div class="h-2 bg-charcoal/8 rounded-full overflow-hidden"><div class="h-full rounded-full bg-purple-400/70" style="width:60%"></div></div><span class="text-xs font-semibold text-charcoal/50">Moderate</span></div>
+              </div>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="text-xs bg-gold/10 text-gold px-3 py-1 rounded-full font-medium">Sensitive Skin</span>
+                <span class="text-xs bg-gold/10 text-gold px-3 py-1 rounded-full font-medium">Year-Round Use</span>
+                <span class="text-xs bg-gold/10 text-gold px-3 py-1 rounded-full font-medium">Luxury</span>
+                <span class="text-xs bg-gold/10 text-gold px-3 py-1 rounded-full font-medium">Hot Sleepers</span>
+              </div>
+              <div class="flex gap-3 flex-wrap">
+                <span class="text-xs px-3 py-1 rounded-full font-medium bg-sage/12 text-sage-dark">✓ Hypoallergenic</span>
+                <span class="text-xs px-3 py-1 rounded-full font-medium bg-charcoal/6 text-charcoal/40">Dry-clean only</span>
+                <span class="text-xs bg-charcoal/6 text-charcoal/40 px-3 py-1 rounded-full font-medium">Light weight</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <button class="text-xs font-medium text-charcoal/45 hover:text-gold transition-colors flex items-center gap-1.5">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9l6.5-6.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              Edit answers
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ PILLOW ══ -->
+      <section class="scroll-mt-6">
+        <div class="space-y-2">
+          <div class="glass-card p-0 overflow-hidden">
+            <div class="bg-sage/12 border-b border-sage/20 px-7 py-4 flex items-center justify-between">
+              <div>
+                <p class="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">Pillow Prescription</p>
+                <h2 class="text-xl font-semibold text-charcoal tracking-tight">Tech Fiber Pillow</h2>
+                <p class="text-xs text-charcoal/45 mt-0.5">TopCool Series</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="hidden sm:flex flex-col items-end gap-1.5">
+                  <span class="text-xs bg-charcoal/8 text-charcoal/55 px-3 py-1.5 rounded-full font-medium">Tech Fiber · Medium firmness</span>
+                  <span class="font-mono text-[11px] text-charcoal/35 bg-charcoal/6 px-2.5 py-1 rounded-md tracking-wider">TN-TF-PL-MD</span>
+                </div>
+                <div class="flex flex-col items-center gap-1">
+                  <div class="relative w-20 h-20">
+                    <svg class="w-full h-full -rotate-90" viewBox="0 0 72 72">
+                      <circle cx="36" cy="36" r="28" fill="none" stroke="rgba(26,26,26,0.08)" stroke-width="5"/>
+                      <circle cx="36" cy="36" r="28" fill="none" stroke="#C49A6C" stroke-width="5" stroke-linecap="round" stroke-dasharray="175.93" stroke-dashoffset="31.6"/>
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center"><span class="text-lg font-bold text-charcoal">82%</span></div>
+                  </div>
+                  <span class="text-xs text-charcoal/40 font-medium tracking-wide">Match</span>
+                </div>
+              </div>
+            </div>
+            <div class="px-7 py-6">
+              <div class="flex items-end gap-6 mb-5">
+                <div class="flex flex-col items-center gap-2">
+                  <div class="relative w-24" style="height:44px">
+                    <div class="absolute bottom-0 left-0 right-0 bg-sage/25 border-2 border-sage/40 rounded-xl" style="height:22px"></div>
+                    <div class="absolute bottom-0 left-0 right-0 h-px bg-charcoal/20"></div>
+                  </div>
+                  <span class="text-xs font-semibold text-charcoal/60 uppercase tracking-widest">Medium Loft</span>
+                </div>
+                <div class="text-sm text-charcoal/60 leading-relaxed flex-1">Keeps your neck in neutral alignment whether you sleep on your back or side.</div>
+              </div>
+              <p class="text-sm text-charcoal/60 leading-relaxed mb-5">High-performance tech fiber fill that stays lofty wash after wash. Machine washable, fully hypoallergenic, and dries quickly — the practical choice for allergy sufferers and busy households.</p>
+              <div class="flex flex-wrap gap-2 mb-4">
+                <span class="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">Allergy Sufferers</span>
+                <span class="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">Low Maintenance</span>
+                <span class="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">Side Sleepers</span>
+                <span class="text-xs bg-sage/12 text-sage-dark px-3 py-1 rounded-full font-medium">Combination Sleepers</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex justify-end">
+            <button class="text-xs font-medium text-charcoal/45 hover:text-gold transition-colors flex items-center gap-1.5">
+              <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9l6.5-6.5z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+              Edit answers
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ Save card ══ -->
+      <div class="glass-card p-6">
+        <p class="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-1">Save your sleep plan</p>
+        <p class="text-sm text-charcoal/55 leading-relaxed mb-4">Add your name to save everything you've completed — and an optional email to receive your full report.</p>
+        <div class="grid sm:grid-cols-2 gap-3 mb-4">
+          <input type="text" placeholder="Name (required)" class="w-full px-4 py-3 rounded-xl bg-white/60 border border-charcoal/12 text-sm text-charcoal placeholder:text-charcoal/35 outline-none">
+          <input type="email" placeholder="Email (optional)" class="w-full px-4 py-3 rounded-xl bg-white/60 border border-charcoal/12 text-sm text-charcoal placeholder:text-charcoal/35 outline-none">
+        </div>
+        <button class="bg-charcoal text-cream px-8 py-3 rounded-xl text-sm font-medium hover:bg-charcoal/85 transition-colors shadow-sm inline-flex items-center gap-2">
+          Save my plan
+          <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
+      <!-- ══ Footer ══ -->
+      <div class="text-center pt-2 pb-4">
+        <p class="text-xs text-charcoal/25">TN Select · Tonia Nicole Pro Bar · 24 June 2026</p>
+      </div>
+
+    </div>
+  </main>
+</div>
+</body>
+</html>

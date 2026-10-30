@@ -299,6 +299,93 @@ const PremiumIcon = () => (
   </svg>
 )
 
+
+// ── v2 additions (FEAC 1020 question set) ──
+const SkinLuxIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <path d="M4 20C8 14 12 14 16 18C20 22 24 22 28 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M4 26C8 20 12 20 16 24C20 28 24 28 28 22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+    <path d="M22 5L23.2 8.2L26.5 9L23.2 9.8L22 13L20.8 9.8L17.5 9L20.8 8.2L22 5Z" fill="currentColor"/>
+  </svg>
+)
+const StyleNatureIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <path d="M6 26C6 14 14 6 26 6C26 18 18 26 6 26Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+    <path d="M6 26L20 12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+  </svg>
+)
+const StyleMinimalIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect x="5" y="5" width="22" height="22" rx="2" stroke="currentColor" strokeWidth="2"/>
+    <rect x="5" y="5" width="11" height="11" fill="currentColor" opacity="0.25"/>
+    <rect x="16" y="16" width="11" height="11" fill="currentColor" opacity="0.25"/>
+  </svg>
+)
+const StylePlayfulIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <circle cx="16" cy="17" r="9" stroke="currentColor" strokeWidth="2"/>
+    <circle cx="8" cy="8" r="3.5" stroke="currentColor" strokeWidth="2"/>
+    <circle cx="24" cy="8" r="3.5" stroke="currentColor" strokeWidth="2"/>
+    <circle cx="13" cy="16" r="1.2" fill="currentColor"/>
+    <circle cx="19" cy="16" r="1.2" fill="currentColor"/>
+    <path d="M13 20.5C14 21.5 18 21.5 19 20.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+)
+const StyleClassicIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <path d="M5 24L7 10L13 16L16 7L19 16L25 10L27 24H5Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+    <path d="M7 27H25" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+  </svg>
+)
+const AllergyWashableIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <rect x="5" y="5" width="22" height="22" rx="3" stroke="currentColor" strokeWidth="2"/>
+    <circle cx="16" cy="18" r="5.5" stroke="currentColor" strokeWidth="2"/>
+    <path d="M12 18C13.5 16.5 18.5 19.5 20 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
+    <circle cx="9" cy="9" r="1.2" fill="currentColor"/><circle cx="13" cy="9" r="1.2" fill="currentColor"/>
+  </svg>
+)
+const AllergyNaturalIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <path d="M16 4L6 8V17C6 22 10.5 26.5 16 28C21.5 26.5 26 22 26 17V8L16 4Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+    <path d="M12 20C12 15 15 12 20 12C20 17 17 20 12 20Z" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round"/>
+  </svg>
+)
+const ScentNoIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <path d="M11 24C9 20 13 18 11 14C9 10 13 8 11 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.4"/>
+    <path d="M18 24C16 20 20 18 18 14C16 10 20 8 18 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.4"/>
+    <line x1="6" y1="26" x2="26" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+  </svg>
+)
+const ScentMildIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <path d="M11 26C9 22 13 20 11 16C9 12 13 10 11 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M18 26C16 22 20 20 18 16C16 12 20 10 18 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+    <path d="M25 26C23 22 27 20 25 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.5"/>
+  </svg>
+)
+const HomeBudgetIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <path d="M5 15L16 6L27 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M8 13V26H24V13" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+    <path d="M13 26V19H19V26" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+  </svg>
+)
+const HomeDailyIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <path d="M5 15L16 6L27 15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M8 13V26H24V13" stroke="currentColor" strokeWidth="2" strokeLinejoin="round"/>
+    <path d="M12 20L15 23L21 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+const TierEnhancedIcon = () => (
+  <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+    <path d="M6 24L12 16L18 20L26 8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+    <path d="M20 8H26V14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+  </svg>
+)
+
 export const ICON_REGISTRY: Record<string, ReactNode> = {
   'flame': <FlameIcon />,
   'thermometer-high': <ThermometerHighIcon />,
@@ -336,6 +423,18 @@ export const ICON_REGISTRY: Record<string, ReactNode> = {
   'allergy-protect': <AllergyProtectIcon />,
   'value': <ValueIcon />,
   'premium': <PremiumIcon />,
+  'skin-lux': <SkinLuxIcon />,
+  'style-nature': <StyleNatureIcon />,
+  'style-minimal': <StyleMinimalIcon />,
+  'style-playful': <StylePlayfulIcon />,
+  'style-classic': <StyleClassicIcon />,
+  'allergy-washable': <AllergyWashableIcon />,
+  'allergy-natural': <AllergyNaturalIcon />,
+  'scent-no': <ScentNoIcon />,
+  'scent-mild': <ScentMildIcon />,
+  'home-budget': <HomeBudgetIcon />,
+  'home-daily': <HomeDailyIcon />,
+  'tier-enhanced': <TierEnhancedIcon />,
 }
 
 export const ICON_KEYS = Object.keys(ICON_REGISTRY)
