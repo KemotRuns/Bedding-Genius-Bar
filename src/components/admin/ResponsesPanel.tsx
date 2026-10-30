@@ -1,5 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from 'react'
-import { supabase } from '../../lib/supabase'
+import { collection, deleteDoc, doc, getDocs, orderBy, query as fsQuery } from 'firebase/firestore'
+import { db } from '../../lib/firebase'
 
 interface ResponseRow {
   id: string
@@ -45,29 +46,25 @@ export default function ResponsesPanel() {
   const [expanded, setExpanded] = useState<string | null>(null)
 
   // Awaits first, so no setState runs synchronously inside the mount effect.
+  async function fetchRows(): Promise<ResponseRow[]> {
+    if (!db) return []
+    const snap = await getDocs(fsQuery(collection(db, 'responses'), orderBy('created_at', 'desc')))
+    return snap.docs.map(d => ({ id: d.id, ...(d.data() as Omit<ResponseRow, 'id'>) }))
+  }
   async function load() {
-    if (!supabase) return
-    const { data, error } = await supabase
-      .from('responses')
-      .select('*')
-      .order('created_at', { ascending: false })
-    if (error) setError(error.message)
-    else { setError(''); setRows((data ?? []) as ResponseRow[]) }
+    try { setRows(await fetchRows()); setError('') } catch (e) { setError((e as Error).message) }
     setLoading(false)
   }
 
   useEffect(() => {
     let cancelled = false
     ;(async () => {
-      if (!supabase) return
-      const { data, error } = await supabase
-        .from('responses')
-        .select('*')
-        .order('created_at', { ascending: false })
-      if (cancelled) return
-      if (error) setError(error.message)
-      else { setError(''); setRows((data ?? []) as ResponseRow[]) }
-      setLoading(false)
+      try {
+        const r = await fetchRows()
+        if (cancelled) return
+        setRows(r); setError('')
+      } catch (e) { if (!cancelled) setError((e as Error).message) }
+      if (!cancelled) setLoading(false)
     })()
     return () => { cancelled = true }
   }, [])
@@ -82,10 +79,9 @@ export default function ResponsesPanel() {
   }, [rows, query, emailOnly])
 
   async function handleDelete(id: string) {
-    if (!supabase) return
+    if (!db) return
     if (!confirm('Delete this response permanently?')) return
-    const { error } = await supabase.from('responses').delete().eq('id', id)
-    if (error) { alert(error.message); return }
+    try { await deleteDoc(doc(db, 'responses', id)) } catch (e) { alert((e as Error).message); return }
     setRows(prev => prev.filter(r => r.id !== id))
   }
 

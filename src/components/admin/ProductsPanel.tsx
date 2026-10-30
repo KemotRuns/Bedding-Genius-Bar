@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
-import { supabase } from '../../lib/supabase'
+import { collection, deleteDoc, doc, getDocs, setDoc, updateDoc, writeBatch } from 'firebase/firestore'
+import { db } from '../../lib/firebase'
+import catalogSeed from '../../data/catalog.json'
 import { imageUrlFor } from '../../lib/products'
 import type { ProductRow } from '../../lib/products'
 import { QUESTION_SEED, SECTION_LONG_TO_SHORT } from '../../lib/questionData'
@@ -55,36 +57,58 @@ export default function ProductsPanel() {
   const [draft, setDraft] = useState<Draft | null>(null)
   const [saving, setSaving] = useState(false)
 
+  async function fetchRows(): Promise<ProductRow[]> {
+    if (!db) return []
+    const snap = await getDocs(collection(db, 'products'))
+    const order: Record<string, number> = { sheet: 0, comforter: 1, pillow: 2 }
+    return snap.docs
+      .map(d => ({ id: d.id, ...(d.data() as Omit<ProductRow, 'id'>) }))
+      .sort((a, b) => (order[a.category] ?? 9) - (order[b.category] ?? 9) || (a.sort_order ?? 0) - (b.sort_order ?? 0))
+  }
   async function load() {
-    if (!supabase) return
-    const { data, error } = await supabase.from('products').select('*').order('category').order('sort_order')
-    if (error) setError(error.message)
-    else { setError(''); setRows((data ?? []) as ProductRow[]) }
+    try { setRows(await fetchRows()); setError('') } catch (e) { setError((e as Error).message) }
     setLoading(false)
   }
   useEffect(() => {
     let cancelled = false
     ;(async () => {
-      if (!supabase) return
-      const { data, error } = await supabase.from('products').select('*').order('category').order('sort_order')
-      if (cancelled) return
-      if (error) setError(error.message)
-      else { setError(''); setRows((data ?? []) as ProductRow[]) }
-      setLoading(false)
+      try {
+        const r = await fetchRows()
+        if (cancelled) return
+        setRows(r); setError('')
+      } catch (e) { if (!cancelled) setError((e as Error).message) }
+      if (!cancelled) setLoading(false)
     })()
     return () => { cancelled = true }
   }, [])
 
+  // One-click seed: writes the bundled catalog (src/data/catalog.json) into Firestore.
+  // Used on first setup and to restore defaults; existing ids are overwritten.
+  async function importBundled() {
+    if (!db) return
+    if (rows.length > 0 && !confirm(`Overwrite ${catalogSeed.length} built-in products in the database? Products you added yourself are kept.`)) return
+    setSaving(true); setError('')
+    try {
+      const batch = writeBatch(db)
+      for (const p of catalogSeed) {
+        const { id, ...data } = p
+        batch.set(doc(db, 'products', id), data)
+      }
+      await batch.commit()
+      setLoading(true); await load()
+    } catch (e) { setError((e as Error).message) }
+    setSaving(false)
+  }
+
   const filtered = useMemo(() => rows.filter(r => cat === 'all' || (r.category as ProductCategory) === cat), [rows, cat])
 
   async function save() {
-    if (!supabase || !draft) return
+    if (!db || !draft) return
     const id = draft.id ?? idFromUrl(draft.url)
     if (!draft.url.trim() || !id) { setError('Please paste a valid FET.com product link (…/SalePage/Index/12345).'); return }
     if (!draft.name_zh.trim()) { setError('Chinese product name is required.'); return }
     setSaving(true); setError('')
     const payload = {
-      id,
       category: draft.category,
       name_zh: draft.name_zh.trim(),
       name_en: draft.name_en.trim() || draft.name_zh.trim(),
@@ -101,24 +125,23 @@ export default function ProductsPanel() {
       sort_order: Number(draft.sort_order) || 0,
       active: draft.active,
     }
-    const res = await supabase.from('products').upsert(payload)
+    try {
+      await setDoc(doc(db, 'products', id), payload, { merge: true })
+    } catch (e) { setSaving(false); setError((e as Error).message); return }
     setSaving(false)
-    if (res.error) { setError(res.error.message); return }
     setDraft(null)
     setLoading(true); await load()
   }
 
   async function remove(row: ProductRow) {
-    if (!supabase) return
+    if (!db) return
     if (!confirm(`Delete "${row.name_zh}" permanently? (You can also just set it to Hidden.)`)) return
-    const { error } = await supabase.from('products').delete().eq('id', row.id)
-    if (error) { alert(error.message); return }
+    try { await deleteDoc(doc(db, 'products', row.id)) } catch (e) { alert((e as Error).message); return }
     setRows(prev => prev.filter(r => r.id !== row.id))
   }
   async function toggleActive(row: ProductRow) {
-    if (!supabase) return
-    const { error } = await supabase.from('products').update({ active: !row.active }).eq('id', row.id)
-    if (error) { alert(error.message); return }
+    if (!db) return
+    try { await updateDoc(doc(db, 'products', row.id), { active: !row.active }) } catch (e) { alert((e as Error).message); return }
     setRows(prev => prev.map(r => r.id === row.id ? { ...r, active: !r.active } : r))
   }
 
@@ -252,6 +275,10 @@ export default function ProductsPanel() {
           </button>
         ))}
         <div className="flex-1" />
+        <button onClick={importBundled} disabled={saving} title="Writes the built-in catalog shipped with the app into the database"
+          className="text-xs px-3 py-2 rounded-xl border border-charcoal/15 text-charcoal/50 hover:bg-white/60 disabled:opacity-50 cursor-pointer">
+          {saving ? 'Importing…' : rows.length === 0 ? `Import built-in catalog (${catalogSeed.length})` : 'Restore built-in catalog'}
+        </button>
         <select className="text-sm px-3 py-2 rounded-xl border border-charcoal/15 bg-white/70 text-charcoal/70 cursor-pointer"
           onChange={e => { if (e.target.value) { setError(''); setDraft(blankDraft(e.target.value as ProductCategory)); e.target.value = '' } }} defaultValue="">
           <option value="" disabled>+ Add product…</option>
@@ -261,7 +288,7 @@ export default function ProductsPanel() {
 
       {loading ? <p className="text-charcoal/40 text-sm py-12 text-center">Loading…</p>
         : error ? <p className="text-red-500 text-sm py-12 text-center">{error}</p>
-        : rows.length === 0 ? <p className="text-charcoal/40 text-sm py-12 text-center">No products in the database yet. The app is using the built-in catalog.</p>
+        : rows.length === 0 ? <p className="text-charcoal/40 text-sm py-12 text-center">No products in the database yet. The app is using the built-in catalog. Click “Import built-in catalog” above to start editing it here.</p>
         : (
           <div className="glass-card overflow-hidden">
             <table className="w-full text-sm">

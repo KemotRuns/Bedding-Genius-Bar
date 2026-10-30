@@ -2,7 +2,8 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import type { ReactNode } from 'react'
 import { defaultCatalog } from './engine'
 import type { Catalog } from './engine'
-import { supabase, isSupabaseConfigured } from './supabase'
+import { collection, getDocs, query, where } from 'firebase/firestore'
+import { db, isFirebaseConfigured } from './firebase'
 import { QUESTIONS } from './questions'
 import type { QuestionConfig } from './types'
 import { rowToProduct } from './products'
@@ -12,28 +13,30 @@ interface CatalogContextValue {
   catalog: Catalog
   questions: QuestionConfig[]
   loading: boolean
-  source: 'bundled' | 'supabase'
+  source: 'bundled' | 'firestore'
 }
 
 const Ctx = createContext<CatalogContextValue>({ catalog: defaultCatalog, questions: QUESTIONS, loading: false, source: 'bundled' })
 
 export function CatalogProvider({ children }: { children: ReactNode }) {
   const [catalog, setCatalog] = useState<Catalog>(defaultCatalog)
-  const [loading, setLoading] = useState(isSupabaseConfigured)
-  const [source, setSource] = useState<'bundled' | 'supabase'>('bundled')
+  const [loading, setLoading] = useState(isFirebaseConfigured)
+  const [source, setSource] = useState<'bundled' | 'firestore'>('bundled')
 
   useEffect(() => {
-    if (!isSupabaseConfigured || !supabase) return
+    if (!isFirebaseConfigured || !db) return
     let cancelled = false
     ;(async () => {
       try {
-        const { data, error } = await supabase.from('products').select('*').eq('active', true).order('sort_order')
+        // Public reads must filter active == true (see firestore.rules).
+        const snap = await getDocs(query(collection(db, 'products'), where('active', '==', true)))
         if (cancelled) return
-        const rows = (data ?? []) as ProductRow[]
-        // Only override the bundled catalog when the DB actually has the v2 shape + rows.
-        if (!error && rows.length > 0 && 'url' in rows[0]) {
+        const rows = snap.docs.map(d => ({ id: d.id, ...(d.data() as Omit<ProductRow, 'id'>) }))
+        // Only override the bundled catalog when Firestore actually has products.
+        if (rows.length > 0) {
+          rows.sort((a, b) => (a.sort_order ?? 0) - (b.sort_order ?? 0))
           setCatalog({ products: rows.map(rowToProduct) })
-          setSource('supabase')
+          setSource('firestore')
         }
       } catch { /* keep bundled */ } finally { if (!cancelled) setLoading(false) }
     })()

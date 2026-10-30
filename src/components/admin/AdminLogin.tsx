@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { supabase } from '../../lib/supabase'
+import { signInWithEmailAndPassword } from 'firebase/auth'
+import { auth } from '../../lib/firebase'
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('')
@@ -9,11 +10,17 @@ export default function AdminLogin() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!supabase) return
+    if (!auth) return
     setBusy(true)
     setError('')
-    const { error } = await supabase.auth.signInWithPassword({ email: email.trim(), password })
-    if (error) setError(error.message)
+    try {
+      await signInWithEmailAndPassword(auth, email.trim(), password)
+    } catch (err) {
+      const code = (err as { code?: string }).code ?? ''
+      setError(code.includes('invalid-credential') || code.includes('wrong-password') || code.includes('user-not-found')
+        ? 'Email or password is incorrect.'
+        : (err as Error).message)
+    }
     setBusy(false)
   }
 

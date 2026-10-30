@@ -1,6 +1,6 @@
 import type { Product } from './types'
 
-// Supabase `products` row (v2 schema) → Product
+// Firestore `products/{id}` document (+ id) → Product
 export interface ProductRow {
   id: string; category: string
   name_zh: string; name_en: string

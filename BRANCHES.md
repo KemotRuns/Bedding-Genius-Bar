@@ -44,7 +44,7 @@
 - **Engine** (`src/lib/engine.ts`): set-based matching. Pillows/comforters carry `match` = answers they suit (from FEAC's "List of matched products"); bedding sets carry `material` + `style` and derive matches from `MATERIAL_MATCH`. Per-question weights; match % = weighted criteria satisfied / answered. Ties → `sort_order` (seeded cheapest-first)
 - **Results**: photo, bilingual name, type chip, bullets, "View on FET.com", "Why this fits you" chips, runner-up with thumbnail; attribute bars removed
 - **Admin**: Products + Responses only. Product editor = paste FET link (photo auto), names, type, bullets, tick "recommend when…" answers (bedding: material + style dropdowns). Questions/Scoring panels and DB tables removed
-- **Supabase**: `supabase/schema.sql` is now v2 (drops v1 question/rule tables, recreates `products`); `seed.sql` regenerated via `npx tsx scripts/gen-seed.ts`
+- **Backend (v2.1)**: Supabase replaced by **Firebase** (Firestore `products` + `responses`, Auth email/password). Rules in `firestore.rules` (admin allowlist by email). Seed = “Import built-in catalog” button in `/admin`. Reason: the free Supabase project was deleted after idling; Firebase Spark never pauses
 - Removed: `products/pillows/comforters.json`, `scoringRules.ts`, old results components, `QuestionsPanel`, `ScoringPanel`
 
 ## Branching Workflow

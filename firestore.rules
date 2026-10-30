@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Admin allowlist. Adding an admin = add the email here and redeploy rules
+    // (firebase deploy --only firestore:rules). Mirror it in VITE_ADMIN_EMAILS.
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email != null
+        && request.auth.token.email.lower() in [
+          'tom@brainiakconsulting.com'
+        ];
+    }
+
+    // Catalog: the kiosk reads active products (queries must filter active == true);
+    // admins read and write everything.
+    match /products/{id} {
+      allow read: if resource.data.active == true || isAdmin();
+      allow write: if isAdmin();
+    }
+
+    // Captured sleep plans: anyone may create (the kiosk is anonymous);
+    // only admins read or delete; nothing is ever updated.
+    match /responses/{id} {
+      allow create: if request.resource.data.keys().hasAll(['created_at', 'answers', 'recommendation']);
+      allow read, delete: if isAdmin();
+      allow update: if false;
+    }
+  }
+}

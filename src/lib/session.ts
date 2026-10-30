@@ -1,13 +1,14 @@
 import type { QuizAnswers, ProductCategory } from './types'
 import { getRecommendation, CATEGORY_QUESTIONS } from './engine'
 import type { Catalog } from './engine'
-import { supabase, isSupabaseConfigured } from './supabase'
+import { addDoc, collection } from 'firebase/firestore'
+import { db, isFirebaseConfigured } from './firebase'
 
 // ── Storage keys ──────────────────────────────────────────────────────────────
 const SESSIONS_KEY = 'tn_sessions'       // full local history of finalized sessions
 const QUEUE_KEY    = 'tn_capture_queue'  // sessions awaiting delivery
 
-// Legacy Google Apps Script endpoint (empty → Supabase or local-only).
+// Legacy Google Apps Script endpoint (empty → Firestore or local-only).
 const ENDPOINT = (import.meta.env.VITE_CAPTURE_ENDPOINT as string | undefined)?.trim() || ''
 
 // ── Section completeness ──────────────────────────────────────────────────────
@@ -90,17 +91,19 @@ export function getSessions(): CapturedSession[] {
 
 // ── Remote delivery (with offline retry queue) ────────────────────────────────
 async function deliver(session: CapturedSession): Promise<boolean> {
-  if (isSupabaseConfigured && supabase) {
-    const { error } = await supabase.from('responses').insert({
-      created_at: session.createdAt,
-      name: session.name,
-      email: session.email ?? null,
-      lang: session.lang,
-      answers: session.answers,
-      completed_sections: session.completedSections,
-      recommendation: session.recommendation,
-    })
-    return !error
+  if (isFirebaseConfigured && db) {
+    try {
+      await addDoc(collection(db, 'responses'), {
+        created_at: session.createdAt,
+        name: session.name,
+        email: session.email ?? null,
+        lang: session.lang,
+        answers: session.answers,
+        completed_sections: session.completedSections,
+        recommendation: session.recommendation,
+      })
+      return true
+    } catch { return false }
   }
   if (ENDPOINT) {
     try {
@@ -112,7 +115,7 @@ async function deliver(session: CapturedSession): Promise<boolean> {
 }
 
 export async function flushQueue(): Promise<void> {
-  if (!isSupabaseConfigured && !ENDPOINT) return
+  if (!isFirebaseConfigured && !ENDPOINT) return
   const queue = read<CapturedSession[]>(QUEUE_KEY, [])
   if (queue.length === 0) return
   const remaining: CapturedSession[] = []

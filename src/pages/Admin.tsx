@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
-import type { Session } from '@supabase/supabase-js'
-import { supabase, isSupabaseConfigured } from '../lib/supabase'
+import { onAuthStateChanged, signOut } from 'firebase/auth'
+import type { User } from 'firebase/auth'
+import { auth, isFirebaseConfigured, isAdminEmail } from '../lib/firebase'
 import AdminLogin from '../components/admin/AdminLogin'
 import AdminShell from '../components/admin/AdminShell'
 
@@ -13,48 +14,26 @@ function Centered({ children }: { children: React.ReactNode }) {
 }
 
 export default function Admin() {
-  const [session, setSession] = useState<Session | null>(null)
-  const [authReady, setAuthReady] = useState(!isSupabaseConfigured)
-  const [adminState, setAdminState] = useState<{ checkedFor: string | null; isAdmin: boolean }>({ checkedFor: null, isAdmin: false })
+  const [user, setUser] = useState<User | null>(null)
+  const [authReady, setAuthReady] = useState(!isFirebaseConfigured)
 
-  // Track the auth session (state set only in async callbacks).
   useEffect(() => {
-    if (!isSupabaseConfigured || !supabase) return
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session)
-      setAuthReady(true)
-    })
-    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => setSession(s))
-    return () => sub.subscription.unsubscribe()
+    if (!auth) return
+    return onAuthStateChanged(auth, u => { setUser(u); setAuthReady(true) })
   }, [])
 
-  // Verify admin allowlist membership whenever the session changes.
-  useEffect(() => {
-    if (!supabase || !session) return
-    let cancelled = false
-    supabase.from('admins').select('user_id').eq('user_id', session.user.id).maybeSingle()
-      .then(({ data }) => {
-        if (!cancelled) setAdminState({ checkedFor: session.user.id, isAdmin: Boolean(data) })
-      })
-    return () => { cancelled = true }
-  }, [session])
-
-  const adminChecked = session ? adminState.checkedFor === session.user.id : true
-  const isAdmin = Boolean(session) && adminChecked && adminState.isAdmin
-
-  if (!isSupabaseConfigured) {
-    return <Centered>Supabase isn’t configured. Set <code>VITE_SUPABASE_URL</code> and <code>VITE_SUPABASE_ANON_KEY</code>.</Centered>
+  if (!isFirebaseConfigured) {
+    return <Centered>Firebase isn’t configured. Set the <code>VITE_FIREBASE_*</code> variables.</Centered>
   }
   if (!authReady) return <Centered>Loading…</Centered>
-  if (!session) return <AdminLogin />
-  if (!adminChecked) return <Centered>Checking access…</Centered>
-  if (!isAdmin) {
+  if (!user) return <AdminLogin />
+  if (!isAdminEmail(user.email)) {
     return (
       <Centered>
-        <p>Signed in as <strong>{session.user.email}</strong>, but this account isn’t an admin.</p>
-        <button onClick={() => supabase!.auth.signOut()} className="text-charcoal underline cursor-pointer">Sign out</button>
+        <p>Signed in as <strong>{user.email}</strong>, but this account isn’t an admin.</p>
+        <button onClick={() => auth && signOut(auth)} className="text-charcoal underline cursor-pointer">Sign out</button>
       </Centered>
     )
   }
-  return <AdminShell email={session.user.email} onSignOut={() => supabase!.auth.signOut()} />
+  return <AdminShell email={user.email ?? undefined} onSignOut={() => auth && signOut(auth)} />
 }
