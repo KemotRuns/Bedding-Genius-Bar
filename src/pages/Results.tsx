@@ -7,6 +7,7 @@ import type { QuizAnswers, ScoredProduct, PriceTier } from '../lib/types'
 import { useLang } from '../lib/LanguageContext'
 import { tr } from '../lib/i18n'
 import { buildSession, saveSession, isSectionComplete } from '../lib/session'
+import { heardSummary, reasonsFor } from '../lib/advice'
 
 const SECTION_ORDER = ['sheets', 'comforter', 'pillow'] as const
 type SectionId = typeof SECTION_ORDER[number]
@@ -56,8 +57,8 @@ function ShopButton({ url, zh, small = false }: { url: string; zh: boolean; smal
     <a href={url} target="_blank" rel="noopener noreferrer"
       className={`inline-flex items-center gap-2 rounded-xl font-medium transition-colors cursor-pointer ${small
         ? 'text-xs px-3 py-1.5 border border-charcoal/15 text-charcoal/60 hover:border-gold hover:text-gold'
-        : 'text-sm px-5 py-2.5 bg-charcoal text-cream hover:bg-charcoal/85 shadow-sm'}`}>
-      {zh ? '前往 FET.com 選購' : 'View on FET.com'}
+        : 'text-sm px-5 py-2.5 border border-charcoal/25 text-charcoal hover:border-gold hover:text-gold bg-white/50'}`}>
+      {zh ? '在 FET.com 查看這款商品' : 'See this on FET.com'}
       <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M5 2H12V9M12 2L3 11" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
     </a>
   )
@@ -71,14 +72,13 @@ function Chip({ children, tone = 'neutral' }: { children: React.ReactNode; tone?
 // ── Prescription card ────────────────────────────────────────────────────────
 
 const TIER_LABEL: Record<PriceTier, { en: string; zh: string }> = {
-  entry:   { en: 'Entry option', zh: '入門首選' },
-  premium: { en: 'Premium upgrade', zh: '進階升級' },
+  entry:   { en: 'A good place to start', zh: '入門好選擇' },
+  premium: { en: 'If you want to go further', zh: '想更進一步' },
 }
 
 function ProductCard({ section, top, tier, alternative = false, answers, zh }: {
   section: SectionId; top: ScoredProduct; tier?: PriceTier; alternative?: boolean; answers: QuizAnswers; zh: boolean
 }) {
-  const { questions } = useCatalog()
   const meta = SECTIONS[section]
   const p = top.product
   const accentBg = meta.accent === 'gold' ? 'bg-gold/8 border-gold/20' : 'bg-sage/12 border-sage/20'
@@ -92,12 +92,8 @@ function ProductCard({ section, top, tier, alternative = false, answers, zh }: {
   const winterNote = section === 'comforter' && answers.comforterTemp === 'Hot' && !top.matched.includes('comforterTemp')
   const browseUrl = section === 'sheets' && p.material ? MATERIAL_BROWSE_URL[p.material] : null
 
-  // "Why this fits": the option labels of every criterion this product satisfied.
-  const matchedLabels = top.matched.map(q => {
-    const qc = questions.find(x => x.id === q)
-    const opt = qc?.options.find(o => o.value === answers[q])
-    return opt ? (zh && opt.label_zh ? opt.label_zh : opt.label) : null
-  }).filter((x): x is string => Boolean(x))
+  // "Why this fits": one cause-and-effect sentence per criterion this product satisfies.
+  const reasons = reasonsFor(top, answers, zh)
 
   return (
     <>
@@ -106,7 +102,7 @@ function ProductCard({ section, top, tier, alternative = false, answers, zh }: {
           <div className="min-w-0">
             <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5 flex flex-wrap items-center gap-2">
               <span>{headLabel}</span>
-              {tier && <span className="normal-case tracking-normal text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-charcoal text-cream">{zh ? TIER_LABEL[tier].zh : TIER_LABEL[tier].en}</span>}
+              {tier && <span className="normal-case tracking-normal text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-sage/15 text-sage-dark">{zh ? TIER_LABEL[tier].zh : TIER_LABEL[tier].en}</span>}
             </p>
             <h2 className="text-xl font-semibold text-charcoal tracking-tight leading-snug">{name}</h2>
             {altName && <p className="text-xs text-charcoal/45 mt-0.5 truncate">{altName}</p>}
@@ -148,10 +144,12 @@ function ProductCard({ section, top, tier, alternative = false, answers, zh }: {
               )}
             </div>
           </div>
-          {matchedLabels.length > 0 && (
+          {reasons.length > 0 && (
             <div className="mt-6 pt-5 border-t border-charcoal/6">
-              <p className="text-[11px] font-semibold tracking-widest uppercase text-charcoal/35 mb-2">{zh ? '符合您的需求' : 'Why this fits you'}</p>
-              <div className="flex flex-wrap gap-2">{matchedLabels.map(l => <Chip key={l} tone="sage">{l}</Chip>)}</div>
+              <p className="text-[11px] font-semibold tracking-widest uppercase text-charcoal/35 mb-2.5">{zh ? '為什麼適合您' : 'Why this fits you'}</p>
+              <ul className="space-y-1.5">
+                {reasons.map(r => <li key={r} className="text-sm text-charcoal/65 leading-relaxed">{r}</li>)}
+              </ul>
             </div>
           )}
         </div>
@@ -268,6 +266,24 @@ export default function Results() {
 
       <main className="max-w-4xl mx-auto px-6 pb-16">
         <motion.div variants={containerVariants} initial="hidden" animate="show" className="space-y-6 pt-6">
+          {anyComplete && (
+            <motion.div variants={itemVariants} className="glass-card p-6 sm:p-7">
+              <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-3">{zh ? '我們聽到的' : 'What we heard'}</p>
+              <div className="space-y-3">
+                {SECTION_ORDER.filter(id => done[id]).map(id => {
+                  const text = heardSummary(id, answers, zh)
+                  return text ? (
+                    <p key={id} className="text-[15px] text-charcoal/75 leading-relaxed">
+                      <span className="font-semibold text-charcoal">{tr(SECTIONS[id].label, lang)}{zh ? '：' : ': '}</span>{text}
+                    </p>
+                  ) : null
+                })}
+              </div>
+              <p className="text-xs text-charcoal/40 leading-relaxed mt-4">
+                {zh ? '以下的建議都是依照您的回答挑選的。若有任何一項不符合，可以隨時修改答案。' : 'Everything below was chosen from your answers. If something does not sound like you, you can edit them at any time.'}
+              </p>
+            </motion.div>
+          )}
           {SECTION_ORDER.map(id => {
             const sec = SECTIONS[id]
             const list = ranked[id]

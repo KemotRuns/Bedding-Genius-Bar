@@ -68,9 +68,9 @@ const INSIGHTS: Partial<Record<keyof QuizAnswers, Record<string, T>>> = {
     Balanced: { en: 'Balanced softness and support: fibre pillows fit well.', zh: '偏好均衡柔軟彈性，科技纖維枕適合您。' },
   },
   shoulderWidth: {
-    Petite:  { en: 'Narrow shoulders: a lower pillow suits you.', zh: '窄肩體型，適合較低的枕頭。' },
-    Average: { en: 'Average shoulders: a medium-height pillow suits you.', zh: '一般肩寬，適合中等高度的枕頭。' },
-    Broad:   { en: 'Broad shoulders: a higher pillow suits you.', zh: '寬肩體型，適合較高的枕頭。' },
+    Petite:  { en: 'Narrow shoulders noted. Pillow height will be matched to them.', zh: '窄肩體型已記錄，將為您配對合適的枕高。' },
+    Average: { en: 'Average shoulders noted. Pillow height will be matched to them.', zh: '一般肩寬已記錄，將為您配對合適的枕高。' },
+    Broad:   { en: 'Broad shoulders noted. Pillow height will be matched to them.', zh: '寬肩體型已記錄，將為您配對合適的枕高。' },
   },
   pillowAllergy: {
     Yes: { en: 'Sensitivities noted. Only memory foam and fibre pillows are shown.', zh: '敏感需求已記錄，僅推薦記憶枕與科技纖維枕。' },
