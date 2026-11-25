@@ -330,7 +330,7 @@ export default function Results() {
                   </div>
                   <p className="text-sm font-semibold text-charcoal mb-1">{zh ? `已儲存，${name}！` : `Saved, ${name}!`}</p>
                   <p className="text-xs text-charcoal/50 leading-relaxed">
-                    {email ? (zh ? `我們會將您的睡眠計畫寄送至 ${email}。` : `We'll send your sleep plan to ${email}.`) : (zh ? '您的睡眠檔案已儲存。' : 'Your sleep profile has been saved.')}
+                    {email ? (zh ? `您的睡眠計畫已儲存。我們可能會透過 ${email} 與您聯繫。` : `Your sleep plan has been saved. We may follow up at ${email}.`) : (zh ? '您的睡眠檔案已儲存。' : 'Your sleep profile has been saved.')}
                   </p>
                   <button onClick={() => setSaved(false)} className="text-xs text-charcoal/40 hover:text-gold mt-3 cursor-pointer">{zh ? '以最新答案重新儲存' : 'Re-save with latest answers'}</button>
                 </div>
@@ -338,7 +338,7 @@ export default function Results() {
                 <>
                   <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-1">{zh ? '儲存您的睡眠計畫' : 'Save your sleep plan'}</p>
                   <p className="text-sm text-charcoal/55 leading-relaxed mb-4">
-                    {zh ? '留下您的姓名以儲存目前的推薦結果，並可選填 Email 以接收完整報告。' : 'Add your name to save everything you\'ve completed, and an optional email to receive your full report.'}
+                    {zh ? '留下您的姓名以儲存目前完成的內容。若希望我們後續與您聯繫，歡迎留下 Email。' : 'Add your name to save everything you\'ve completed. Leave your email if you\'d like us to follow up.'}
                   </p>
                   <div className="grid sm:grid-cols-2 gap-3 mb-4">
                     <div>
