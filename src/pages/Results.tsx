@@ -1,9 +1,9 @@
 import { useState, useMemo, useEffect } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { getRecommendation, matchPercent } from '../lib/engine'
+import { getRecommendation, matchPercent, pickTiers, MATERIAL_BROWSE_URL } from '../lib/engine'
 import { useCatalog } from '../lib/CatalogContext'
-import type { QuizAnswers, ScoredProduct } from '../lib/types'
+import type { QuizAnswers, ScoredProduct, PriceTier } from '../lib/types'
 import { useLang } from '../lib/LanguageContext'
 import { tr } from '../lib/i18n'
 import { buildSession, saveSession, isSectionComplete } from '../lib/session'
@@ -70,8 +70,13 @@ function Chip({ children, tone = 'neutral' }: { children: React.ReactNode; tone?
 
 // ── Prescription card ────────────────────────────────────────────────────────
 
-function ProductCard({ section, top, runnerUp, answers, zh }: {
-  section: SectionId; top: ScoredProduct; runnerUp?: ScoredProduct; answers: QuizAnswers; zh: boolean
+const TIER_LABEL: Record<PriceTier, { en: string; zh: string }> = {
+  entry:   { en: 'Entry option', zh: '入門首選' },
+  premium: { en: 'Premium upgrade', zh: '進階升級' },
+}
+
+function ProductCard({ section, top, tier, alternative = false, answers, zh }: {
+  section: SectionId; top: ScoredProduct; tier?: PriceTier; alternative?: boolean; answers: QuizAnswers; zh: boolean
 }) {
   const { questions } = useCatalog()
   const meta = SECTIONS[section]
@@ -80,7 +85,12 @@ function ProductCard({ section, top, runnerUp, answers, zh }: {
   const tone = meta.accent === 'gold' ? 'gold' : 'sage'
   const name = zh ? p.name_zh : p.name_en
   const altName = zh ? p.name_en : p.name_zh
-  const bullets = zh ? p.bullets_zh : p.bullets_en
+  // Fall back to the other language when a product has copy in only one.
+  const bullets = zh ? (p.bullets_zh.length ? p.bullets_zh : p.bullets_en) : (p.bullets_en.length ? p.bullets_en : p.bullets_zh)
+  const headLabel = alternative && !tier ? (zh ? '也可考慮' : 'Also consider') : (zh ? meta.cardLabel.zh : meta.cardLabel.en)
+  // Warm sleeper, but the allergy / scent rules left only winter-weight comforters.
+  const winterNote = section === 'comforter' && answers.comforterTemp === 'Hot' && !top.matched.includes('comforterTemp')
+  const browseUrl = section === 'sheets' && p.material ? MATERIAL_BROWSE_URL[p.material] : null
 
   // "Why this fits": the option labels of every criterion this product satisfied.
   const matchedLabels = top.matched.map(q => {
@@ -94,7 +104,10 @@ function ProductCard({ section, top, runnerUp, answers, zh }: {
       <div className="glass-card p-0 overflow-hidden">
         <div className={`${accentBg} border-b px-7 py-4 flex items-center justify-between gap-4`}>
           <div className="min-w-0">
-            <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5">{zh ? meta.cardLabel.zh : meta.cardLabel.en}</p>
+            <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5 flex flex-wrap items-center gap-2">
+              <span>{headLabel}</span>
+              {tier && <span className="normal-case tracking-normal text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-charcoal text-cream">{zh ? TIER_LABEL[tier].zh : TIER_LABEL[tier].en}</span>}
+            </p>
             <h2 className="text-xl font-semibold text-charcoal tracking-tight leading-snug">{name}</h2>
             {altName && <p className="text-xs text-charcoal/45 mt-0.5 truncate">{altName}</p>}
           </div>
@@ -120,7 +133,19 @@ function ProductCard({ section, top, runnerUp, answers, zh }: {
                   ))}
                 </ul>
               )}
-              <ShopButton url={p.url} zh={zh} />
+              <div className="flex flex-wrap items-center gap-3">
+                <ShopButton url={p.url} zh={zh} />
+                {browseUrl && (
+                  <a href={browseUrl} target="_blank" rel="noopener noreferrer" className="text-xs font-medium text-charcoal/50 hover:text-gold underline underline-offset-4 transition-colors">
+                    {zh ? '探索更多此材質的設計' : 'Explore more designs in this material'}
+                  </a>
+                )}
+              </div>
+              {winterNote && (
+                <p className="text-xs text-charcoal/50 leading-relaxed mt-4">
+                  {zh ? '此款為冬被。符合您過敏與氣味需求的材質，目前沒有較輕薄的款式。' : 'This is a winter-weight comforter. No lighter option is currently available in the materials that fit your allergy and scent answers.'}
+                </p>
+              )}
             </div>
           </div>
           {matchedLabels.length > 0 && (
@@ -132,25 +157,6 @@ function ProductCard({ section, top, runnerUp, answers, zh }: {
         </div>
       </div>
 
-      {runnerUp && runnerUp.score > 0 && (
-        <div className="glass-card p-5 mt-4">
-          <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/30 mb-3">{zh ? '也可考慮' : 'Also consider'}</p>
-          <div className="flex items-center gap-4">
-            <a href={runnerUp.product.url} target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
-              <ProductImage src={runnerUp.product.image_url} alt={zh ? runnerUp.product.name_zh : runnerUp.product.name_en} className="w-16 h-16 rounded-lg border border-charcoal/8 bg-white" />
-            </a>
-            <div className="flex-1 min-w-0">
-              <p className="font-medium text-charcoal text-sm leading-snug">{zh ? runnerUp.product.name_zh : runnerUp.product.name_en}</p>
-              <p className="text-xs text-charcoal/45 mt-0.5">{zh ? runnerUp.product.type_zh : runnerUp.product.type_en}</p>
-              <div className="mt-2"><ShopButton url={runnerUp.product.url} zh={zh} small /></div>
-            </div>
-            <div className="text-right flex-shrink-0">
-              <div className="text-sm font-bold text-charcoal/40">{matchPercent(runnerUp)}%</div>
-              <div className="text-xs text-charcoal/30">{zh ? '匹配度' : 'match'}</div>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   )
 }
@@ -176,7 +182,7 @@ function ProfileSection({ answers, zh }: { answers: QuizAnswers; zh: boolean }) 
 
 // ── Dev fallback (no quiz in session) ────────────────────────────────────────
 const DUMMY_ANSWERS: QuizAnswers = {
-  nightHeat: 'Warm', skinType: 'SensitiveLux', careLevel: 'Standard', sensoryPref: 'Silky', designStyle: 'Nature',
+  nightHeat: 'Hot', skinType: 'Sensitive', careLevel: 'Careful', sensoryPref: 'Silky', designStyle: 'Nature',
   comforterTemp: 'Neutral', comforterFeel: 'Smooth', comforterAllergy: 'Natural', comforterScent: 'NoScent', comforterUse: 'Luxury',
   sleepPosition: 'Side', shoulderWidth: 'Average', pillowFeel: 'Contour', pillowAllergy: 'Yes', pillowTier: 'Enhanced',
 }
@@ -265,11 +271,13 @@ export default function Results() {
           {SECTION_ORDER.map(id => {
             const sec = SECTIONS[id]
             const list = ranked[id]
+            const pick = pickTiers(list)
             return (
               <motion.section key={id} id={`sec-${id}`} variants={itemVariants} className="scroll-mt-6">
-                {done[id] && list[0] ? (
-                  <div className="space-y-2">
-                    <ProductCard section={id} top={list[0]} runnerUp={list[1]} answers={answers} zh={zh} />
+                {done[id] && pick ? (
+                  <div className="space-y-4">
+                    <ProductCard section={id} top={pick.primary} tier={pick.primaryTier} answers={answers} zh={zh} />
+                    {pick.secondary && <ProductCard section={id} top={pick.secondary} tier={pick.secondaryTier} alternative answers={answers} zh={zh} />}
                     <div className="flex justify-end">
                       <button onClick={() => navigate(`/quiz?product=${id}&edit=1`)} className="text-xs font-medium text-charcoal/45 hover:text-gold transition-colors flex items-center gap-1.5 cursor-pointer">
                         <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L5 11l-2.5.5L3 9l6.5-6.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/></svg>

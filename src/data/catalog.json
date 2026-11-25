@@ -1,1615 +1,2875 @@
 [
-  {
-    "id": "11640341",
-    "category": "sheet",
-    "name_zh": "TopCool冰凍銀抗菌涼感系列（共8色）",
-    "name_en": "TopCool Cooling Fiber set · Minimalist & Solid",
-    "type_zh": "TopCool 涼感纖維",
-    "type_en": "TopCool Cooling Fiber",
-    "url": "https://www.fet.com.tw/SalePage/Index/11640341",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11640341/0/0?v=1",
-    "price_twd": 1480,
-    "bullets_zh": [
-      "接觸涼感",
-      "親膚滑順",
-      "環保節能"
-    ],
-    "bullets_en": [
-      "Instant cooling touch",
-      "Skin-friendly & smooth",
-      "Eco-friendly & energy-saving"
-    ],
-    "match": {
-      "designStyle": [
-        "Minimal"
-      ]
-    },
-    "material": "topcool",
-    "style": "Minimal",
-    "sort_order": 1,
-    "active": true
+ {
+  "id": "11696733",
+  "category": "sheet",
+  "name_zh": "TopCool瞬涼呼吸涼感被／悠游海龜",
+  "name_en": "TopCool™ Instant-Cool Breathable Comforter, Ocean Turtle",
+  "type_zh": "TopCool 涼感纖維",
+  "type_en": "TopCool Cooling Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/11696733",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11696733/0/0?v=1",
+  "price_twd": 1980,
+  "bullets_zh": [
+   "接觸涼感",
+   "親膚滑順",
+   "環保節能"
+  ],
+  "bullets_en": [
+   "Instant cooling touch",
+   "Skin-friendly & smooth",
+   "Eco-friendly & energy-saving"
+  ],
+  "match": {},
+  "material": "topcool",
+  "style": "Playful",
+  "sort_order": 1,
+  "active": true
+ },
+ {
+  "id": "11696695",
+  "category": "sheet",
+  "name_zh": "TopCool瞬涼呼吸涼感床包枕套組／甜莓之吻",
+  "name_en": "TopCool™ Instant-Cool Fitted Sheet Set, Berry Breeze",
+  "type_zh": "TopCool 涼感纖維",
+  "type_en": "TopCool Cooling Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/11696695",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11696695/0/0?v=1",
+  "price_twd": 2900,
+  "bullets_zh": [
+   "接觸涼感",
+   "親膚滑順",
+   "環保節能"
+  ],
+  "bullets_en": [
+   "Instant cooling touch",
+   "Skin-friendly & smooth",
+   "Eco-friendly & energy-saving"
+  ],
+  "match": {},
+  "material": "topcool",
+  "style": "Nature",
+  "sort_order": 2,
+  "active": true
+ },
+ {
+  "id": "11696687",
+  "category": "sheet",
+  "name_zh": "TopCool瞬涼呼吸涼感床包枕套組／鯨海奇航",
+  "name_en": "TopCool™ Instant-Cool Fitted Sheet Set, Nautical Voyage",
+  "type_zh": "TopCool 涼感纖維",
+  "type_en": "TopCool Cooling Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/11696687",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11696687/0/0?v=1",
+  "price_twd": 2900,
+  "bullets_zh": [
+   "接觸涼感",
+   "親膚滑順",
+   "環保節能"
+  ],
+  "bullets_en": [
+   "Instant cooling touch",
+   "Skin-friendly & smooth",
+   "Eco-friendly & energy-saving"
+  ],
+  "match": {},
+  "material": "topcool",
+  "style": "Playful",
+  "sort_order": 3,
+  "active": true
+ },
+ {
+  "id": "11696675",
+  "category": "sheet",
+  "name_zh": "TopCool瞬涼呼吸涼感床包枕套組／悠游海龜",
+  "name_en": "TopCool™ Instant-Cool Fitted Sheet Set, Ocean Turtle",
+  "type_zh": "TopCool 涼感纖維",
+  "type_en": "TopCool Cooling Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/11696675",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11696675/0/0?v=1",
+  "price_twd": 2400,
+  "bullets_zh": [
+   "接觸涼感",
+   "親膚滑順",
+   "環保節能"
+  ],
+  "bullets_en": [
+   "Instant cooling touch",
+   "Skin-friendly & smooth",
+   "Eco-friendly & energy-saving"
+  ],
+  "match": {},
+  "material": "topcool",
+  "style": "Playful",
+  "sort_order": 4,
+  "active": true
+ },
+ {
+  "id": "11696657",
+  "category": "sheet",
+  "name_zh": "Jr TopCool瞬涼呼吸涼感床包枕套組／Q比滾雪球",
+  "name_en": "TopCool™ Instant-Cool Fitted Sheet Set, Q Snowball",
+  "type_zh": "TopCool 涼感纖維",
+  "type_en": "TopCool Cooling Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/11696657",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11696657/0/0?v=1",
+  "price_twd": 2400,
+  "bullets_zh": [
+   "接觸涼感",
+   "親膚滑順",
+   "環保節能"
+  ],
+  "bullets_en": [
+   "Instant cooling touch",
+   "Skin-friendly & smooth",
+   "Eco-friendly & energy-saving"
+  ],
+  "match": {},
+  "material": "topcool",
+  "style": "Playful",
+  "sort_order": 5,
+  "active": true
+ },
+ {
+  "id": "11652984",
+  "category": "sheet",
+  "name_zh": "TopCool冰凍銀抗菌涼感被（8色任選）",
+  "name_en": "TopCool™ Arctic Silver-Ion Cooling Blanket, Solid Collection, 8 colours",
+  "type_zh": "TopCool 涼感纖維",
+  "type_en": "TopCool Cooling Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/11652984",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11652984/0/0?v=1",
+  "price_twd": 1480,
+  "bullets_zh": [
+   "接觸涼感",
+   "親膚滑順",
+   "環保節能"
+  ],
+  "bullets_en": [
+   "Instant cooling touch",
+   "Skin-friendly & smooth",
+   "Eco-friendly & energy-saving"
+  ],
+  "match": {},
+  "material": "topcool",
+  "style": "Minimal",
+  "sort_order": 6,
+  "active": true
+ },
+ {
+  "id": "11652962",
+  "category": "sheet",
+  "name_zh": "TopCool冰凍銀抗菌涼感床包枕套組（8色任選）",
+  "name_en": "TopCool™ Arctic Silver-Ion Cooling Fitted Sheet Set, Solid Collection, 8 colours",
+  "type_zh": "TopCool 涼感纖維",
+  "type_en": "TopCool Cooling Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/11652962",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11652962/0/0?v=1",
+  "price_twd": 1480,
+  "bullets_zh": [
+   "接觸涼感",
+   "親膚滑順",
+   "環保節能"
+  ],
+  "bullets_en": [
+   "Instant cooling touch",
+   "Skin-friendly & smooth",
+   "Eco-friendly & energy-saving"
+  ],
+  "match": {},
+  "material": "topcool",
+  "style": "Minimal",
+  "sort_order": 7,
+  "active": true
+ },
+ {
+  "id": "11652642",
+  "category": "sheet",
+  "name_zh": "TopCool冰凍銀抗菌涼感墊／涼感保潔墊（8色任選）",
+  "name_en": "TopCool™ Arctic Silver-Ion Instant Cooling Mattress Protector, Solid Collection, 8 colours",
+  "type_zh": "TopCool 涼感纖維",
+  "type_en": "TopCool Cooling Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/11652642",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11652642/0/0?v=1",
+  "price_twd": 1280,
+  "bullets_zh": [
+   "接觸涼感",
+   "親膚滑順",
+   "環保節能"
+  ],
+  "bullets_en": [
+   "Instant cooling touch",
+   "Skin-friendly & smooth",
+   "Eco-friendly & energy-saving"
+  ],
+  "match": {},
+  "material": "topcool",
+  "style": "Minimal",
+  "sort_order": 8,
+  "active": true
+ },
+ {
+  "id": "12274841",
+  "category": "sheet",
+  "name_zh": "80支100%天絲™萊賽爾素色被套床包組／秋穗",
+  "name_en": "80'S TENCEL™ Lyocell Solid Bedding Set, Oat & Amber",
+  "type_zh": "80支天絲™萊賽爾",
+  "type_en": "80S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12274841",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12274841/0/0?v=1",
+  "price_twd": 7980,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "細緻柔滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Fine & silky-soft"
+  ],
+  "match": {},
+  "material": "tencel80",
+  "style": "Minimal",
+  "sort_order": 9,
+  "active": true
+ },
+ {
+  "id": "12232415",
+  "category": "sheet",
+  "name_zh": "80支100%天絲™萊賽爾素色被套床包組／砂褐",
+  "name_en": "80'S TENCEL™ Lyocell Solid Bedding Set, Dune",
+  "type_zh": "80支天絲™萊賽爾",
+  "type_en": "80S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12232415",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12232415/0/0?v=1",
+  "price_twd": 7980,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "細緻柔滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Fine & silky-soft"
+  ],
+  "match": {},
+  "material": "tencel80",
+  "style": "Minimal",
+  "sort_order": 10,
+  "active": true
+ },
+ {
+  "id": "12159041",
+  "category": "sheet",
+  "name_zh": "80支100%天絲™萊賽爾素色被套床包組／月靛",
+  "name_en": "80'S TENCEL™ Lyocell Solid Bedding Set, Moonlit Indigo",
+  "type_zh": "80支天絲™萊賽爾",
+  "type_en": "80S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12159041",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12159041/0/0?v=1",
+  "price_twd": 7980,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "細緻柔滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Fine & silky-soft"
+  ],
+  "match": {},
+  "material": "tencel80",
+  "style": "Minimal",
+  "sort_order": 11,
+  "active": true
+ },
+ {
+  "id": "12133346",
+  "category": "sheet",
+  "name_zh": "80支100%天絲™萊賽爾素色被套床包組／玄灰",
+  "name_en": "80'S TENCEL™ Lyocell Solid Bedding Set, Twilight Grey",
+  "type_zh": "80支天絲™萊賽爾",
+  "type_en": "80S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12133346",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12133346/0/0?v=1",
+  "price_twd": 7980,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "細緻柔滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Fine & silky-soft"
+  ],
+  "match": {},
+  "material": "tencel80",
+  "style": "Minimal",
+  "sort_order": 12,
+  "active": true
+ },
+ {
+  "id": "12274833",
+  "category": "sheet",
+  "name_zh": "80支100%天絲™萊賽爾印花被套床包組／樹影微光",
+  "name_en": "80'S TENCEL™ Lyocell Printed Bedding Set, Dappled Canopy",
+  "type_zh": "80支天絲™萊賽爾",
+  "type_en": "80S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12274833",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12274833/0/0?v=1",
+  "price_twd": 7980,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "細緻柔滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Fine & silky-soft"
+  ],
+  "match": {},
+  "material": "tencel80",
+  "style": "Nature",
+  "sort_order": 13,
+  "active": true
+ },
+ {
+  "id": "12133145",
+  "category": "sheet",
+  "name_zh": "80支100%天絲™萊賽爾印花被套床包組／倫敦霧境",
+  "name_en": "80'S TENCEL™ Lyocell Printed Bedding Set, Mist Over Mayfair",
+  "type_zh": "80支天絲™萊賽爾",
+  "type_en": "80S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12133145",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12133145/0/0?v=1",
+  "price_twd": 8480,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "細緻柔滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Fine & silky-soft"
+  ],
+  "match": {},
+  "material": "tencel80",
+  "style": "Playful",
+  "sort_order": 14,
+  "active": true
+ },
+ {
+  "id": "12133133",
+  "category": "sheet",
+  "name_zh": "80支100%天絲™萊賽爾印花被套床包組／愛琴海微風",
+  "name_en": "80'S TENCEL™ Lyocell Printed Bedding Set, Santorini Reverie",
+  "type_zh": "80支天絲™萊賽爾",
+  "type_en": "80S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12133133",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12133133/0/0?v=1",
+  "price_twd": 7980,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "細緻柔滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Fine & silky-soft"
+  ],
+  "match": {},
+  "material": "tencel80",
+  "style": "Playful",
+  "sort_order": 15,
+  "active": true
+ },
+ {
+  "id": "12131633",
+  "category": "sheet",
+  "name_zh": "80支100%天絲™萊賽爾印花被套床包組／晨曦花蹤",
+  "name_en": "80'S TENCEL™ Lyocell Printed Bedding Set, Dawn in Bloom",
+  "type_zh": "80支天絲™萊賽爾",
+  "type_en": "80S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12131633",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12131633/0/0?v=1",
+  "price_twd": 7980,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "細緻柔滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Fine & silky-soft"
+  ],
+  "match": {},
+  "material": "tencel80",
+  "style": "Nature",
+  "sort_order": 16,
+  "active": true
+ },
+ {
+  "id": "11635341",
+  "category": "sheet",
+  "name_zh": "80支100%天絲™萊賽爾印花被套床包組／漫舞微風",
+  "name_en": "80'S TENCEL™ Lyocell Printed Bedding Set, Lilting Breeze",
+  "type_zh": "80支天絲™萊賽爾",
+  "type_en": "80S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/11635341",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11635341/0/0?v=1",
+  "price_twd": 7980,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "細緻柔滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Fine & silky-soft"
+  ],
+  "match": {},
+  "material": "tencel80",
+  "style": "Nature",
+  "sort_order": 17,
+  "active": true
+ },
+ {
+  "id": "11635323",
+  "category": "sheet",
+  "name_zh": "80支100%天絲™萊賽爾印花被套床包組／光影之鏡",
+  "name_en": "80'S TENCEL™ Lyocell Printed Bedding Set, Glimmering Shadows",
+  "type_zh": "80支天絲™萊賽爾",
+  "type_en": "80S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/11635323",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11635323/0/0?v=1",
+  "price_twd": 7980,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "細緻柔滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Fine & silky-soft"
+  ],
+  "match": {},
+  "material": "tencel80",
+  "style": "Minimal",
+  "sort_order": 18,
+  "active": true
+ },
+ {
+  "id": "10586569",
+  "category": "sheet",
+  "name_zh": "80支100%天絲™萊賽爾印花被套床包組／浪花時光",
+  "name_en": "80'S TENCEL™ Lyocell Printed Bedding Set, Shoreline Hours",
+  "type_zh": "80支天絲™萊賽爾",
+  "type_en": "80S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/10586569",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10586569/0/0?v=1",
+  "price_twd": 8480,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "細緻柔滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Fine & silky-soft"
+  ],
+  "match": {},
+  "material": "tencel80",
+  "style": "Minimal",
+  "sort_order": 19,
+  "active": true
+ },
+ {
+  "id": "11712666",
+  "category": "sheet",
+  "name_zh": "300織紗100%萊賽爾天絲素色兩用被床包組／星嵐紫",
+  "name_en": "300 Thread Count TENCEL™ Lyocell Solid All-Season Quilt Set, Stardust Lavender",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/11712666",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11712666/0/0?v=1",
+  "price_twd": 4680,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Minimal",
+  "sort_order": 20,
+  "active": true
+ },
+ {
+  "id": "11712433",
+  "category": "sheet",
+  "name_zh": "300織紗100%萊賽爾天絲素色兩用被床包組／冰川灰",
+  "name_en": "300 Thread Count TENCEL™ Lyocell Solid All-Season Quilt Set, Glacier Grey",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/11712433",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11712433/0/0?v=1",
+  "price_twd": 4880,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Minimal",
+  "sort_order": 21,
+  "active": true
+ },
+ {
+  "id": "11712426",
+  "category": "sheet",
+  "name_zh": "300織紗100%萊賽爾天絲素色兩用被床包組／月海藍",
+  "name_en": "300 Thread Count TENCEL™ Lyocell Solid All-Season Quilt Set, Moonstone Blue",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/11712426",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11712426/0/0?v=1",
+  "price_twd": 4880,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Minimal",
+  "sort_order": 22,
+  "active": true
+ },
+ {
+  "id": "12224461",
+  "category": "sheet",
+  "name_zh": "60支100%萊賽爾天絲兩用被床包組／紫陌花語",
+  "name_en": "60'S TENCEL™ Lyocell Printed All-Season Quilt Set, Lilac Lanes",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12224461",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12224461/0/0?v=1",
+  "price_twd": 3980,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Nature",
+  "sort_order": 23,
+  "active": true
+ },
+ {
+  "id": "12224394",
+  "category": "sheet",
+  "name_zh": "60支100%萊賽爾天絲兩用被床包組／青禾花事",
+  "name_en": "60'S TENCEL™ Lyocell Printed All-Season Quilt Set, Meadow in May",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12224394",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12224394/0/0?v=1",
+  "price_twd": 3780,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Nature",
+  "sort_order": 24,
+  "active": true
+ },
+ {
+  "id": "12224297",
+  "category": "sheet",
+  "name_zh": "60支100%萊賽爾天絲兩用被床包組／晴嵐初綻",
+  "name_en": "60'S TENCEL™ Lyocell Printed All-Season Quilt Set, Skyward Bloom",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12224297",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12224297/0/0?v=1",
+  "price_twd": 3780,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Nature",
+  "sort_order": 25,
+  "active": true
+ },
+ {
+  "id": "12224287",
+  "category": "sheet",
+  "name_zh": "60支100%萊賽爾天絲兩用被床包組／海霧拾光",
+  "name_en": "60'S TENCEL™ Lyocell Printed All-Season Quilt Set, Misty Horizons",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12224287",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12224287/0/0?v=1",
+  "price_twd": 3780,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Minimal",
+  "sort_order": 26,
+  "active": true
+ },
+ {
+  "id": "12167647",
+  "category": "sheet",
+  "name_zh": "60支100%萊賽爾天絲兩用被床包組／花漾蒔光",
+  "name_en": "60'S TENCEL™ Lyocell Printed All-Season Quilt Set, Freshly Gathered",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12167647",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12167647/0/0?v=1",
+  "price_twd": 3780,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Nature",
+  "sort_order": 27,
+  "active": true
+ },
+ {
+  "id": "12165381",
+  "category": "sheet",
+  "name_zh": "60支100%萊賽爾天絲兩用被床包組／紫韻初妍",
+  "name_en": "60'S TENCEL™ Lyocell Printed All-Season Quilt Set, Wisteria Grace",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12165381",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12165381/0/0?v=1",
+  "price_twd": 3780,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Nature",
+  "sort_order": 28,
+  "active": true
+ },
+ {
+  "id": "12165376",
+  "category": "sheet",
+  "name_zh": "60支100%萊賽爾天絲兩用被床包組／青嵐花徑",
+  "name_en": "60'S TENCEL™ Lyocell Printed All-Season Quilt Set, Hillside Stroll",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12165376",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12165376/0/0?v=1",
+  "price_twd": 3780,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Nature",
+  "sort_order": 29,
+  "active": true
+ },
+ {
+  "id": "12215581",
+  "category": "sheet",
+  "name_zh": "jr 60支100%萊賽爾天絲兩用被床包組／心織所象",
+  "name_en": "60'S TENCEL™ Lyocell Printed All-Season Quilt Set, Gentle Giants",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12215581",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12215581/0/0?v=1",
+  "price_twd": 5480,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Playful",
+  "sort_order": 30,
+  "active": true
+ },
+ {
+  "id": "12159133",
+  "category": "sheet",
+  "name_zh": "jr 60支100%萊賽爾天絲兩用被床包組／晚安星森林",
+  "name_en": "60'S TENCEL™ Lyocell Printed All-Season Quilt Set, Forest Lullaby",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12159133",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12159133/0/0?v=1",
+  "price_twd": 5480,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Playful",
+  "sort_order": 31,
+  "active": true
+ },
+ {
+  "id": "12143917",
+  "category": "sheet",
+  "name_zh": "jr 60支100%萊賽爾天絲兩用被床包組／花漾飛馬",
+  "name_en": "60'S TENCEL™ Lyocell Printed All-Season Quilt Set, Once Upon a Unicorn",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/12143917",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12143917/0/0?v=1",
+  "price_twd": 5480,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Playful",
+  "sort_order": 32,
+  "active": true
+ },
+ {
+  "id": "11638463",
+  "category": "sheet",
+  "name_zh": "jr 60支100%萊賽爾天絲兩用被床包組／氣球歡樂遊",
+  "name_en": "60'S TENCEL™ Lyocell Printed All-Season Quilt Set, Balloon Parade",
+  "type_zh": "60支天絲™萊賽爾",
+  "type_en": "60S TENCEL™ Lyocell",
+  "url": "https://www.fet.com.tw/SalePage/Index/11638463",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11638463/0/0?v=1",
+  "price_twd": 5480,
+  "bullets_zh": [
+   "環境友善",
+   "抗菌抗過敏",
+   "柔軟順滑"
+  ],
+  "bullets_en": [
+   "Eco-friendly",
+   "Antibacterial & hypoallergenic",
+   "Soft & smooth"
+  ],
+  "match": {},
+  "material": "tencel60",
+  "style": "Playful",
+  "sort_order": 33,
+  "active": true
+ },
+ {
+  "id": "11336901",
+  "category": "sheet",
+  "name_zh": "Charisma 600織義大利色織緹花拼接四件式被套床包組／月露漫舞",
+  "name_en": "600 Thread Count Italian Yarn-Dyed Jacquard Bordered Bedding Set, Moonlit Waltz",
+  "type_zh": "600織高織數棉",
+  "type_en": "600TC High-Count Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/11336901",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11336901/0/0?v=1",
+  "price_twd": 33800,
+  "bullets_zh": [
+   "絕佳舒適度",
+   "高品質細緻與色澤",
+   "穩定耐用性"
+  ],
+  "bullets_en": [
+   "Superior comfort",
+   "Premium fineness & luster",
+   "Stable durability"
+  ],
+  "match": {},
+  "material": "cotton500",
+  "style": "Classic",
+  "sort_order": 34,
+  "active": true
+ },
+ {
+  "id": "11336887",
+  "category": "sheet",
+  "name_zh": "Charisma 600織義大利色織緹花拼接四件式被套床包組／晨露輕揚",
+  "name_en": "600 Thread Count Italian Yarn-Dyed Jacquard Bordered Bedding Set, Sunrise Sonata",
+  "type_zh": "600織高織數棉",
+  "type_en": "600TC High-Count Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/11336887",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11336887/0/0?v=1",
+  "price_twd": 30800,
+  "bullets_zh": [
+   "絕佳舒適度",
+   "高品質細緻與色澤",
+   "穩定耐用性"
+  ],
+  "bullets_en": [
+   "Superior comfort",
+   "Premium fineness & luster",
+   "Stable durability"
+  ],
+  "match": {},
+  "material": "cotton500",
+  "style": "Classic",
+  "sort_order": 35,
+  "active": true
+ },
+ {
+  "id": "11632574",
+  "category": "sheet",
+  "name_zh": "Charisma 500織埃及長纖細棉蕾絲四件式被套床包組／永夜恬境",
+  "name_en": "500 Thread Count Egyptian Long-Staple Cotton Lace Bedding Set, Serene Nocturne",
+  "type_zh": "500織埃及長纖棉",
+  "type_en": "500TC Egyptian Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/11632574",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11632574/0/0?v=1",
+  "price_twd": 13800,
+  "bullets_zh": [
+   "吸濕排汗佳",
+   "緊實細緻度",
+   "絕佳舒適度"
+  ],
+  "bullets_en": [
+   "Excellent moisture-wicking",
+   "Tight & fine weave",
+   "Superior comfort"
+  ],
+  "match": {},
+  "material": "cotton500",
+  "style": "Classic",
+  "sort_order": 36,
+  "active": true
+ },
+ {
+  "id": "11621767",
+  "category": "sheet",
+  "name_zh": "Charisma 500織埃及長纖細棉拼接四件式被套床包組／星瀾夜語",
+  "name_en": "500 Thread Count Egyptian Long-Staple Cotton Panelled Bedding Set, Starlit Tides",
+  "type_zh": "500織埃及長纖棉",
+  "type_en": "500TC Egyptian Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/11621767",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11621767/0/0?v=1",
+  "price_twd": 13800,
+  "bullets_zh": [
+   "吸濕排汗佳",
+   "緊實細緻度",
+   "絕佳舒適度"
+  ],
+  "bullets_en": [
+   "Excellent moisture-wicking",
+   "Tight & fine weave",
+   "Superior comfort"
+  ],
+  "match": {},
+  "material": "cotton500",
+  "style": "Classic",
+  "sort_order": 37,
+  "active": true
+ },
+ {
+  "id": "11621752",
+  "category": "sheet",
+  "name_zh": "Charisma 500織埃及長纖細棉刺繡四件式被套床包組／夜沐晨光",
+  "name_en": "500 Thread Count Egyptian Long-Staple Cotton Embroidered Bedding Set, Daybreak Aria",
+  "type_zh": "500織埃及長纖棉",
+  "type_en": "500TC Egyptian Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/11621752",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11621752/0/0?v=1",
+  "price_twd": 13800,
+  "bullets_zh": [
+   "吸濕排汗佳",
+   "緊實細緻度",
+   "絕佳舒適度"
+  ],
+  "bullets_en": [
+   "Excellent moisture-wicking",
+   "Tight & fine weave",
+   "Superior comfort"
+  ],
+  "match": {},
+  "material": "cotton500",
+  "style": "Classic",
+  "sort_order": 38,
+  "active": true
+ },
+ {
+  "id": "11197371",
+  "category": "sheet",
+  "name_zh": "Charisma 500織埃及長纖細棉刺繡四件式被套床包組／冰雪",
+  "name_en": "500 Thread Count Egyptian Long-Staple Cotton Embroidered Bedding Set, Winter White",
+  "type_zh": "500織埃及長纖棉",
+  "type_en": "500TC Egyptian Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/11197371",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11197371/0/0?v=1",
+  "price_twd": 13800,
+  "bullets_zh": [
+   "吸濕排汗佳",
+   "緊實細緻度",
+   "絕佳舒適度"
+  ],
+  "bullets_en": [
+   "Excellent moisture-wicking",
+   "Tight & fine weave",
+   "Superior comfort"
+  ],
+  "match": {},
+  "material": "cotton500",
+  "style": "Classic",
+  "sort_order": 39,
+  "active": true
+ },
+ {
+  "id": "11151409",
+  "category": "sheet",
+  "name_zh": "Charisma 500織埃及長纖細棉刺繡四件式被套床包組／藍月峽灣",
+  "name_en": "500 Thread Count Egyptian Long-Staple Cotton Embroidered Bedding Set, Blue Moon Fjord",
+  "type_zh": "500織埃及長纖棉",
+  "type_en": "500TC Egyptian Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/11151409",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11151409/0/0?v=1",
+  "price_twd": 13800,
+  "bullets_zh": [
+   "吸濕排汗佳",
+   "緊實細緻度",
+   "絕佳舒適度"
+  ],
+  "bullets_en": [
+   "Excellent moisture-wicking",
+   "Tight & fine weave",
+   "Superior comfort"
+  ],
+  "match": {},
+  "material": "cotton500",
+  "style": "Classic",
+  "sort_order": 40,
+  "active": true
+ },
+ {
+  "id": "12216262",
+  "category": "sheet",
+  "name_zh": "Charisma 300織義大利長纖細棉印花四件式被套床包組／沁藍微光",
+  "name_en": "300 Thread Count Italian Long-Staple Cotton Printed Bedding Set, Blue Hour Botanica",
+  "type_zh": "60支長纖棉",
+  "type_en": "60S Long-Staple Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/12216262",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12216262/0/0?v=1",
+  "price_twd": 14800,
+  "bullets_zh": [
+   "柔軟順滑",
+   "高耐用性",
+   "吸濕排汗佳"
+  ],
+  "bullets_en": [
+   "Soft & smooth",
+   "Highly durable",
+   "Excellent moisture-wicking"
+  ],
+  "match": {},
+  "material": "cotton60",
+  "style": "Nature",
+  "sort_order": 41,
+  "active": true
+ },
+ {
+  "id": "12170072",
+  "category": "sheet",
+  "name_zh": "Narumi聯名款 高紗支長纖細棉印花被套床包組／經典露西",
+  "name_en": "300 Thread Count Long-Staple Cotton Printed Bedding Set, Classic Lucy",
+  "type_zh": "60支長纖棉",
+  "type_en": "60S Long-Staple Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/12170072",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12170072/0/0?v=1",
+  "price_twd": 9480,
+  "bullets_zh": [
+   "柔軟順滑",
+   "高耐用性",
+   "吸濕排汗佳"
+  ],
+  "bullets_en": [
+   "Soft & smooth",
+   "Highly durable",
+   "Excellent moisture-wicking"
+  ],
+  "match": {},
+  "material": "cotton60",
+  "style": "Nature",
+  "sort_order": 42,
+  "active": true
+ },
+ {
+  "id": "11079881",
+  "category": "sheet",
+  "name_zh": "Narumi聯名款 高紗支長纖細棉印花被套床包組／露西花園",
+  "name_en": "300 Thread Count Long-Staple Cotton Printed Bedding Set, Lucy's Garden",
+  "type_zh": "60支長纖棉",
+  "type_en": "60S Long-Staple Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/11079881",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11079881/0/0?v=1",
+  "price_twd": 9480,
+  "bullets_zh": [
+   "柔軟順滑",
+   "高耐用性",
+   "吸濕排汗佳"
+  ],
+  "bullets_en": [
+   "Soft & smooth",
+   "Highly durable",
+   "Excellent moisture-wicking"
+  ],
+  "match": {},
+  "material": "cotton60",
+  "style": "Nature",
+  "sort_order": 43,
+  "active": true
+ },
+ {
+  "id": "10133178",
+  "category": "sheet",
+  "name_zh": "Narumi聯名款 100%高紗支長纖棉印花被套床包組／仙境花園",
+  "name_en": "300 Thread Count Long-Staple Cotton Printed Bedding Set, Elysian Garden",
+  "type_zh": "60支長纖棉",
+  "type_en": "60S Long-Staple Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/10133178",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10133178/0/0?v=1",
+  "price_twd": 9480,
+  "bullets_zh": [
+   "柔軟順滑",
+   "高耐用性",
+   "吸濕排汗佳"
+  ],
+  "bullets_en": [
+   "Soft & smooth",
+   "Highly durable",
+   "Excellent moisture-wicking"
+  ],
+  "match": {},
+  "material": "cotton60",
+  "style": "Nature",
+  "sort_order": 44,
+  "active": true
+ },
+ {
+  "id": "10133107",
+  "category": "sheet",
+  "name_zh": "Narumi聯名款 100%高紗支長纖棉印花被套床包組／少女的花束",
+  "name_en": "300 Thread Count Long-Staple Cotton Printed Bedding Set, Darling Bouquet",
+  "type_zh": "60支長纖棉",
+  "type_en": "60S Long-Staple Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/10133107",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10133107/0/0?v=1",
+  "price_twd": 9480,
+  "bullets_zh": [
+   "柔軟順滑",
+   "高耐用性",
+   "吸濕排汗佳"
+  ],
+  "bullets_en": [
+   "Soft & smooth",
+   "Highly durable",
+   "Excellent moisture-wicking"
+  ],
+  "match": {},
+  "material": "cotton60",
+  "style": "Nature",
+  "sort_order": 45,
+  "active": true
+ },
+ {
+  "id": "11861679",
+  "category": "sheet",
+  "name_zh": "300織長纖細棉素色兩用被床包組／霧都藍",
+  "name_en": "300 Thread Count Long-Staple Cotton Solid All-Season Quilt Set, Veiled Blue",
+  "type_zh": "60支長纖棉",
+  "type_en": "60S Long-Staple Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/11861679",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11861679/0/0?v=1",
+  "price_twd": 3580,
+  "bullets_zh": [
+   "柔軟順滑",
+   "高耐用性",
+   "吸濕排汗佳"
+  ],
+  "bullets_en": [
+   "Soft & smooth",
+   "Highly durable",
+   "Excellent moisture-wicking"
+  ],
+  "match": {},
+  "material": "cotton60",
+  "style": "Minimal",
+  "sort_order": 46,
+  "active": true
+ },
+ {
+  "id": "11860455",
+  "category": "sheet",
+  "name_zh": "300織長纖細棉素色兩用被床包組／榛果棕",
+  "name_en": "300 Thread Count Long-Staple Cotton Solid All-Season Quilt Set, Hazelnut Brown",
+  "type_zh": "60支長纖棉",
+  "type_en": "60S Long-Staple Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/11860455",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11860455/0/0?v=1",
+  "price_twd": 3580,
+  "bullets_zh": [
+   "柔軟順滑",
+   "高耐用性",
+   "吸濕排汗佳"
+  ],
+  "bullets_en": [
+   "Soft & smooth",
+   "Highly durable",
+   "Excellent moisture-wicking"
+  ],
+  "match": {},
+  "material": "cotton60",
+  "style": "Minimal",
+  "sort_order": 47,
+  "active": true
+ },
+ {
+  "id": "11860447",
+  "category": "sheet",
+  "name_zh": "300織長纖細棉素色兩用被床包組／蓓蕾粉",
+  "name_en": "300 Thread Count Long-Staple Cotton Solid All-Season Quilt Set, Rosebud Pink",
+  "type_zh": "60支長纖棉",
+  "type_en": "60S Long-Staple Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/11860447",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11860447/0/0?v=1",
+  "price_twd": 3580,
+  "bullets_zh": [
+   "柔軟順滑",
+   "高耐用性",
+   "吸濕排汗佳"
+  ],
+  "bullets_en": [
+   "Soft & smooth",
+   "Highly durable",
+   "Excellent moisture-wicking"
+  ],
+  "match": {},
+  "material": "cotton60",
+  "style": "Minimal",
+  "sort_order": 48,
+  "active": true
+ },
+ {
+  "id": "11860443",
+  "category": "sheet",
+  "name_zh": "300織長纖細棉素色兩用被床包組／暮雲灰",
+  "name_en": "300 Thread Count Long-Staple Cotton Solid All-Season Quilt Set, Evening Grey",
+  "type_zh": "60支長纖棉",
+  "type_en": "60S Long-Staple Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/11860443",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11860443/0/0?v=1",
+  "price_twd": 3580,
+  "bullets_zh": [
+   "柔軟順滑",
+   "高耐用性",
+   "吸濕排汗佳"
+  ],
+  "bullets_en": [
+   "Soft & smooth",
+   "Highly durable",
+   "Excellent moisture-wicking"
+  ],
+  "match": {},
+  "material": "cotton60",
+  "style": "Minimal",
+  "sort_order": 49,
+  "active": true
+ },
+ {
+  "id": "11860435",
+  "category": "sheet",
+  "name_zh": "300織長纖細棉素色兩用被床包組／煙嵐綠",
+  "name_en": "300 Thread Count Long-Staple Cotton Solid All-Season Quilt Set, Highland Green",
+  "type_zh": "60支長纖棉",
+  "type_en": "60S Long-Staple Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/11860435",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11860435/0/0?v=1",
+  "price_twd": 3580,
+  "bullets_zh": [
+   "柔軟順滑",
+   "高耐用性",
+   "吸濕排汗佳"
+  ],
+  "bullets_en": [
+   "Soft & smooth",
+   "Highly durable",
+   "Excellent moisture-wicking"
+  ],
+  "match": {},
+  "material": "cotton60",
+  "style": "Minimal",
+  "sort_order": 50,
+  "active": true
+ },
+ {
+  "id": "12107262",
+  "category": "sheet",
+  "name_zh": "100%精梳棉兩用被床包組／湖水藍映",
+  "name_en": "Combed Cotton Printed All-Season Quilt Set, Lakeside Floral",
+  "type_zh": "40支精梳棉",
+  "type_en": "40S Combed Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/12107262",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12107262/0/0?v=1",
+  "price_twd": 4980,
+  "bullets_zh": [
+   "透氣吸汗",
+   "耐洗耐用",
+   "CP值高"
+  ],
+  "bullets_en": [
+   "Breathable & sweat-absorbing",
+   "Washable & durable",
+   "Great value for money"
+  ],
+  "match": {},
+  "material": "cotton40",
+  "style": "Nature",
+  "sort_order": 51,
+  "active": true
+ },
+ {
+  "id": "12066381",
+  "category": "sheet",
+  "name_zh": "100%精梳棉兩用被床包組／紫薰漫舞",
+  "name_en": "Combed Cotton Printed All-Season Quilt Set, Swaying Lavender",
+  "type_zh": "40支精梳棉",
+  "type_en": "40S Combed Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/12066381",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12066381/0/0?v=1",
+  "price_twd": 2580,
+  "bullets_zh": [
+   "透氣吸汗",
+   "耐洗耐用",
+   "CP值高"
+  ],
+  "bullets_en": [
+   "Breathable & sweat-absorbing",
+   "Washable & durable",
+   "Great value for money"
+  ],
+  "match": {},
+  "material": "cotton40",
+  "style": "Nature",
+  "sort_order": 52,
+  "active": true
+ },
+ {
+  "id": "12066368",
+  "category": "sheet",
+  "name_zh": "100%精梳棉兩用被床包組／青蔓花苑",
+  "name_en": "Combed Cotton Printed All-Season Quilt Set, Trailing Vines",
+  "type_zh": "40支精梳棉",
+  "type_en": "40S Combed Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/12066368",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12066368/0/0?v=1",
+  "price_twd": 2580,
+  "bullets_zh": [
+   "透氣吸汗",
+   "耐洗耐用",
+   "CP值高"
+  ],
+  "bullets_en": [
+   "Breathable & sweat-absorbing",
+   "Washable & durable",
+   "Great value for money"
+  ],
+  "match": {},
+  "material": "cotton40",
+  "style": "Nature",
+  "sort_order": 53,
+  "active": true
+ },
+ {
+  "id": "12066355",
+  "category": "sheet",
+  "name_zh": "100%精梳棉兩用被床包組／緋色恬夢",
+  "name_en": "Combed Cotton Printed All-Season Quilt Set, Rose Sonnet",
+  "type_zh": "40支精梳棉",
+  "type_en": "40S Combed Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/12066355",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12066355/0/0?v=1",
+  "price_twd": 2580,
+  "bullets_zh": [
+   "透氣吸汗",
+   "耐洗耐用",
+   "CP值高"
+  ],
+  "bullets_en": [
+   "Breathable & sweat-absorbing",
+   "Washable & durable",
+   "Great value for money"
+  ],
+  "match": {},
+  "material": "cotton40",
+  "style": "Nature",
+  "sort_order": 54,
+  "active": true
+ },
+ {
+  "id": "12131492",
+  "category": "sheet",
+  "name_zh": "100%精梳棉兩用被床包組／靜謐時光",
+  "name_en": "Combed Cotton Printed All-Season Quilt Set, Quiet Interlude",
+  "type_zh": "40支精梳棉",
+  "type_en": "40S Combed Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/12131492",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12131492/0/0?v=1",
+  "price_twd": 3480,
+  "bullets_zh": [
+   "透氣吸汗",
+   "耐洗耐用",
+   "CP值高"
+  ],
+  "bullets_en": [
+   "Breathable & sweat-absorbing",
+   "Washable & durable",
+   "Great value for money"
+  ],
+  "match": {},
+  "material": "cotton40",
+  "style": "Minimal",
+  "sort_order": 55,
+  "active": true
+ },
+ {
+  "id": "12107254",
+  "category": "sheet",
+  "name_zh": "100%精梳棉兩用被床包組／灰隅光隙",
+  "name_en": "Combed Cotton Printed All-Season Quilt Set, Grey Gleam",
+  "type_zh": "40支精梳棉",
+  "type_en": "40S Combed Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/12107254",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12107254/0/0?v=1",
+  "price_twd": 4980,
+  "bullets_zh": [
+   "透氣吸汗",
+   "耐洗耐用",
+   "CP值高"
+  ],
+  "bullets_en": [
+   "Breathable & sweat-absorbing",
+   "Washable & durable",
+   "Great value for money"
+  ],
+  "match": {},
+  "material": "cotton40",
+  "style": "Minimal",
+  "sort_order": 56,
+  "active": true
+ },
+ {
+  "id": "12020433",
+  "category": "sheet",
+  "name_zh": "100%精梳棉兩用被床包組／麥田秋色",
+  "name_en": "Combed Cotton Printed All-Season Quilt Set, Autumn Fields",
+  "type_zh": "40支精梳棉",
+  "type_en": "40S Combed Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/12020433",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12020433/0/0?v=1",
+  "price_twd": 2780,
+  "bullets_zh": [
+   "透氣吸汗",
+   "耐洗耐用",
+   "CP值高"
+  ],
+  "bullets_en": [
+   "Breathable & sweat-absorbing",
+   "Washable & durable",
+   "Great value for money"
+  ],
+  "match": {},
+  "material": "cotton40",
+  "style": "Minimal",
+  "sort_order": 57,
+  "active": true
+ },
+ {
+  "id": "12020426",
+  "category": "sheet",
+  "name_zh": "100%精梳棉兩用被床包組／靜藍時光",
+  "name_en": "Combed Cotton Printed All-Season Quilt Set, Still Blue",
+  "type_zh": "40支精梳棉",
+  "type_en": "40S Combed Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/12020426",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12020426/0/0?v=1",
+  "price_twd": 2580,
+  "bullets_zh": [
+   "透氣吸汗",
+   "耐洗耐用",
+   "CP值高"
+  ],
+  "bullets_en": [
+   "Breathable & sweat-absorbing",
+   "Washable & durable",
+   "Great value for money"
+  ],
+  "match": {},
+  "material": "cotton40",
+  "style": "Minimal",
+  "sort_order": 58,
+  "active": true
+ },
+ {
+  "id": "12159089",
+  "category": "sheet",
+  "name_zh": "100%精梳棉兩用被床包組／沁綠森活",
+  "name_en": "Combed Cotton Printed All-Season Quilt Set, Woodland Living",
+  "type_zh": "40支精梳棉",
+  "type_en": "40S Combed Cotton",
+  "url": "https://www.fet.com.tw/SalePage/Index/12159089",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12159089/0/0?v=1",
+  "price_twd": 3980,
+  "bullets_zh": [
+   "透氣吸汗",
+   "耐洗耐用",
+   "CP值高"
+  ],
+  "bullets_en": [
+   "Breathable & sweat-absorbing",
+   "Washable & durable",
+   "Great value for money"
+  ],
+  "match": {},
+  "material": "cotton40",
+  "style": "Playful",
+  "sort_order": 59,
+  "active": true
+ },
+ {
+  "id": "7013299",
+  "category": "comforter",
+  "name_zh": "牡丹級雙宮繭長纖蠶絲冬被",
+  "name_en": "Peony Double-Cocoon Long-Strand Silk Winter Comforter",
+  "type_zh": "蠶絲",
+  "type_en": "Silk",
+  "url": "https://www.fet.com.tw/SalePage/Index/7013299",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7013299/0/0?v=1",
+  "price_twd": 24800,
+  "bullets_zh": [
+   "雙宮繭頂級蓬鬆與卓越保暖",
+   "天然恆溫透氣，恆久乾爽不悶熱",
+   "親膚抗敏防蟎，輕盈無壓舒適感"
+  ],
+  "bullets_en": [
+   "Superior Loft & Exceptional Thermal Retention",
+   "Natural Climate Control & Breathable Moisture Wicking",
+   "Hypoallergenic & Weightless Cloud-Like Comfort"
+  ],
+  "match": {
+   "comforterTemp": [
+    "Neutral"
+   ],
+   "comforterFeel": [
+    "Smooth"
+   ],
+   "comforterAllergy": [
+    "Natural",
+    "None"
+   ],
+   "comforterScent": [
+    "NoScent"
+   ],
+   "comforterUse": [
+    "Luxury"
+   ]
   },
-  {
-    "id": "11696657",
-    "category": "sheet",
-    "name_zh": "Jr TopCool瞬涼呼吸涼感床包枕套組／Q比滾雪球",
-    "name_en": "TopCool Cooling Fiber set · Playful & Thematic (Q比滾雪球)",
-    "type_zh": "TopCool 涼感纖維",
-    "type_en": "TopCool Cooling Fiber",
-    "url": "https://www.fet.com.tw/SalePage/Index/11696657",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11696657/0/0?v=1",
-    "price_twd": 2400,
-    "bullets_zh": [
-      "接觸涼感",
-      "親膚滑順",
-      "環保節能"
-    ],
-    "bullets_en": [
-      "Instant cooling touch",
-      "Skin-friendly & smooth",
-      "Eco-friendly & energy-saving"
-    ],
-    "match": {
-      "designStyle": [
-        "Playful"
-      ]
-    },
-    "material": "topcool",
-    "style": "Playful",
-    "sort_order": 2,
-    "active": true
+  "sort_order": 60,
+  "active": true
+ },
+ {
+  "id": "10234144",
+  "category": "comforter",
+  "name_zh": "典藏100%蠶絲冬被",
+  "name_en": "Heirloom 100% Mulberry Silk Winter Comforter",
+  "type_zh": "蠶絲",
+  "type_en": "Silk",
+  "url": "https://www.fet.com.tw/SalePage/Index/10234144",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10234144/0/0?v=1",
+  "price_twd": 6680,
+  "bullets_zh": [
+   "防蟎抑菌 天然抗敏",
+   "親膚滑順 貼身柔軟舒適"
+  ],
+  "bullets_en": [
+   "Anti-mite and antibacterial, naturally hypoallergenic.",
+   "Skin-friendly, smooth, and soft for contouring comfort."
+  ],
+  "match": {
+   "comforterTemp": [
+    "Neutral"
+   ],
+   "comforterFeel": [
+    "Smooth"
+   ],
+   "comforterAllergy": [
+    "Natural",
+    "None"
+   ],
+   "comforterScent": [
+    "NoScent"
+   ],
+   "comforterUse": [
+    "Luxury"
+   ]
   },
-  {
-    "id": "11772580",
-    "category": "sheet",
-    "name_zh": "100%精梳棉兩用被床包組／暮煙灰境",
-    "name_en": "40S Combed Cotton set · Minimalist & Solid (暮煙灰境)",
-    "type_zh": "40支精梳棉",
-    "type_en": "40S Combed Cotton",
-    "url": "https://www.fet.com.tw/SalePage/Index/11772580",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11772580/0/0?v=1",
-    "price_twd": 2580,
-    "bullets_zh": [
-      "透氣吸汗",
-      "耐洗耐用",
-      "CP值高"
-    ],
-    "bullets_en": [
-      "Breathable & sweat-absorbing",
-      "Washable & durable",
-      "Great value for money"
-    ],
-    "match": {
-      "designStyle": [
-        "Minimal"
-      ]
-    },
-    "material": "cotton40",
-    "style": "Minimal",
-    "sort_order": 3,
-    "active": true
+  "sort_order": 61,
+  "active": true
+ },
+ {
+  "id": "10233996",
+  "category": "comforter",
+  "name_zh": "防蟎抗菌頂級100%法國羊毛被",
+  "name_en": "Premium Anti-Mite Antibacterial 100% French Wool Comforter",
+  "type_zh": "羊毛",
+  "type_en": "Wool",
+  "url": "https://www.fet.com.tw/SalePage/Index/10233996",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10233996/0/0?v=1",
+  "price_twd": 3980,
+  "bullets_zh": [
+   "100%親膚純棉表布 台灣製造",
+   "頂級GOLDEN LABEL法國羊毛",
+   "蓬鬆回彈、發熱蓄暖、吸濕排汗、防蟎抗菌"
+  ],
+  "bullets_en": [
+   "100% skin-friendly cotton cover, Made in Taiwan.",
+   "Premium GOLDEN LABEL French wool.",
+   "Plush and resilient, heat-retaining, moisture-wicking, and hypoallergenic."
+  ],
+  "match": {
+   "comforterTemp": [
+    "Neutral"
+   ],
+   "comforterFeel": [
+    "Heavy"
+   ],
+   "comforterAllergy": [
+    "None"
+   ],
+   "comforterScent": [
+    "MildOk"
+   ],
+   "comforterUse": [
+    "Budget"
+   ]
   },
-  {
-    "id": "11696695",
-    "category": "sheet",
-    "name_zh": "TopCool瞬涼呼吸涼感床包枕套組／甜莓之吻",
-    "name_en": "TopCool Cooling Fiber set · Nature-Inspired (甜莓之吻)",
-    "type_zh": "TopCool 涼感纖維",
-    "type_en": "TopCool Cooling Fiber",
-    "url": "https://www.fet.com.tw/SalePage/Index/11696695",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11696695/0/0?v=1",
-    "price_twd": 2900,
-    "bullets_zh": [
-      "接觸涼感",
-      "親膚滑順",
-      "環保節能"
-    ],
-    "bullets_en": [
-      "Instant cooling touch",
-      "Skin-friendly & smooth",
-      "Eco-friendly & energy-saving"
-    ],
-    "match": {
-      "designStyle": [
-        "Nature"
-      ]
-    },
-    "material": "topcool",
-    "style": "Nature",
-    "sort_order": 4,
-    "active": true
+  "sort_order": 62,
+  "active": true
+ },
+ {
+  "id": "9464788",
+  "category": "comforter",
+  "name_zh": "石墨烯科技法國羊毛極暖被",
+  "name_en": "Graphene-Tech French Wool Extra-Warm Comforter",
+  "type_zh": "羊毛",
+  "type_en": "Wool",
+  "url": "https://www.fet.com.tw/SalePage/Index/9464788",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/9464788/0/0?v=1",
+  "price_twd": 4280,
+  "bullets_zh": [
+   "100%親膚純棉表布 台灣製造",
+   "頂級GOLDEN LABEL法國羊毛",
+   "蓬鬆回彈、發熱蓄暖、吸濕排汗、防蟎抗菌",
+   "石墨烯紅外線釋放 守護睡眠健康"
+  ],
+  "bullets_en": [
+   "100% skin-friendly cotton cover, Made in Taiwan.",
+   "Premium GOLDEN LABEL French wool.",
+   "Plush and resilient, heat-retaining, moisture-wicking, and hypoallergenic.",
+   "Graphene far-infrared emission to protect your sleep health."
+  ],
+  "match": {
+   "comforterTemp": [
+    "Always Cold"
+   ],
+   "comforterFeel": [
+    "Heavy"
+   ],
+   "comforterAllergy": [
+    "None"
+   ],
+   "comforterScent": [
+    "MildOk"
+   ],
+   "comforterUse": [
+    "Budget"
+   ]
   },
-  {
-    "id": "12159089",
-    "category": "sheet",
-    "name_zh": "Jr 環保印染100%精梳棉兩用被床包組 / 沁綠森活",
-    "name_en": "40S Combed Cotton set · Playful & Thematic (沁綠森活)",
-    "type_zh": "40支精梳棉",
-    "type_en": "40S Combed Cotton",
-    "url": "https://www.fet.com.tw/SalePage/Index/12159089",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12159089/0/0?v=1",
-    "price_twd": 3480,
-    "bullets_zh": [
-      "透氣吸汗",
-      "耐洗耐用",
-      "CP值高"
-    ],
-    "bullets_en": [
-      "Breathable & sweat-absorbing",
-      "Washable & durable",
-      "Great value for money"
-    ],
-    "match": {
-      "designStyle": [
-        "Playful"
-      ]
-    },
-    "material": "cotton40",
-    "style": "Playful",
-    "sort_order": 5,
-    "active": true
+  "sort_order": 63,
+  "active": true
+ },
+ {
+  "id": "7011929",
+  "category": "comforter",
+  "name_zh": "法國尊爵95D羽絨冬被",
+  "name_en": "French 95D Noble Down Winter Comforter",
+  "type_zh": "羽絨",
+  "type_en": "Down",
+  "url": "https://www.fet.com.tw/SalePage/Index/7011929",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7011929/0/0?v=1",
+  "price_twd": 16800,
+  "bullets_zh": [
+   "來自法國的高品質羽絨",
+   "如雲朵般的奢華柔軟與輕盈感",
+   "吸濕透氣"
+  ],
+  "bullets_en": [
+   "Exquisite premium down sourced from France.",
+   "Luxuriously plush and exceptionally lightweight.",
+   "Advanced moisture-wicking and supreme breathability."
+  ],
+  "match": {
+   "comforterTemp": [
+    "Always Cold"
+   ],
+   "comforterFeel": [
+    "Fluffy"
+   ],
+   "comforterAllergy": [
+    "None"
+   ],
+   "comforterScent": [
+    "MildOk"
+   ],
+   "comforterUse": [
+    "Luxury"
+   ]
   },
-  {
-    "id": "12224394",
-    "category": "sheet",
-    "name_zh": "60支環保印染100%萊賽爾天絲兩用被床包組 /青禾花事",
-    "name_en": "60S Tencel™ Lyocell set · Nature-Inspired (青禾花事)",
-    "type_zh": "60支天絲™萊賽爾",
-    "type_en": "60S Tencel™ Lyocell",
-    "url": "https://www.fet.com.tw/SalePage/Index/12224394",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12224394/0/0?v=1",
-    "price_twd": 3780,
-    "bullets_zh": [
-      "環境友善",
-      "抗菌抗過敏",
-      "柔軟順滑"
-    ],
-    "bullets_en": [
-      "Eco-friendly",
-      "Antibacterial & hypoallergenic",
-      "Soft & smooth"
-    ],
-    "match": {
-      "designStyle": [
-        "Nature"
-      ]
-    },
-    "material": "tencel60",
-    "style": "Nature",
-    "sort_order": 6,
-    "active": true
+  "sort_order": 64,
+  "active": true
+ },
+ {
+  "id": "7012183",
+  "category": "comforter",
+  "name_zh": "波蘭御藏80D羽絨冬被",
+  "name_en": "Polish 80D Imperial Down Winter Comforter",
+  "type_zh": "羽絨",
+  "type_en": "Down",
+  "url": "https://www.fet.com.tw/SalePage/Index/7012183",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7012183/0/0?v=1",
+  "price_twd": 9980,
+  "bullets_zh": [
+   "來自波蘭的高品質羽絨",
+   "蓬鬆輕柔",
+   "吸濕透氣"
+  ],
+  "bullets_en": [
+   "High-quality down from Poland.",
+   "Lightweight and fluffy.",
+   "Moisture-wicking and breathable."
+  ],
+  "match": {
+   "comforterTemp": [
+    "Always Cold"
+   ],
+   "comforterFeel": [
+    "Fluffy"
+   ],
+   "comforterAllergy": [
+    "None"
+   ],
+   "comforterScent": [
+    "MildOk"
+   ],
+   "comforterUse": [
+    "Luxury"
+   ]
   },
-  {
-    "id": "11712426",
-    "category": "sheet",
-    "name_zh": "300織紗100%萊賽爾天絲素色兩用被床包組／月海藍",
-    "name_en": "60S Tencel™ Lyocell set · Minimalist & Solid (月海藍)",
-    "type_zh": "60支天絲™萊賽爾",
-    "type_en": "60S Tencel™ Lyocell",
-    "url": "https://www.fet.com.tw/SalePage/Index/11712426",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11712426/0/0?v=1",
-    "price_twd": 4680,
-    "bullets_zh": [
-      "環境友善",
-      "抗菌抗過敏",
-      "柔軟順滑"
-    ],
-    "bullets_en": [
-      "Eco-friendly",
-      "Antibacterial & hypoallergenic",
-      "Soft & smooth"
-    ],
-    "match": {
-      "designStyle": [
-        "Minimal"
-      ]
-    },
-    "material": "tencel60",
-    "style": "Minimal",
-    "sort_order": 7,
-    "active": true
+  "sort_order": 65,
+  "active": true
+ },
+ {
+  "id": "12181097",
+  "category": "comforter",
+  "name_zh": "日規JIS波蘭典藏70D立體羽絨冬被",
+  "name_en": "JIS Standard Polish 70D Down Heirloom Winter Comforter",
+  "type_zh": "羽絨",
+  "type_en": "Down",
+  "url": "https://www.fet.com.tw/SalePage/Index/12181097",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12181097/0/0?v=1",
+  "price_twd": 6280,
+  "bullets_zh": [
+   "來自波蘭的高品質羽絨",
+   "質地輕柔蓬鬆不悶熱",
+   "表布採100%40支純棉"
+  ],
+  "bullets_en": [
+   "High-quality down from Poland.",
+   "Lightweight, plush, and highly breathable without trapping heat.",
+   "Outer cover made of 100% 40-count pure cotton."
+  ],
+  "match": {
+   "comforterTemp": [
+    "Neutral"
+   ],
+   "comforterFeel": [
+    "Fluffy"
+   ],
+   "comforterAllergy": [
+    "None"
+   ],
+   "comforterScent": [
+    "MildOk"
+   ],
+   "comforterUse": [
+    "Daily"
+   ]
   },
-  {
-    "id": "12107262",
-    "category": "sheet",
-    "name_zh": "環保印染100%精梳棉兩用被床包組／湖水藍映",
-    "name_en": "40S Combed Cotton set · Nature-Inspired (湖水藍映)",
-    "type_zh": "40支精梳棉",
-    "type_en": "40S Combed Cotton",
-    "url": "https://www.fet.com.tw/SalePage/Index/12107262",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12107262/0/0?v=1",
-    "price_twd": 4980,
-    "bullets_zh": [
-      "透氣吸汗",
-      "耐洗耐用",
-      "CP值高"
-    ],
-    "bullets_en": [
-      "Breathable & sweat-absorbing",
-      "Washable & durable",
-      "Great value for money"
-    ],
-    "match": {
-      "designStyle": [
-        "Nature"
-      ]
-    },
-    "material": "cotton40",
-    "style": "Nature",
-    "sort_order": 8,
-    "active": true
+  "sort_order": 66,
+  "active": true
+ },
+ {
+  "id": "10234353",
+  "category": "comforter",
+  "name_zh": "90D水洗羽絨輕暖天天被",
+  "name_en": "Washable 90D Down Lightweight Everyday Comforter",
+  "type_zh": "羽絨",
+  "type_en": "Down",
+  "url": "https://www.fet.com.tw/SalePage/Index/10234353",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10234353/0/0?v=1",
+  "price_twd": 5980,
+  "bullets_zh": [
+   "日規JIS 90D可水洗羽絨",
+   "日本原裝進口防絨印花表布",
+   "可水洗機洗 遠離塵蟎細菌"
+  ],
+  "bullets_en": [
+   "JIS Standard Washable 90D Down",
+   "Japanese Down-Proof Printed Shell",
+   "Machine Washable"
+  ],
+  "match": {
+   "comforterTemp": [
+    "Hot"
+   ],
+   "comforterFeel": [
+    "Smooth"
+   ],
+   "comforterAllergy": [
+    "None"
+   ],
+   "comforterScent": [
+    "MildOk"
+   ],
+   "comforterUse": [
+    "Daily"
+   ]
   },
-  {
-    "id": "12159133",
-    "category": "sheet",
-    "name_zh": "Jr 60支環保印染100%萊賽爾天絲兩用被床包組／晚安星森林",
-    "name_en": "60S Tencel™ Lyocell set · Playful & Thematic (晚安星森林)",
-    "type_zh": "60支天絲™萊賽爾",
-    "type_en": "60S Tencel™ Lyocell",
-    "url": "https://www.fet.com.tw/SalePage/Index/12159133",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12159133/0/0?v=1",
-    "price_twd": 5480,
-    "bullets_zh": [
-      "環境友善",
-      "抗菌抗過敏",
-      "柔軟順滑"
-    ],
-    "bullets_en": [
-      "Eco-friendly",
-      "Antibacterial & hypoallergenic",
-      "Soft & smooth"
-    ],
-    "match": {
-      "designStyle": [
-        "Playful"
-      ]
-    },
-    "material": "tencel60",
-    "style": "Playful",
-    "sort_order": 9,
-    "active": true
+  "sort_order": 67,
+  "active": true
+ },
+ {
+  "id": "10249533",
+  "category": "comforter",
+  "name_zh": "英威達抗菌七孔石墨烯冬被",
+  "name_en": "INVISTA™ Antibacterial 7-Hole Fiber Graphene Winter Comforter",
+  "type_zh": "科技纖維",
+  "type_en": "Synthetic Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/10249533",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10249533/0/0?v=1",
+  "price_twd": 5980,
+  "bullets_zh": [
+   "奈米纖維-片狀結構石墨烯，強大導熱迅速恆溫",
+   "台灣製造-台灣在地加工製造，品質嚴格把控",
+   "親膚表布-專利七孔抗菌，防蟎抗菌除臭，多效合一",
+   "內外溫暖-布被芯皆添加石墨烯鎖熱技術升級"
+  ],
+  "bullets_en": [
+   "Nanofiber with flake-structured graphene for excellent heat conduction and rapid temperature regulation.",
+   "Made in Taiwan with strict quality control for reliable manufacturing.",
+   "Skin-friendly cover featuring patented 7-hole technology. An all-in-one solution for anti-mite, antibacterial, and deodorizing effects.",
+   "Warm inside and out. Both the cover and inner core are upgraded with graphene heat-locking technology."
+  ],
+  "match": {
+   "comforterTemp": [
+    "Always Cold"
+   ],
+   "comforterFeel": [
+    "Heavy"
+   ],
+   "comforterAllergy": [
+    "Washable",
+    "None"
+   ],
+   "comforterScent": [
+    "NoScent"
+   ],
+   "comforterUse": [
+    "Daily"
+   ]
   },
-  {
-    "id": "12131633",
-    "category": "sheet",
-    "name_zh": "80支環保印染100%天絲™萊賽爾印花被套床包組／晨曦花蹤",
-    "name_en": "80S Tencel™ Lyocell set · Nature-Inspired (晨曦花蹤)",
-    "type_zh": "80支天絲™萊賽爾",
-    "type_en": "80S Tencel™ Lyocell",
-    "url": "https://www.fet.com.tw/SalePage/Index/12131633",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12131633/0/0?v=1",
-    "price_twd": 7980,
-    "bullets_zh": [
-      "環境友善",
-      "抗菌抗過敏",
-      "細緻柔滑"
-    ],
-    "bullets_en": [
-      "Eco-friendly",
-      "Antibacterial & hypoallergenic",
-      "Fine & silky-soft"
-    ],
-    "match": {
-      "designStyle": [
-        "Nature"
-      ]
-    },
-    "material": "tencel80",
-    "style": "Nature",
-    "sort_order": 10,
-    "active": true
+  "sort_order": 68,
+  "active": true
+ },
+ {
+  "id": "7012266",
+  "category": "comforter",
+  "name_zh": "英威達抗菌七孔冬被",
+  "name_en": "INVISTA™ Antibacterial 7-Hole Fiber Winter Comforter",
+  "type_zh": "科技纖維",
+  "type_en": "Synthetic Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/7012266",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7012266/0/0?v=1",
+  "price_twd": 5280,
+  "bullets_zh": [
+   "獨家七孔專利技術 提供卓越的透氣性",
+   "不易滋生細菌、黴菌及過敏原",
+   "可機洗和烘乾 不易結塊變形"
+  ],
+  "bullets_en": [
+   "Exclusive 7-hole patented technology provides exceptional breathability.",
+   "Hypoallergenic, resisting bacteria, mold, and allergens.",
+   "Machine washable and dryable, maintaining its shape without clumping."
+  ],
+  "match": {
+   "comforterTemp": [
+    "Neutral"
+   ],
+   "comforterFeel": [
+    "Heavy"
+   ],
+   "comforterAllergy": [
+    "Washable",
+    "None"
+   ],
+   "comforterScent": [
+    "NoScent"
+   ],
+   "comforterUse": [
+    "Daily"
+   ]
   },
-  {
-    "id": "12133346",
-    "category": "sheet",
-    "name_zh": "80支環保印染100%天絲™萊賽爾素色被套床包組／玄灰",
-    "name_en": "80S Tencel™ Lyocell set · Minimalist & Solid (玄灰)",
-    "type_zh": "80支天絲™萊賽爾",
-    "type_en": "80S Tencel™ Lyocell",
-    "url": "https://www.fet.com.tw/SalePage/Index/12133346",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12133346/0/0?v=1",
-    "price_twd": 7980,
-    "bullets_zh": [
-      "環境友善",
-      "抗菌抗過敏",
-      "細緻柔滑"
-    ],
-    "bullets_en": [
-      "Eco-friendly",
-      "Antibacterial & hypoallergenic",
-      "Fine & silky-soft"
-    ],
-    "match": {
-      "designStyle": [
-        "Minimal"
-      ]
-    },
-    "material": "tencel80",
-    "style": "Minimal",
-    "sort_order": 11,
-    "active": true
+  "sort_order": 69,
+  "active": true
+ },
+ {
+  "id": "7071526",
+  "category": "comforter",
+  "name_zh": "英威達抗菌七孔四季被",
+  "name_en": "INVISTA™ Antibacterial 7-Hole Fiber All-Season Comforter",
+  "type_zh": "科技纖維",
+  "type_en": "Synthetic Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/7071526",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7071526/0/0?v=1",
+  "price_twd": 4280,
+  "bullets_zh": [
+   "獨家七孔專利技術 提供卓越的透氣性",
+   "不易滋生細菌、黴菌及過敏原",
+   "可機洗和烘乾 不易結塊變形"
+  ],
+  "bullets_en": [
+   "Exclusive 7-hole patented technology provides exceptional breathability.",
+   "Hypoallergenic, resisting bacteria, mold, and allergens.",
+   "Machine washable and dryable, maintaining its shape without clumping."
+  ],
+  "match": {
+   "comforterTemp": [
+    "Hot"
+   ],
+   "comforterFeel": [
+    "Fluffy"
+   ],
+   "comforterAllergy": [
+    "Washable",
+    "None"
+   ],
+   "comforterScent": [
+    "NoScent"
+   ],
+   "comforterUse": [
+    "Daily"
+   ]
   },
-  {
-    "id": "12133145",
-    "category": "sheet",
-    "name_zh": "80支環保印染100%天絲™萊賽爾印花被套床包組／倫敦霧境",
-    "name_en": "80S Tencel™ Lyocell set · Playful & Thematic (倫敦霧境)",
-    "type_zh": "80支天絲™萊賽爾",
-    "type_en": "80S Tencel™ Lyocell",
-    "url": "https://www.fet.com.tw/SalePage/Index/12133145",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12133145/0/0?v=1",
-    "price_twd": 7980,
-    "bullets_zh": [
-      "環境友善",
-      "抗菌抗過敏",
-      "細緻柔滑"
-    ],
-    "bullets_en": [
-      "Eco-friendly",
-      "Antibacterial & hypoallergenic",
-      "Fine & silky-soft"
-    ],
-    "match": {
-      "designStyle": [
-        "Playful"
-      ]
-    },
-    "material": "tencel80",
-    "style": "Playful",
-    "sort_order": 12,
-    "active": true
+  "sort_order": 70,
+  "active": false
+ },
+ {
+  "id": "9523713",
+  "category": "comforter",
+  "name_zh": "超導熱石墨烯恆溫冬被",
+  "name_en": "Graphene Thermo-Regulating Winter Comforter - Superior Heat Conduction",
+  "type_zh": "科技纖維",
+  "type_en": "Synthetic Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/9523713",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/9523713/0/0?v=1",
+  "price_twd": 3980,
+  "bullets_zh": [
+   "高達50%石墨烯迅速導熱",
+   "遠紅外線釋放，睡眠也護健康",
+   "吸濕抗菌 有效抗靜電"
+  ],
+  "bullets_en": [
+   "Up to 50% graphene for rapid heat conduction.",
+   "Far-infrared emission to protect your health during sleep.",
+   "Moisture-wicking, antibacterial, and effectively anti-static."
+  ],
+  "match": {
+   "comforterTemp": [
+    "Always Cold"
+   ],
+   "comforterFeel": [
+    "Heavy"
+   ],
+   "comforterAllergy": [
+    "None"
+   ],
+   "comforterScent": [
+    "NoScent"
+   ],
+   "comforterUse": [
+    "Budget"
+   ]
   },
-  {
-    "id": "11079881",
-    "category": "sheet",
-    "name_zh": "Narumi聯名款 高紗支長纖細棉印花被套床包組／露西花園",
-    "name_en": "60S Combed Cotton set · Nature-Inspired (露西花園)",
-    "type_zh": "60支精梳棉",
-    "type_en": "60S Combed Cotton",
-    "url": "https://www.fet.com.tw/SalePage/Index/11079881",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11079881/0/0?v=1",
-    "price_twd": 9480,
-    "bullets_zh": [
-      "柔軟順滑",
-      "高耐用性",
-      "吸濕排汗佳"
-    ],
-    "bullets_en": [
-      "Soft & smooth",
-      "Highly durable",
-      "Excellent moisture-wicking"
-    ],
-    "match": {
-      "designStyle": [
-        "Nature"
-      ]
-    },
-    "material": "cotton60",
-    "style": "Nature",
-    "sort_order": 13,
-    "active": true
+  "sort_order": 71,
+  "active": true
+ },
+ {
+  "id": "12263423",
+  "category": "comforter",
+  "name_zh": "暖棉眠石墨烯膠原蛋白水洗冬被",
+  "name_en": "Warm Cotton Graphene Collagen Washable Comforter",
+  "type_zh": "科技纖維",
+  "type_en": "Synthetic Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/12263423",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12263423/0/0?v=1",
+  "price_twd": 1980,
+  "bullets_zh": [
+   "極柔彈性表布 升級添加膠原蛋白",
+   "石墨烯導熱纖維 恆溫加倍溫暖",
+   "免用被套 可水洗機洗遠離塵蟎"
+  ],
+  "bullets_en": [
+   "Ultra-soft elastic cover, upgraded with added collagen.",
+   "Graphene heat-conducting fibers for constant temperature and double the warmth.",
+   "No duvet cover needed; water and machine washable to keep dust mites away."
+  ],
+  "match": {
+   "comforterTemp": [
+    "Always Cold"
+   ],
+   "comforterFeel": [
+    "Heavy"
+   ],
+   "comforterAllergy": [
+    "Washable",
+    "None"
+   ],
+   "comforterScent": [
+    "NoScent"
+   ],
+   "comforterUse": [
+    "Budget"
+   ]
   },
-  {
-    "id": "11632574",
-    "category": "sheet",
-    "name_zh": "500織埃及長纖細棉蕾絲四件式被套床包組／永夜恬境",
-    "name_en": "500/600TC High-Count Cotton set · Classic Luxury (永夜恬境)",
-    "type_zh": "500/600織高支棉",
-    "type_en": "500/600TC High-Count Cotton",
-    "url": "https://www.fet.com.tw/SalePage/Index/11632574",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11632574/0/0?v=1",
-    "price_twd": 13800,
-    "bullets_zh": [
-      "吸濕排汗佳",
-      "緊實細緻織法",
-      "絕佳舒適度"
-    ],
-    "bullets_en": [
-      "Excellent moisture-wicking",
-      "Tight & fine weave",
-      "Superior comfort"
-    ],
-    "match": {
-      "designStyle": [
-        "Classic"
-      ]
-    },
-    "material": "cotton500",
-    "style": "Classic",
-    "sort_order": 14,
-    "active": true
+  "sort_order": 72,
+  "active": true
+ },
+ {
+  "id": "10434005",
+  "category": "comforter",
+  "name_zh": "德國防蟎抗菌水洗好眠被",
+  "name_en": "Washable German Hypoallergenic Comforter",
+  "type_zh": "科技纖維",
+  "type_en": "Synthetic Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/10434005",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10434005/0/0?v=1",
+  "price_twd": 2980,
+  "bullets_zh": [
+   "防蟎抗菌 水洗多次功效不減",
+   "國際無毒認證 全家安心使用",
+   "免用被套 親膚柔軟蓬鬆溫暖"
+  ],
+  "bullets_en": [
+   "Durable Hypoallergenic Protection",
+   "Certified Safe & Non-Toxic",
+   "Ready-to-Use & Skin-Friendly"
+  ],
+  "match": {
+   "comforterTemp": [
+    "Neutral"
+   ],
+   "comforterFeel": [
+    "Fluffy"
+   ],
+   "comforterAllergy": [
+    "Washable",
+    "None"
+   ],
+   "comforterScent": [
+    "NoScent"
+   ],
+   "comforterUse": [
+    "Budget"
+   ]
   },
-  {
-    "id": "11336901",
-    "category": "sheet",
-    "name_zh": "600織義大利色織緹花拼接四件式被套床包組／月露漫舞",
-    "name_en": "500/600TC High-Count Cotton set · Classic Luxury (月露漫舞)",
-    "type_zh": "500/600織高支棉",
-    "type_en": "500/600TC High-Count Cotton",
-    "url": "https://www.fet.com.tw/SalePage/Index/11336901",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11336901/0/0?v=1",
-    "price_twd": 33800,
-    "bullets_zh": [
-      "吸濕排汗佳",
-      "緊實細緻織法",
-      "絕佳舒適度"
-    ],
-    "bullets_en": [
-      "Excellent moisture-wicking",
-      "Tight & fine weave",
-      "Superior comfort"
-    ],
-    "match": {
-      "designStyle": [
-        "Classic"
-      ]
-    },
-    "material": "cotton500",
-    "style": "Classic",
-    "sort_order": 15,
-    "active": true
+  "sort_order": 73,
+  "active": true
+ },
+ {
+  "id": "12273441",
+  "category": "comforter",
+  "name_zh": "德國鎖溫科技柔暖水洗被",
+  "name_en": "Washable German Thermal-Lock Tech Comforter",
+  "type_zh": "科技纖維",
+  "type_en": "Synthetic Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/12273441",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12273441/0/0?v=1",
+  "price_twd": 2280,
+  "bullets_zh": [
+   "鎖溫科技 留住暖度一整晚",
+   "柔軟親膚 羊絨般細膩觸感",
+   "可水洗機洗 安心好保養"
+  ],
+  "bullets_en": [
+   "Advanced Thermal-Lock",
+   "Cashmere-Like Softness",
+   "Machine Washable & Easy Care"
+  ],
+  "match": {
+   "comforterTemp": [
+    "Neutral"
+   ],
+   "comforterFeel": [
+    "Fluffy"
+   ],
+   "comforterAllergy": [
+    "Washable",
+    "None"
+   ],
+   "comforterScent": [
+    "NoScent"
+   ],
+   "comforterUse": [
+    "Budget"
+   ]
   },
-  {
-    "id": "11383996",
-    "category": "comforter",
-    "name_zh": "暖棉眠石墨烯膠原蛋白水洗冬被",
-    "name_en": "Warm Cotton Graphene Collagen Washable Comforter",
-    "type_zh": "科技纖維",
-    "type_en": "Synthetic Fiber",
-    "url": "https://www.fet.com.tw/SalePage/Index/11383996",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11383996/0/0?v=1",
-    "price_twd": 1680,
-    "bullets_zh": [
-      "極柔彈性表布 升級添加膠原蛋白",
-      "石墨烯導熱纖維 恆溫加倍溫暖",
-      "免用被套 可水洗機洗遠離塵蟎"
-    ],
-    "bullets_en": [
-      "Ultra-soft elastic cover, upgraded with added collagen.",
-      "Graphene heat-conducting fibers for constant temperature and double the warmth.",
-      "No duvet cover needed; water and machine washable to keep dust mites away."
-    ],
-    "match": {
-      "comforterTemp": [
-        "Always Cold"
-      ],
-      "comforterAllergy": [
-        "Washable",
-        "None"
-      ],
-      "comforterUse": [
-        "Budget"
-      ]
-    },
-    "sort_order": 16,
-    "active": true
+  "sort_order": 74,
+  "active": true
+ },
+ {
+  "id": "7013366",
+  "category": "pillow",
+  "name_zh": "法國95D尊爵羽絨枕",
+  "name_en": "French 95D Noble Down Pillow",
+  "type_zh": "羽絨",
+  "type_en": "Down",
+  "url": "https://www.fet.com.tw/SalePage/Index/7013366",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7013366/0/0?v=1",
+  "price_twd": 6980,
+  "bullets_zh": [
+   "95%頂級羽絨",
+   "高效回彈",
+   "蓬柔飽滿"
+  ],
+  "bullets_en": [
+   "95% Ultra-Premium Down",
+   "Exceptional Lasting Resilience",
+   "Luxuriously Plush and Voluminous"
+  ],
+  "match": {
+   "sleepPosition": [
+    "Back",
+    "Side"
+   ],
+   "pillowFeel": [
+    "Sink"
+   ],
+   "shoulderWidth": [
+    "Broad"
+   ],
+   "pillowAllergy": [
+    "No"
+   ],
+   "pillowTier": [
+    "Luxury"
+   ]
   },
-  {
-    "id": "9523713",
-    "category": "comforter",
-    "name_zh": "超導熱石墨烯恆溫冬被",
-    "name_en": "Graphene Thermo-Regulating Winter Comforter",
-    "type_zh": "科技纖維",
-    "type_en": "Synthetic Fiber",
-    "url": "https://www.fet.com.tw/SalePage/Index/9523713",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/9523713/0/0?v=1",
-    "price_twd": 2180,
-    "bullets_zh": [
-      "高達50%石墨烯迅速導熱",
-      "遠紅外線釋放，睡眠也護健康",
-      "吸濕抗菌 有效抗靜電"
-    ],
-    "bullets_en": [
-      "Up to 50% graphene for rapid heat conduction.",
-      "Far-infrared emission to protect your health during sleep.",
-      "Moisture-wicking, antibacterial, and effectively anti-static."
-    ],
-    "match": {
-      "comforterTemp": [
-        "Always Cold"
-      ],
-      "comforterFeel": [
-        "Heavy"
-      ],
-      "comforterAllergy": [
-        "None"
-      ],
-      "comforterScent": [
-        "NoScent"
-      ],
-      "comforterUse": [
-        "Budget"
-      ]
-    },
-    "sort_order": 17,
-    "active": true
+  "sort_order": 75,
+  "active": true
+ },
+ {
+  "id": "7013349",
+  "category": "pillow",
+  "name_zh": "波蘭70D御藏羽絨枕",
+  "name_en": "Polish 70D Imperial Down Pillow",
+  "type_zh": "羽絨",
+  "type_en": "Down",
+  "url": "https://www.fet.com.tw/SalePage/Index/7013349",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7013349/0/0?v=1",
+  "price_twd": 5980,
+  "bullets_zh": [
+   "包覆性佳",
+   "輕柔舒適",
+   "吸濕透氣"
+  ],
+  "bullets_en": [
+   "Excellent enveloping comfort",
+   "Soft and lightweight",
+   "Moisture-wicking and breathable"
+  ],
+  "match": {
+   "sleepPosition": [
+    "Stomach",
+    "Back"
+   ],
+   "pillowFeel": [
+    "Sink"
+   ],
+   "shoulderWidth": [
+    "Petite"
+   ],
+   "pillowAllergy": [
+    "No"
+   ],
+   "pillowTier": [
+    "Luxury"
+   ]
   },
-  {
-    "id": "9464788",
-    "category": "comforter",
-    "name_zh": "石墨烯科技法國羊毛極暖冬被",
-    "name_en": "Graphene-Tech French Wool Extra-Warm Comforter",
-    "type_zh": "羊毛",
-    "type_en": "Wool",
-    "url": "https://www.fet.com.tw/SalePage/Index/9464788",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/9464788/0/0?v=1",
-    "price_twd": 2980,
-    "bullets_zh": [
-      "100%親膚純棉表布 台灣製造",
-      "頂級GOLDEN LABEL法國羊毛",
-      "蓬鬆回彈、發熱蓄暖、吸濕排汗、防螨抗菌",
-      "石墨烯紅外線釋放 守護睡眠健康"
-    ],
-    "bullets_en": [
-      "100% skin-friendly cotton cover, Made in Taiwan.",
-      "Premium GOLDEN LABEL French wool.",
-      "Plush and resilient, heat-retaining, moisture-wicking, and hypoallergenic.",
-      "Graphene far-infrared emission to protect your sleep health."
-    ],
-    "match": {
-      "comforterTemp": [
-        "Always Cold"
-      ],
-      "comforterFeel": [
-        "Heavy"
-      ],
-      "comforterAllergy": [
-        "None"
-      ],
-      "comforterScent": [
-        "MildOk"
-      ],
-      "comforterUse": [
-        "Daily"
-      ]
-    },
-    "sort_order": 18,
-    "active": true
+  "sort_order": 76,
+  "active": true
+ },
+ {
+  "id": "9479454",
+  "category": "pillow",
+  "name_zh": "波蘭30D典藏羽絨枕",
+  "name_en": "Polish 30D Heirloom Down Pillow",
+  "type_zh": "羽絨",
+  "type_en": "Down",
+  "url": "https://www.fet.com.tw/SalePage/Index/9479454",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/9479454/0/0?v=1",
+  "price_twd": 1680,
+  "bullets_zh": [
+   "100%純棉表布 透氣舒適",
+   "採用波蘭羽絨 蓬鬆飽滿"
+  ],
+  "bullets_en": [
+   "100% cotton cover, breathable and comfortable",
+   "Filled with Polish down, fluffy and full"
+  ],
+  "match": {
+   "sleepPosition": [
+    "Stomach"
+   ],
+   "pillowFeel": [
+    "Sink"
+   ],
+   "shoulderWidth": [
+    "Petite"
+   ],
+   "pillowAllergy": [
+    "No"
+   ],
+   "pillowTier": [
+    "Effortless"
+   ]
   },
-  {
-    "id": "10233996",
-    "category": "comforter",
-    "name_zh": "防蹣抗菌頂級100%法國羊毛被",
-    "name_en": "Anti-Mite Antibacterial 100% French Wool Comforter",
-    "type_zh": "羊毛",
-    "type_en": "Wool",
-    "url": "https://www.fet.com.tw/SalePage/Index/10233996",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10233996/0/0?v=1",
-    "price_twd": 2980,
-    "bullets_zh": [
-      "100%親膚純棉表布 台灣製造",
-      "頂級GOLDEN LABEL法國羊毛",
-      "蓬鬆回彈、發熱蓄暖、吸濕排汗、防螨抗菌"
-    ],
-    "bullets_en": [
-      "100% skin-friendly cotton cover, Made in Taiwan.",
-      "Premium GOLDEN LABEL French wool.",
-      "Plush and resilient, heat-retaining, moisture-wicking, and hypoallergenic."
-    ],
-    "match": {
-      "comforterTemp": [
-        "Neutral"
-      ],
-      "comforterFeel": [
-        "Heavy"
-      ],
-      "comforterAllergy": [
-        "None"
-      ],
-      "comforterScent": [
-        "MildOk"
-      ],
-      "comforterUse": [
-        "Daily"
-      ]
-    },
-    "sort_order": 19,
-    "active": true
+  "sort_order": 77,
+  "active": true
+ },
+ {
+  "id": "11615976",
+  "category": "pillow",
+  "name_zh": "自然眠乳膠枕",
+  "name_en": "Natural Rest Latex Pillow",
+  "type_zh": "乳膠",
+  "type_en": "Latex",
+  "url": "https://www.fet.com.tw/SalePage/Index/11615976",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11615976/0/0?v=1",
+  "price_twd": 3280,
+  "bullets_zh": [
+   "100%天然乳膠，Q彈支撐力性",
+   "蜂巢式透氣孔 清爽排汗不悶熱"
+  ],
+  "bullets_en": [
+   "100% natural latex for highly resilient support.",
+   "Honeycomb ventilation holes for a refreshing, moisture-wicking, and breathable experience."
+  ],
+  "match": {
+   "sleepPosition": [
+    "Side"
+   ],
+   "pillowFeel": [
+    "Springy"
+   ],
+   "shoulderWidth": [
+    "Broad"
+   ],
+   "pillowAllergy": [
+    "No"
+   ],
+   "pillowTier": [
+    "Enhanced"
+   ]
   },
-  {
-    "id": "10234144",
-    "category": "comforter",
-    "name_zh": "典藏100%蠶絲冬被",
-    "name_en": "Heirloom 100% Mulberry Silk Winter Comforter",
-    "type_zh": "蠶絲",
-    "type_en": "Silk",
-    "url": "https://www.fet.com.tw/SalePage/Index/10234144",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10234144/0/0?v=1",
-    "price_twd": 3980,
-    "bullets_zh": [
-      "防蹣抑菌 天然抗敏",
-      "親膚滑順 貼身柔軟舒適"
-    ],
-    "bullets_en": [
-      "Anti-mite and antibacterial, naturally hypoallergenic.",
-      "Skin-friendly, smooth, and soft for contouring comfort."
-    ],
-    "match": {
-      "comforterTemp": [
-        "Neutral"
-      ],
-      "comforterFeel": [
-        "Smooth"
-      ],
-      "comforterAllergy": [
-        "Natural",
-        "None"
-      ],
-      "comforterScent": [
-        "NoScent"
-      ],
-      "comforterUse": [
-        "Luxury"
-      ]
-    },
-    "sort_order": 20,
-    "active": true
+  "sort_order": 78,
+  "active": true
+ },
+ {
+  "id": "11228476",
+  "category": "pillow",
+  "name_zh": "防蟎抗菌乳膠工學枕",
+  "name_en": "Ergonomic Anti-Mite Antibacterial Latex Pillow",
+  "type_zh": "乳膠",
+  "type_en": "Latex",
+  "url": "https://www.fet.com.tw/SalePage/Index/11228476",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11228476/0/0?v=1",
+  "price_twd": 2280,
+  "bullets_zh": [
+   "100%天然乳膠，Q彈支撐力佳",
+   "蜂巢式透氣孔，清爽排汗不悶熱",
+   "天然防蟎抗菌"
+  ],
+  "bullets_en": [
+   "100% natural latex for excellent resilient support.",
+   "Honeycomb ventilation holes for a refreshing, moisture-wicking, and breathable sleep.",
+   "Naturally anti-mite and antibacterial, eco-friendly"
+  ],
+  "match": {
+   "sleepPosition": [
+    "Back"
+   ],
+   "pillowFeel": [
+    "Springy"
+   ],
+   "shoulderWidth": [
+    "Average"
+   ],
+   "pillowAllergy": [
+    "No"
+   ],
+   "pillowTier": [
+    "Enhanced"
+   ]
   },
-  {
-    "id": "10234353",
-    "category": "comforter",
-    "name_zh": "90D水洗羽絨輕暖天天被",
-    "name_en": "Washable Down Lightweight Everyday Comforter",
-    "type_zh": "羽絨",
-    "type_en": "Down",
-    "url": "https://www.fet.com.tw/SalePage/Index/10234353",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10234353/0/0?v=1",
-    "price_twd": 3980,
-    "bullets_zh": [
-      "日規JIS 90D可水洗羽絨",
-      "日本原裝進口防絨印花表布",
-      "可水洗機洗 遠離塵蹣細菌"
-    ],
-    "bullets_en": [
-      "JIS standard 90/10 washable down.",
-      "Encased in an exquisite, down-proof printed shell imported straight from Japan.",
-      "Effortlessly machine washable to eliminate dust mites and bacteria, ensuring a pristine and hygienic sleep environment."
-    ],
-    "match": {
-      "comforterTemp": [
-        "Hot"
-      ],
-      "comforterFeel": [
-        "Smooth"
-      ],
-      "comforterAllergy": [
-        "None"
-      ],
-      "comforterScent": [
-        "NoScent",
-        "MildOk"
-      ],
-      "comforterUse": [
-        "Budget"
-      ]
-    },
-    "sort_order": 21,
-    "active": true
+  "sort_order": 79,
+  "active": true
+ },
+ {
+  "id": "7329954",
+  "category": "pillow",
+  "name_zh": "防蟎抗菌乳膠優適枕",
+  "name_en": "Anti-Mite Antibacterial Latex Comfort Pillow",
+  "type_zh": "乳膠",
+  "type_en": "Latex",
+  "url": "https://www.fet.com.tw/SalePage/Index/7329954",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7329954/0/0?v=1",
+  "price_twd": 2280,
+  "bullets_zh": [
+   "100%天然乳膠，Q彈支撐力佳",
+   "蜂巢式透氣孔，清爽排汗不悶熱",
+   "天然防蟎抗菌"
+  ],
+  "bullets_en": [
+   "100% natural latex for excellent resilient support.",
+   "Honeycomb ventilation holes for a refreshing, moisture-wicking, and breathable sleep.",
+   "Naturally anti-mite and antibacterial, eco-friendly"
+  ],
+  "match": {
+   "sleepPosition": [
+    "Back",
+    "Side"
+   ],
+   "pillowFeel": [
+    "Springy"
+   ],
+   "shoulderWidth": [
+    "Average"
+   ],
+   "pillowAllergy": [
+    "No"
+   ],
+   "pillowTier": [
+    "Enhanced"
+   ]
   },
-  {
-    "id": "7071526",
-    "category": "comforter",
-    "name_zh": "英威達抗菌七孔四季被",
-    "name_en": "INVISTA Antibacterial 7-Hole Fiber All-Season Comforter",
-    "type_zh": "科技纖維",
-    "type_en": "Synthetic Fiber",
-    "url": "https://www.fet.com.tw/SalePage/Index/7071526",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7071526/0/0?v=1",
-    "price_twd": 4280,
-    "bullets_zh": [
-      "獨家七孔專利技術 提供卓越的透氣性",
-      "不易滋生細菌、黴菌及過敏原",
-      "可機洗和烘乾 不易結塊變形"
-    ],
-    "bullets_en": [
-      "Exclusive 7-hole patented technology provides exceptional breathability.",
-      "Hypoallergenic, resisting bacteria, mold, and allergens.",
-      "Machine washable and dryable, maintaining its shape without clumping."
-    ],
-    "match": {
-      "comforterTemp": [
-        "Hot"
-      ],
-      "comforterAllergy": [
-        "Washable",
-        "None"
-      ],
-      "comforterScent": [
-        "NoScent"
-      ],
-      "comforterUse": [
-        "Budget"
-      ]
-    },
-    "sort_order": 22,
-    "active": true
+  "sort_order": 80,
+  "active": true
+ },
+ {
+  "id": "10586828",
+  "category": "pillow",
+  "name_zh": "天然透氣乳膠枕",
+  "name_en": "Natural Breathable Latex Pillow",
+  "type_zh": "乳膠",
+  "type_en": "Latex",
+  "url": "https://www.fet.com.tw/SalePage/Index/10586828",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10586828/0/0?v=1",
+  "price_twd": 1680,
+  "bullets_zh": [
+   "弧型按摩顆粒",
+   "優選泰國天然乳膠",
+   "防蟎抗菌機能"
+  ],
+  "bullets_en": [
+   "Curved Massage Nodules. The nodule design massages the neck and shoulders to promote blood circulation, allowing for complete relaxation during sleep.",
+   "Premium Natural Latex. Made from selected Thai natural latex, it effectively neutralizes odors and blocks static electricity.",
+   "Anti-Mite and Antibacterial Function. Natural latex proteins prevent bacteria and dust mite breeding, while unique natural pores expel body moisture."
+  ],
+  "match": {
+   "sleepPosition": [
+    "Back"
+   ],
+   "pillowFeel": [
+    "Springy"
+   ],
+   "shoulderWidth": [
+    "Average"
+   ],
+   "pillowAllergy": [
+    "No"
+   ],
+   "pillowTier": [
+    "Effortless"
+   ]
   },
-  {
-    "id": "10249533",
-    "category": "comforter",
-    "name_zh": "英威達抗菌七孔石墨烯冬被",
-    "name_en": "INVISTA Antibacterial 7-Hole Fiber Graphene Winter Comforter",
-    "type_zh": "科技纖維",
-    "type_en": "Synthetic Fiber",
-    "url": "https://www.fet.com.tw/SalePage/Index/10249533",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10249533/0/0?v=1",
-    "price_twd": 4480,
-    "bullets_zh": [
-      "奈米纖維-片狀結構石墨烯，強大導熱迅速恆溫",
-      "台灣製造-台灣在地加工製造，品質嚴格把控",
-      "親膚表布-專利七孔抗菌，防螨抗菌除臭，多效合一",
-      "內外溫暖-布被芯皆添加石墨烯鎖熱技術升級"
-    ],
-    "bullets_en": [
-      "Nanofiber with flake-structured graphene for excellent heat conduction and rapid temperature regulation.",
-      "Made in Taiwan with strict quality control for reliable manufacturing.",
-      "Skin-friendly cover featuring patented 7-hole technology. An all-in-one solution for anti-mite, antibacterial, and deodorizing effects.",
-      "Warm inside and out. Both the cover and inner core are upgraded with graphene heat-locking technology."
-    ],
-    "match": {
-      "comforterTemp": [
-        "Always Cold"
-      ],
-      "comforterFeel": [
-        "Heavy"
-      ],
-      "comforterAllergy": [
-        "Washable",
-        "None"
-      ],
-      "comforterScent": [
-        "NoScent"
-      ],
-      "comforterUse": [
-        "Budget"
-      ]
-    },
-    "sort_order": 23,
-    "active": true
+  "sort_order": 81,
+  "active": true
+ },
+ {
+  "id": "7013427",
+  "category": "pillow",
+  "name_zh": "銀抗菌舒眠記憶枕",
+  "name_en": "Silver-Ion Antibacterial Sleep Memory Foam Pillow",
+  "type_zh": "記憶棉",
+  "type_en": "Memory Foam",
+  "url": "https://www.fet.com.tw/SalePage/Index/7013427",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7013427/0/0?v=1",
+  "price_twd": 2280,
+  "bullets_zh": [
+   "人體工學",
+   "銀離子抗菌",
+   "透氣乾爽",
+   "釋壓支撐"
+  ],
+  "bullets_en": [
+   "Ergonomic Design",
+   "Silver Ion Antimicrobial Technology",
+   "Ultra-Breathable & Moisture-Wicking",
+   "Targeted Pressure-Relieving Support"
+  ],
+  "match": {
+   "sleepPosition": [
+    "Back",
+    "Side"
+   ],
+   "pillowFeel": [
+    "Contour"
+   ],
+   "shoulderWidth": [
+    "Average"
+   ],
+   "pillowAllergy": [
+    "Yes",
+    "No"
+   ],
+   "pillowTier": [
+    "Enhanced"
+   ]
   },
-  {
-    "id": "12181097",
-    "category": "comforter",
-    "name_zh": "日規JIS波蘭典藏70D立體羽絨冬被",
-    "name_en": "Polish 70D Heirloom Down Winter Comforter (JIS)",
-    "type_zh": "羽絨",
-    "type_en": "Down",
-    "url": "https://www.fet.com.tw/SalePage/Index/12181097",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/12181097/0/0?v=1",
-    "price_twd": 4780,
-    "bullets_zh": [
-      "來自波蘭的高品質羽絨",
-      "質地輕柔蓬鬆不悶熱",
-      "表布採100%40支純棉"
-    ],
-    "bullets_en": [
-      "High-quality down from Poland.",
-      "Lightweight, plush, and highly breathable without trapping heat.",
-      "Outer cover made of 100% 40-count pure cotton."
-    ],
-    "match": {
-      "comforterTemp": [
-        "Neutral"
-      ],
-      "comforterFeel": [
-        "Fluffy"
-      ],
-      "comforterAllergy": [
-        "None"
-      ],
-      "comforterScent": [
-        "MildOk"
-      ],
-      "comforterUse": [
-        "Daily",
-        "Luxury"
-      ]
-    },
-    "sort_order": 24,
-    "active": true
+  "sort_order": 82,
+  "active": true
+ },
+ {
+  "id": "8919542",
+  "category": "pillow",
+  "name_zh": "石墨烯釋壓可調式飛碟記憶枕",
+  "name_en": "Graphene Pressure-Relief Adjustable Disc Memory Foam Pillow",
+  "type_zh": "記憶棉",
+  "type_en": "Memory Foam",
+  "url": "https://www.fet.com.tw/SalePage/Index/8919542",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/8919542/0/0?v=1",
+  "price_twd": 1680,
+  "bullets_zh": [
+   "石墨烯纖維，高傳導布料抗菌除臭",
+   "記憶棉慢釋壓回彈，完美包覆頭頸肩各區",
+   "特選親膚網眼布，柔軟觸感"
+  ],
+  "bullets_en": [
+   "Graphene fiber with highly conductive fabric for antibacterial and deodorizing effects.",
+   "Memory foam provides slow-rebound pressure relief, perfectly enveloping the head, neck, and shoulders.",
+   "Skin-friendly mesh fabric with a noticeably soft touch."
+  ],
+  "match": {
+   "sleepPosition": [
+    "Back",
+    "Side"
+   ],
+   "pillowFeel": [
+    "Contour"
+   ],
+   "shoulderWidth": [
+    "Broad"
+   ],
+   "pillowAllergy": [
+    "Yes",
+    "No"
+   ],
+   "pillowTier": [
+    "Effortless"
+   ]
   },
-  {
-    "id": "7012266",
-    "category": "comforter",
-    "name_zh": "英威達抗菌七孔冬被",
-    "name_en": "INVISTA Antibacterial 7-Hole Fiber Winter Comforter",
-    "type_zh": "科技纖維",
-    "type_en": "Synthetic Fiber",
-    "url": "https://www.fet.com.tw/SalePage/Index/7012266",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7012266/0/0?v=1",
-    "price_twd": 5280,
-    "bullets_zh": [
-      "獨家七孔專利技術 提供卓越的透氣性",
-      "不易滋生細菌、黴菌及過敏原",
-      "可機洗和烘乾 不易結塊變形"
-    ],
-    "bullets_en": [
-      "Exclusive 7-hole patented technology provides exceptional breathability.",
-      "Hypoallergenic, resisting bacteria, mold, and allergens.",
-      "Machine washable and dryable, maintaining its shape without clumping."
-    ],
-    "match": {
-      "comforterTemp": [
-        "Neutral"
-      ],
-      "comforterFeel": [
-        "Heavy"
-      ],
-      "comforterAllergy": [
-        "Washable",
-        "None"
-      ],
-      "comforterScent": [
-        "NoScent"
-      ],
-      "comforterUse": [
-        "Budget"
-      ]
-    },
-    "sort_order": 25,
-    "active": true
+  "sort_order": 83,
+  "active": true
+ },
+ {
+  "id": "11372605",
+  "category": "pillow",
+  "name_zh": "抗菌恆溫雙效記憶枕",
+  "name_en": "Thermo-Regulating Memory Foam Antibacterial Pillow",
+  "type_zh": "記憶棉",
+  "type_en": "Memory Foam",
+  "url": "https://www.fet.com.tw/SalePage/Index/11372605",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11372605/0/0?v=1",
+  "price_twd": 1080,
+  "bullets_zh": [
+   "竹炭抗菌防蟎 有效抑菌除臭",
+   "凝膠舒涼恆溫 久睡不悶熱",
+   "OEKO-TEX透氣親膚表布"
+  ],
+  "bullets_en": [
+   "Bamboo charcoal infused for antibacterial and dust mite resistance, effectively preventing odors.",
+   "Cooling gel for temperature regulation, keeping you comfortable and cool throughout the night.",
+   "OEKO-TEX® certified breathable and skin-friendly cover."
+  ],
+  "match": {
+   "sleepPosition": [
+    "Back",
+    "Side"
+   ],
+   "pillowFeel": [
+    "Contour"
+   ],
+   "shoulderWidth": [
+    "Average"
+   ],
+   "pillowAllergy": [
+    "Yes",
+    "No"
+   ],
+   "pillowTier": [
+    "Effortless"
+   ]
   },
-  {
-    "id": "7012183",
-    "category": "comforter",
-    "name_zh": "波蘭御藏80D羽絨冬被",
-    "name_en": "Polish 80D Imperial Down Winter Comforter",
-    "type_zh": "羽絨",
-    "type_en": "Down",
-    "url": "https://www.fet.com.tw/SalePage/Index/7012183",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7012183/0/0?v=1",
-    "price_twd": 9980,
-    "bullets_zh": [
-      "來自波蘭的高品質羽絨",
-      "蓬鬆輕柔",
-      "吸濕透氣"
-    ],
-    "bullets_en": [
-      "High-quality down from Poland.",
-      "Lightweight and fluffy.",
-      "Moisture-wicking and breathable."
-    ],
-    "match": {
-      "comforterTemp": [
-        "Always Cold"
-      ],
-      "comforterFeel": [
-        "Fluffy"
-      ],
-      "comforterAllergy": [
-        "None"
-      ],
-      "comforterScent": [
-        "MildOk"
-      ],
-      "comforterUse": [
-        "Luxury"
-      ]
-    },
-    "sort_order": 26,
-    "active": true
+  "sort_order": 84,
+  "active": true
+ },
+ {
+  "id": "9466073",
+  "category": "pillow",
+  "name_zh": "銅離子可分離兩用枕（記憶枕+羽絲棉枕）",
+  "name_en": "Copper-Ion Antibacterial Detachable Dual-Use Pillow (Memory Foam & Microfiber)",
+  "type_zh": "記憶棉",
+  "type_en": "Memory Foam",
+  "url": "https://www.fet.com.tw/SalePage/Index/9466073",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/9466073/0/0?v=1",
+  "price_twd": 1580,
+  "bullets_zh": [
+   "機能型枕芯，彈力支撐透氣舒適",
+   "釋壓記憶枕+羽絲棉枕一枕多用",
+   "表布銅離子纖維，抗菌消除異味"
+  ],
+  "bullets_en": [
+   "Functional pillow core providing resilient support and breathable comfort.",
+   "Combines pressure-relief memory foam and microfiber for versatile multi-purpose use.",
+   "Copper-ion fiber cover for antibacterial protection and odor elimination."
+  ],
+  "match": {
+   "sleepPosition": [
+    "Side"
+   ],
+   "pillowFeel": [
+    "Contour"
+   ],
+   "shoulderWidth": [
+    "Average"
+   ],
+   "pillowAllergy": [
+    "Yes",
+    "No"
+   ],
+   "pillowTier": [
+    "Effortless"
+   ]
   },
-  {
-    "id": "7011929",
-    "category": "comforter",
-    "name_zh": "法國尊爵95D羽絨冬被",
-    "name_en": "French 95D Noble Down Winter Comforter",
-    "type_zh": "羽絨",
-    "type_en": "Down",
-    "url": "https://www.fet.com.tw/SalePage/Index/7011929",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7011929/0/0?v=1",
-    "price_twd": 13800,
-    "bullets_zh": [
-      "來自法國的高品質羽絨",
-      "如雲朵般的奢華柔軟與輕盈感",
-      "吸濕透氣"
-    ],
-    "bullets_en": [
-      "Exquisite premium down sourced from France.",
-      "Luxuriously plush and exceptionally lightweight.",
-      "Advanced moisture-wicking and supreme breathability."
-    ],
-    "match": {
-      "comforterTemp": [
-        "Always Cold"
-      ],
-      "comforterFeel": [
-        "Fluffy"
-      ],
-      "comforterAllergy": [
-        "None"
-      ],
-      "comforterScent": [
-        "MildOk"
-      ],
-      "comforterUse": [
-        "Luxury"
-      ]
-    },
-    "sort_order": 27,
-    "active": true
+  "sort_order": 85,
+  "active": true
+ },
+ {
+  "id": "10575975",
+  "category": "pillow",
+  "name_zh": "釋壓記憶棉雙芯力學枕",
+  "name_en": "Dual-Core Ergonomic Pillow with Pressure-Relief Memory Foam",
+  "type_zh": "記憶棉",
+  "type_en": "Memory Foam",
+  "url": "https://www.fet.com.tw/SalePage/Index/10575975",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10575975/0/0?v=1",
+  "price_twd": 1580,
+  "bullets_zh": [
+   "舒適不悶熱",
+   "貼合人體 吸震減壓",
+   "慢回彈支撐 完全包覆",
+   "高密度材質 耐用不易變形"
+  ],
+  "bullets_en": [
+   "Comfortable and Breathable",
+   "Body-Contouring for Shock Absorption and Pressure Relief",
+   "Slow-Rebound Support with Complete Envelopment",
+   "High-Density Material, Durable and Shape-Retaining"
+  ],
+  "match": {
+   "sleepPosition": [
+    "Back"
+   ],
+   "pillowFeel": [
+    "Contour"
+   ],
+   "shoulderWidth": [
+    "Petite"
+   ],
+   "pillowAllergy": [
+    "Yes",
+    "No"
+   ],
+   "pillowTier": [
+    "Effortless"
+   ]
   },
-  {
-    "id": "7013299",
-    "category": "comforter",
-    "name_zh": "御璽雙宮繭長纖蠶絲冬被",
-    "name_en": "Imperial Double-Cocoon Long-Strand Silk Winter Comforter",
-    "type_zh": "蠶絲",
-    "type_en": "Silk",
-    "url": "https://www.fet.com.tw/SalePage/Index/7013299",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7013299/0/0?v=1",
-    "price_twd": 23800,
-    "bullets_zh": [
-      "雙宮繭頂級蓬鬆與卓越保暖",
-      "天然恆溫透氣，恆久乾爽不悶熱",
-      "親膚抗敏防蟎，輕盈無壓舒適感"
-    ],
-    "bullets_en": [
-      "Superior Loft & Exceptional Thermal Retention",
-      "Natural Climate Control & Breathable Moisture Wicking",
-      "Hypoallergenic & Weightless Cloud-Like Comfort"
-    ],
-    "match": {
-      "comforterTemp": [
-        "Neutral"
-      ],
-      "comforterFeel": [
-        "Smooth"
-      ],
-      "comforterAllergy": [
-        "Natural",
-        "None"
-      ],
-      "comforterScent": [
-        "NoScent"
-      ],
-      "comforterUse": [
-        "Luxury"
-      ]
-    },
-    "sort_order": 28,
-    "active": true
+  "sort_order": 86,
+  "active": true
+ },
+ {
+  "id": "7013406",
+  "category": "pillow",
+  "name_zh": "涼夏凝膠枕",
+  "name_en": "Cool Retreat Gel Pillow",
+  "type_zh": "記憶棉",
+  "type_en": "Memory Foam",
+  "url": "https://www.fet.com.tw/SalePage/Index/7013406",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7013406/0/0?v=1",
+  "price_twd": 2280,
+  "bullets_zh": [
+   "具有良好的透氣性，可快速散發人體所產生的熱量",
+   "柔軟舒適性佳，回彈性好，可以緩衝人體壓力，提升睡眠品質",
+   "透氣舒適"
+  ],
+  "bullets_en": [
+   "Advanced Cooling Gel",
+   "Superior Responsive Bounce",
+   "Highly Breathable"
+  ],
+  "match": {
+   "sleepPosition": [
+    "Back"
+   ],
+   "pillowFeel": [
+    "Contour"
+   ],
+   "shoulderWidth": [
+    "Average"
+   ],
+   "pillowAllergy": [
+    "No"
+   ],
+   "pillowTier": [
+    "Enhanced"
+   ]
   },
-  {
-    "id": "9479069",
-    "category": "pillow",
-    "name_zh": "雲柔防蟎抗菌水洗枕",
-    "name_en": "Cloud-Soft Anti-Mite Antibacterial Washable Pillow",
-    "type_zh": "科技纖維",
-    "type_en": "Synthetic Fiber",
-    "url": "https://www.fet.com.tw/SalePage/Index/9479069",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/9479069/0/0?v=1",
-    "price_twd": 580,
-    "bullets_zh": [
-      "100%純棉表布 透氣舒適",
-      "採用日本大和防螨抗菌",
-      "輕鬆水洗"
-    ],
-    "bullets_en": [
-      "100% cotton cover for breathable comfort.",
-      "Treated with Japanese Daiwa anti-mite and antibacterial technology.",
-      "Easy to wash."
-    ],
-    "match": {
-      "pillowFeel": [
-        "Sink"
-      ],
-      "pillowAllergy": [
-        "Yes"
-      ],
-      "pillowTier": [
-        "Effortless"
-      ]
-    },
-    "sort_order": 29,
-    "active": true
+  "sort_order": 87,
+  "active": true
+ },
+ {
+  "id": "6998177",
+  "category": "pillow",
+  "name_zh": "天蠶絲舒眠枕",
+  "name_en": "TENCEL™-Silk Blend Sleep Pillow",
+  "type_zh": "科技纖維",
+  "type_en": "Synthetic Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/6998177",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/6998177/0/0?v=1",
+  "price_twd": 1880,
+  "bullets_zh": [
+   "天然護膚",
+   "吸濕排汗",
+   "冬暖夏涼"
+  ],
+  "bullets_en": [
+   "Naturally skin-friendly.",
+   "Moisture-wicking and breathable.",
+   "Warm in winter and cool in summer."
+  ],
+  "match": {
+   "sleepPosition": [
+    "Side"
+   ],
+   "pillowFeel": [
+    "Balanced"
+   ],
+   "shoulderWidth": [
+    "Broad"
+   ],
+   "pillowAllergy": [
+    "Yes",
+    "No"
+   ],
+   "pillowTier": [
+    "Effortless"
+   ]
   },
-  {
-    "id": "11701296",
-    "category": "pillow",
-    "name_zh": "調色盤彈芯抗菌雲朵水洗枕",
-    "name_en": "Bounce-Core Antibacterial Washable Cloud Pillow",
-    "type_zh": "科技纖維",
-    "type_en": "Synthetic Fiber",
-    "url": "https://www.fet.com.tw/SalePage/Index/11701296",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11701296/0/0?v=1",
-    "price_twd": 620,
-    "bullets_zh": [
-      "蓬軟透氣",
-      "支撐回彈",
-      "輕鬆水洗"
-    ],
-    "bullets_en": [
-      "Plush and breathable.",
-      "Supportive and resilient.",
-      "Easy to wash."
-    ],
-    "match": {
-      "pillowFeel": [
-        "Sink"
-      ],
-      "pillowAllergy": [
-        "Yes"
-      ],
-      "pillowTier": [
-        "Effortless"
-      ]
-    },
-    "sort_order": 30,
-    "active": true
+  "sort_order": 88,
+  "active": true
+ },
+ {
+  "id": "6998414",
+  "category": "pillow",
+  "name_zh": "英威達抗菌七孔枕",
+  "name_en": "INVISTA™ Antibacterial 7-Hole Fiber Pillow",
+  "type_zh": "科技纖維",
+  "type_en": "Synthetic Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/6998414",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/6998414/0/0?v=1",
+  "price_twd": 1680,
+  "bullets_zh": [
+   "獨家七孔專利技術 提供卓越的透氣性",
+   "不易滋生細菌、黴菌及過敏原",
+   "可機洗和烘乾 不易結塊變形"
+  ],
+  "bullets_en": [
+   "Exclusive 7-Hole patented technology provides exceptional breathability.",
+   "Hypoallergenic, resisting bacteria, mold, and allergens.",
+   "Machine washable and dryable, maintaining its shape without clumping."
+  ],
+  "match": {
+   "sleepPosition": [
+    "Back"
+   ],
+   "pillowFeel": [
+    "Sink"
+   ],
+   "shoulderWidth": [
+    "Average"
+   ],
+   "pillowAllergy": [
+    "Yes",
+    "No"
+   ],
+   "pillowTier": [
+    "Effortless"
+   ]
   },
-  {
-    "id": "9479488",
-    "category": "pillow",
-    "name_zh": "舒眠天絲枕",
-    "name_en": "Tencel Lyocell Sleep Pillow",
-    "type_zh": "科技纖維",
-    "type_en": "Synthetic Fiber",
-    "url": "https://www.fet.com.tw/SalePage/Index/9479488",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/9479488/0/0?v=1",
-    "price_twd": 780,
-    "bullets_zh": [
-      "天絲™萊賽爾親膚表布",
-      "柔軟透氣",
-      "輕鬆水洗"
-    ],
-    "bullets_en": [
-      "Tencel™ Lyocell skin-friendly cover",
-      "Soft and breathable",
-      "Easy to wash"
-    ],
-    "match": {
-      "pillowTier": [
-        "Effortless"
-      ]
-    },
-    "_confirm": "bullets written by Brainiak, no FEAC copy supplied",
-    "sort_order": 31,
-    "active": true
+  "sort_order": 89,
+  "active": true
+ },
+ {
+  "id": "9479069",
+  "category": "pillow",
+  "name_zh": "雲柔防蟎抗菌水洗枕",
+  "name_en": "Cloud-Soft Anti-Mite Antibacterial Washable Pillow",
+  "type_zh": "科技纖維",
+  "type_en": "Synthetic Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/9479069",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/9479069/0/0?v=1",
+  "price_twd": 580,
+  "bullets_zh": [
+   "100%純棉表布 透氣舒適",
+   "採用日本大和防蟎抗菌",
+   "輕鬆水洗"
+  ],
+  "bullets_en": [
+   "100% cotton cover for breathable comfort.",
+   "Treated with Japanese Daiwa anti-mite and antibacterial technology.",
+   "Easy to wash."
+  ],
+  "match": {
+   "sleepPosition": [
+    "Back"
+   ],
+   "pillowFeel": [
+    "Sink"
+   ],
+   "shoulderWidth": [
+    "Average"
+   ],
+   "pillowAllergy": [
+    "Yes",
+    "No"
+   ],
+   "pillowTier": [
+    "Effortless"
+   ]
   },
-  {
-    "id": "11372605",
-    "category": "pillow",
-    "name_zh": "抗菌恆溫雙效記憶枕",
-    "name_en": "Thermo-Regulating Memory Foam Antibacterial Pillow",
-    "type_zh": "記憶棉",
-    "type_en": "Memory Foam",
-    "url": "https://www.fet.com.tw/SalePage/Index/11372605",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11372605/0/0?v=1",
-    "price_twd": 980,
-    "bullets_zh": [
-      "竹炭抗菌防蟎 有效抑菌除臭",
-      "凝膠舒涼恆溫 久睡不悶熱",
-      "OEKO-TEX透氣親膚表布"
-    ],
-    "bullets_en": [
-      "Bamboo charcoal infused for antibacterial and dust mite resistance, effectively preventing odors.",
-      "Cooling gel for temperature regulation, keeping you comfortable and cool throughout the night.",
-      "OEKO-TEX® certified breathable and skin-friendly cover."
-    ],
-    "match": {
-      "sleepPosition": [
-        "Back",
-        "Side"
-      ],
-      "shoulderWidth": [
-        "Average"
-      ],
-      "pillowTier": [
-        "Effortless"
-      ]
-    },
-    "sort_order": 32,
-    "active": true
+  "sort_order": 90,
+  "active": true
+ },
+ {
+  "id": "11701296",
+  "category": "pillow",
+  "name_zh": "調色盤彈芯抗菌雲朵水洗枕",
+  "name_en": "Bounce-Core Antibacterial Washable Cloud Pillow",
+  "type_zh": "科技纖維",
+  "type_en": "Synthetic Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/11701296",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11701296/0/0?v=1",
+  "price_twd": 650,
+  "bullets_zh": [
+   "蓬軟透氣",
+   "支撐回彈",
+   "輕鬆水洗"
+  ],
+  "bullets_en": [
+   "Plush and breathable.",
+   "Supportive and resilient.",
+   "Easy to wash."
+  ],
+  "match": {
+   "sleepPosition": [
+    "Back"
+   ],
+   "pillowFeel": [
+    "Sink"
+   ],
+   "shoulderWidth": [
+    "Average"
+   ],
+   "pillowAllergy": [
+    "Yes",
+    "No"
+   ],
+   "pillowTier": [
+    "Effortless"
+   ]
   },
-  {
-    "id": "10575975",
-    "category": "pillow",
-    "name_zh": "釋壓記憶棉雙芯力學枕",
-    "name_en": "Dual-Core Ergonomic Pillow with Pressure-Relief Memory Foam",
-    "type_zh": "記憶棉",
-    "type_en": "Memory Foam",
-    "url": "https://www.fet.com.tw/SalePage/Index/10575975",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10575975/0/0?v=1",
-    "price_twd": 1080,
-    "bullets_zh": [
-      "舒適不悶熱",
-      "貼合人體 吸震減壓",
-      "慢回彈支撐 完全包覆",
-      "高密度材質 耐用不易變形"
-    ],
-    "bullets_en": [
-      "Comfortable and Breathable",
-      "Body-Contouring for Shock Absorption and Pressure Relief",
-      "Slow-Rebound Support with Complete Envelopment",
-      "High-Density Material, Durable and Shape-Retaining"
-    ],
-    "match": {
-      "sleepPosition": [
-        "Back"
-      ],
-      "pillowFeel": [
-        "Contour"
-      ],
-      "shoulderWidth": [
-        "Petite"
-      ],
-      "pillowTier": [
-        "Effortless"
-      ]
-    },
-    "sort_order": 33,
-    "active": true
+  "sort_order": 91,
+  "active": true
+ },
+ {
+  "id": "9479488",
+  "category": "pillow",
+  "name_zh": "舒眠天絲枕",
+  "name_en": "TENCEL™ Lyocell Pillow",
+  "type_zh": "科技纖維",
+  "type_en": "Synthetic Fiber",
+  "url": "https://www.fet.com.tw/SalePage/Index/9479488",
+  "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/9479488/0/0?v=1",
+  "price_twd": 690,
+  "bullets_zh": [],
+  "bullets_en": [
+   "Austrian TENCEL™ Lyocell",
+   "Moisture-Wicking & Hypoallergenic",
+   "Fluffy Comfort & Resilient Support"
+  ],
+  "match": {
+   "sleepPosition": [
+    "Back"
+   ],
+   "shoulderWidth": [
+    "Average"
+   ],
+   "pillowAllergy": [
+    "Yes",
+    "No"
+   ],
+   "pillowTier": [
+    "Effortless"
+   ]
   },
-  {
-    "id": "9466073",
-    "category": "pillow",
-    "name_zh": "銅離子可分離兩用枕",
-    "name_en": "Copper-Ion Antibacterial Detachable Dual-Use Pillow",
-    "type_zh": "記憶棉",
-    "type_en": "Memory Foam",
-    "url": "https://www.fet.com.tw/SalePage/Index/9466073",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/9466073/0/0?v=1",
-    "price_twd": 1180,
-    "bullets_zh": [
-      "機能型枕芯，彈力支撐透氣舒適",
-      "釋壓記憶枕+羽絲棉枕，一枕多用",
-      "表布銅離子纖維，抗菌消除異味"
-    ],
-    "bullets_en": [
-      "Functional pillow core providing resilient support and breathable comfort.",
-      "Pressure-relief memory foam plus microfiber: one pillow, multiple uses.",
-      "Copper-ion fiber cover for antibacterial protection and odor elimination."
-    ],
-    "match": {
-      "sleepPosition": [
-        "Side"
-      ],
-      "pillowFeel": [
-        "Springy"
-      ],
-      "shoulderWidth": [
-        "Average"
-      ],
-      "pillowTier": [
-        "Effortless"
-      ]
-    },
-    "sort_order": 34,
-    "active": true
-  },
-  {
-    "id": "10586828",
-    "category": "pillow",
-    "name_zh": "天然透氣乳膠枕",
-    "name_en": "Natural Breathable Latex Pillow, Shredded",
-    "type_zh": "乳膠",
-    "type_en": "Latex",
-    "url": "https://www.fet.com.tw/SalePage/Index/10586828",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/10586828/0/0?v=1",
-    "price_twd": 1280,
-    "bullets_zh": [
-      "弧型按摩顆粒",
-      "優選泰國天然乳膠",
-      "防蟎抗菌機能"
-    ],
-    "bullets_en": [
-      "Curved Massage Nodules. The nodule design massages the neck and shoulders to promote blood circulation, allowing for complete relaxation during sleep.",
-      "Premium Natural Latex. Made from selected Thai natural latex, it effectively neutralizes odors and blocks static electricity.",
-      "Anti-Mite and Antibacterial Function. Natural latex proteins prevent bacteria and dust mite breeding, while unique natural pores expel body moisture."
-    ],
-    "match": {
-      "sleepPosition": [
-        "Back"
-      ],
-      "pillowFeel": [
-        "Springy"
-      ],
-      "shoulderWidth": [
-        "Average"
-      ],
-      "pillowAllergy": [
-        "Yes",
-        "No"
-      ],
-      "pillowTier": [
-        "Effortless"
-      ]
-    },
-    "sort_order": 35,
-    "active": true
-  },
-  {
-    "id": "9479443",
-    "category": "pillow",
-    "name_zh": "波蘭30D典藏羽絨枕",
-    "name_en": "Polish 30D Heirloom Down Pillow",
-    "type_zh": "羽絨",
-    "type_en": "Down",
-    "url": "https://www.fet.com.tw/SalePage/Index/9479443",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/9479443/0/0?v=1",
-    "price_twd": 1480,
-    "bullets_zh": [
-      "100%純棉表布 透氣舒適",
-      "採用波蘭羽絨 蓬鬆飽滿"
-    ],
-    "bullets_en": [
-      "100% cotton cover, breathable and comfortable",
-      "Filled with Polish down, fluffy and full"
-    ],
-    "match": {
-      "sleepPosition": [
-        "Stomach"
-      ],
-      "pillowFeel": [
-        "Sink"
-      ],
-      "shoulderWidth": [
-        "Petite"
-      ],
-      "pillowAllergy": [
-        "No"
-      ],
-      "pillowTier": [
-        "Effortless"
-      ]
-    },
-    "sort_order": 36,
-    "active": true
-  },
-  {
-    "id": "8919542",
-    "category": "pillow",
-    "name_zh": "石墨烯釋壓可調式飛碟記憶枕",
-    "name_en": "Graphene Pressure-Relief Adjustable Disc Memory Foam Pillow",
-    "type_zh": "記憶棉",
-    "type_en": "Memory Foam",
-    "url": "https://www.fet.com.tw/SalePage/Index/8919542",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/8919542/0/0?v=1",
-    "price_twd": 1580,
-    "bullets_zh": [
-      "石墨烯纖維，高傳導布料抗菌除臭",
-      "記憶棉慢釋壓回彈，完美包覆頭頸肩各區",
-      "特選親膚網眼布，柔軟觸感"
-    ],
-    "bullets_en": [
-      "Graphene fiber with highly conductive fabric for antibacterial and deodorizing effects.",
-      "Memory foam provides slow-rebound pressure relief, perfectly enveloping the head, neck, and shoulders.",
-      "Skin-friendly mesh fabric with a noticeably soft touch."
-    ],
-    "match": {
-      "sleepPosition": [
-        "Back",
-        "Side"
-      ],
-      "pillowFeel": [
-        "Contour"
-      ],
-      "shoulderWidth": [
-        "Broad"
-      ],
-      "pillowTier": [
-        "Effortless"
-      ]
-    },
-    "sort_order": 37,
-    "active": true
-  },
-  {
-    "id": "7013406",
-    "category": "pillow",
-    "name_zh": "涼夏凝膠枕",
-    "name_en": "Cool Retreat Gel Pillow",
-    "type_zh": "凝膠",
-    "type_en": "Gel",
-    "url": "https://www.fet.com.tw/SalePage/Index/7013406",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7013406/0/0?v=1",
-    "price_twd": 2280,
-    "bullets_zh": [
-      "具有良好的透氣性，可快速散發人體所產生的熱量",
-      "柔軟舒適性佳，回彈性好，可以緩衝人體壓力，提升睡眠品質",
-      "透氣舒適"
-    ],
-    "bullets_en": [
-      "Advanced Cooling Gel",
-      "Superior Responsive Bounce",
-      "Highly Breathable"
-    ],
-    "match": {
-      "sleepPosition": [
-        "Back"
-      ],
-      "pillowFeel": [
-        "Contour"
-      ],
-      "shoulderWidth": [
-        "Average"
-      ],
-      "pillowTier": [
-        "Enhanced"
-      ]
-    },
-    "sort_order": 38,
-    "active": true
-  },
-  {
-    "id": "11615976",
-    "category": "pillow",
-    "name_zh": "自然眠乳膠枕",
-    "name_en": "Natural Rest Latex Pillow",
-    "type_zh": "乳膠",
-    "type_en": "Latex",
-    "url": "https://www.fet.com.tw/SalePage/Index/11615976",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11615976/0/0?v=1",
-    "price_twd": 2880,
-    "bullets_zh": [
-      "100%天然乳膠，Q彈支撐力性",
-      "蜂巢式透氣孔 清爽排汗不悶熱"
-    ],
-    "bullets_en": [
-      "100% natural latex for highly resilient support.",
-      "Honeycomb ventilation holes for a refreshing, moisture-wicking, and breathable experience."
-    ],
-    "match": {
-      "sleepPosition": [
-        "Side"
-      ],
-      "pillowFeel": [
-        "Springy"
-      ],
-      "shoulderWidth": [
-        "Broad"
-      ],
-      "pillowAllergy": [
-        "Yes",
-        "No"
-      ],
-      "pillowTier": [
-        "Enhanced"
-      ]
-    },
-    "sort_order": 39,
-    "active": true
-  },
-  {
-    "id": "6998414",
-    "category": "pillow",
-    "name_zh": "英威達抗菌七孔枕",
-    "name_en": "INVISTA Antibacterial 7-Hole Fiber Pillow",
-    "type_zh": "科技纖維",
-    "type_en": "Synthetic Fiber",
-    "url": "https://www.fet.com.tw/SalePage/Index/6998414",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/6998414/0/0?v=1",
-    "price_twd": 3200,
-    "bullets_zh": [
-      "獨家七孔專利技術 提供卓越的透氣性",
-      "不易滋生細菌、黴菌及過敏原",
-      "可機洗和烘乾 不易結塊變形"
-    ],
-    "bullets_en": [
-      "Exclusive 7-hole patented technology provides exceptional breathability.",
-      "Hypoallergenic, resisting bacteria, mold, and allergens.",
-      "Machine washable and dryable, maintaining its shape without clumping."
-    ],
-    "match": {
-      "sleepPosition": [
-        "Back"
-      ],
-      "pillowFeel": [
-        "Sink"
-      ],
-      "shoulderWidth": [
-        "Petite"
-      ],
-      "pillowAllergy": [
-        "Yes"
-      ],
-      "pillowTier": [
-        "Effortless"
-      ]
-    },
-    "sort_order": 40,
-    "active": true
-  },
-  {
-    "id": "6998177",
-    "category": "pillow",
-    "name_zh": "天蠶絲舒眠枕",
-    "name_en": "Tencel-Silk Blend Sleep Pillow",
-    "type_zh": "科技纖維",
-    "type_en": "Synthetic Fiber",
-    "url": "https://www.fet.com.tw/SalePage/Index/6998177",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/6998177/0/0?v=1",
-    "price_twd": 3500,
-    "bullets_zh": [
-      "天然護膚",
-      "吸濕排汗",
-      "冬暖夏涼"
-    ],
-    "bullets_en": [
-      "Naturally skin-friendly.",
-      "Moisture-wicking and breathable.",
-      "Warm in winter and cool in summer."
-    ],
-    "match": {
-      "sleepPosition": [
-        "Side"
-      ],
-      "pillowFeel": [
-        "Balanced"
-      ],
-      "shoulderWidth": [
-        "Average"
-      ],
-      "pillowTier": [
-        "Effortless"
-      ]
-    },
-    "sort_order": 41,
-    "active": true
-  },
-  {
-    "id": "7013427",
-    "category": "pillow",
-    "name_zh": "銀抗菌舒眠記憶枕",
-    "name_en": "Silver-Ion Antibacterial Sleep Memory Foam Pillow",
-    "type_zh": "記憶棉",
-    "type_en": "Memory Foam",
-    "url": "https://www.fet.com.tw/SalePage/Index/7013427",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7013427/0/0?v=1",
-    "price_twd": 4200,
-    "bullets_zh": [
-      "人體工學",
-      "銀離子抗菌",
-      "透氣乾爽",
-      "釋壓支撐"
-    ],
-    "bullets_en": [
-      "Ergonomic Design",
-      "Silver Ion Antimicrobial Technology",
-      "Ultra-Breathable & Moisture-Wicking",
-      "Targeted Pressure-Relieving Support"
-    ],
-    "match": {
-      "sleepPosition": [
-        "Back",
-        "Side"
-      ],
-      "pillowFeel": [
-        "Contour"
-      ],
-      "shoulderWidth": [
-        "Average"
-      ],
-      "pillowTier": [
-        "Enhanced"
-      ]
-    },
-    "sort_order": 42,
-    "active": true
-  },
-  {
-    "id": "11228476",
-    "category": "pillow",
-    "name_zh": "防螨抗菌乳膠工學枕",
-    "name_en": "Ergonomic Anti-Mite Antibacterial Latex Pillow (2-pack)",
-    "type_zh": "乳膠",
-    "type_en": "Latex",
-    "url": "https://www.fet.com.tw/SalePage/Index/11228476",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/11228476/0/0?v=1",
-    "price_twd": 4200,
-    "bullets_zh": [
-      "100%天然乳膠，Q彈支撐力佳",
-      "蜂巢式透氣孔，清爽排汗不悶熱",
-      "天然防螨抗菌"
-    ],
-    "bullets_en": [
-      "100% natural latex for excellent resilient support.",
-      "Honeycomb ventilation holes for a refreshing, moisture-wicking, and breathable sleep.",
-      "Naturally anti-mite and antibacterial, eco-friendly"
-    ],
-    "match": {
-      "sleepPosition": [
-        "Back",
-        "Side"
-      ],
-      "pillowFeel": [
-        "Springy"
-      ],
-      "shoulderWidth": [
-        "Average"
-      ],
-      "pillowAllergy": [
-        "Yes",
-        "No"
-      ],
-      "pillowTier": [
-        "Enhanced"
-      ]
-    },
-    "sort_order": 43,
-    "active": true
-  },
-  {
-    "id": "7013349",
-    "category": "pillow",
-    "name_zh": "波蘭70D御藏羽絨枕",
-    "name_en": "Polish 70D Imperial Down Pillow",
-    "type_zh": "羽絨",
-    "type_en": "Down",
-    "url": "https://www.fet.com.tw/SalePage/Index/7013349",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7013349/0/0?v=1",
-    "price_twd": 7980,
-    "bullets_zh": [
-      "包覆性佳",
-      "輕柔舒適",
-      "吸濕透氣"
-    ],
-    "bullets_en": [
-      "Excellent enveloping comfort",
-      "Soft and lightweight",
-      "Moisture-wicking and breathable"
-    ],
-    "match": {
-      "sleepPosition": [
-        "Stomach",
-        "Back"
-      ],
-      "pillowFeel": [
-        "Sink"
-      ],
-      "shoulderWidth": [
-        "Average"
-      ],
-      "pillowAllergy": [
-        "No"
-      ],
-      "pillowTier": [
-        "Luxury"
-      ]
-    },
-    "sort_order": 44,
-    "active": true
-  },
-  {
-    "id": "7013366",
-    "category": "pillow",
-    "name_zh": "法國95D尊爵羽絨枕",
-    "name_en": "French 95D Noble Down Pillow",
-    "type_zh": "羽絨",
-    "type_en": "Down",
-    "url": "https://www.fet.com.tw/SalePage/Index/7013366",
-    "image_url": "https://img.91app.com/webapi/imagesV3/Original/SalePage/7013366/0/0?v=1",
-    "price_twd": 10980,
-    "bullets_zh": [
-      "95%頂級羽絨",
-      "高效回彈",
-      "蓬柔飽滿"
-    ],
-    "bullets_en": [
-      "95% Ultra-Premium Down",
-      "Exceptional Lasting Resilience",
-      "Luxuriously Plush and Voluminous"
-    ],
-    "match": {
-      "sleepPosition": [
-        "Back",
-        "Side"
-      ],
-      "pillowFeel": [
-        "Sink"
-      ],
-      "shoulderWidth": [
-        "Broad"
-      ],
-      "pillowAllergy": [
-        "No"
-      ],
-      "pillowTier": [
-        "Luxury"
-      ]
-    },
-    "sort_order": 45,
-    "active": true
-  }
+  "sort_order": 92,
+  "active": true
+ }
 ]

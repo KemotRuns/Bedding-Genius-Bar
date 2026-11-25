@@ -1,5 +1,5 @@
 import type { QuizAnswers, ProductCategory } from './types'
-import { getRecommendation, CATEGORY_QUESTIONS } from './engine'
+import { getRecommendation, pickTiers, CATEGORY_QUESTIONS } from './engine'
 import type { Catalog } from './engine'
 import { addDoc, collection } from 'firebase/firestore'
 import { db, isFirebaseConfigured } from './firebase'
@@ -58,7 +58,7 @@ export function buildSession(input: { name: string; email?: string; lang: string
   const rec = getRecommendation(input.answers, input.catalog)
   const done = completedSections(input.answers)
   const pick = (list: typeof rec.sheets): RecommendedItem | undefined => {
-    const top = list[0]
+    const top = pickTiers(list)?.primary
     return top ? { id: top.product.id, name: top.product.name_en, name_zh: top.product.name_zh, url: top.product.url } : undefined
   }
   return {

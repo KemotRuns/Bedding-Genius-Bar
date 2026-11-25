@@ -35,11 +35,11 @@ export interface Product {
   active: boolean
 }
 
-// ─── Quiz answers (v2 question set, 1020 spreadsheet) ───────────────────────
+// ─── Quiz answers (v2.2 question set, 1123 workbook) ───────────────────────
 
-export type NightHeat = 'Very Hot' | 'Warm' | 'Neutral' | 'Cold'
-export type SkinType = 'SensitiveLux' | 'SensitiveRefined' | 'Everyday'
-export type CareLevel = 'Minimal' | 'Standard' | 'Careful'
+export type NightHeat = 'Hot' | 'Neutral'
+export type SkinType = 'Sensitive' | 'None'
+export type CareLevel = 'Standard' | 'Careful'
 export type SensoryPref = 'Cooling' | 'Silky' | 'Classic'
 
 export type ComforterTemp = 'Always Cold' | 'Neutral' | 'Hot'
@@ -82,6 +82,17 @@ export interface ScoredProduct {
   score: number
   maxScore: number           // sum of weights of the answered questions for this category
   matched: (keyof QuizAnswers)[]
+}
+
+/** Price tier of a displayed pick (FEAC 11-23: entry-level + premium upgrade per result). */
+export type PriceTier = 'entry' | 'premium'
+
+/** The one or two products shown for a category. */
+export interface TieredPick {
+  primary: ScoredProduct
+  secondary?: ScoredProduct
+  primaryTier?: PriceTier
+  secondaryTier?: PriceTier
 }
 
 export interface RecommendationResult {

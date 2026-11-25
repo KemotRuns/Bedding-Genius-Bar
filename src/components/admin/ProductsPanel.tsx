@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { collection, deleteDoc, doc, getDocs, setDoc, updateDoc, writeBatch } from 'firebase/firestore'
 import { db } from '../../lib/firebase'
 import catalogSeed from '../../data/catalog.json'
-import { imageUrlFor } from '../../lib/products'
+import { imageUrlFor, CATALOG_REV, isCurrentRev } from '../../lib/products'
 import type { ProductRow } from '../../lib/products'
 import { QUESTION_SEED, SECTION_LONG_TO_SHORT } from '../../lib/questionData'
 import type { ProductCategory } from '../../lib/types'
@@ -21,7 +21,7 @@ const CAT_SECTION: Record<ProductCategory, string> = { sheet: 'sheets', comforte
 const MATERIALS: { value: string; label: string }[] = [
   { value: 'tencel80',  label: '80S Tencel™ Lyocell · 80支天絲' },
   { value: 'tencel60',  label: '60S Tencel™ Lyocell · 60支天絲' },
-  { value: 'cotton60',  label: '60S Cotton · 60支精梳棉' },
+  { value: 'cotton60',  label: '60S / 300TC Long-staple Cotton · 60支長纖棉' },
   { value: 'cotton40',  label: '40S Cotton · 40支精梳棉' },
   { value: 'cotton500', label: '500/600TC High-count Cotton · 高織數棉' },
   { value: 'topcool',   label: 'TopCool cooling fibre · TopCool 涼感' },
@@ -83,23 +83,32 @@ export default function ProductsPanel() {
   }, [])
 
   // One-click seed: writes the bundled catalog (src/data/catalog.json) into Firestore.
-  // Used on first setup and to restore defaults; existing ids are overwritten.
+  // Used on first setup, to restore defaults, and to move the database to a new
+  // catalog revision: built-in ids are overwritten and products left over from an
+  // older revision are removed. Products added under the current revision are kept.
   async function importBundled() {
     if (!db) return
-    if (rows.length > 0 && !confirm(`Overwrite ${catalogSeed.length} built-in products in the database? Products you added yourself are kept.`)) return
+    const seedIds = new Set(catalogSeed.map(p => p.id))
+    const stale = rows.filter(r => !isCurrentRev(r) && !seedIds.has(r.id))
+    const msg = stale.length > 0
+      ? `Update the database to the new catalog? ${catalogSeed.length} built-in products are written and ${stale.length} products from the previous catalog are removed.`
+      : `Overwrite ${catalogSeed.length} built-in products in the database? Products you added yourself are kept.`
+    if (rows.length > 0 && !confirm(msg)) return
     setSaving(true); setError('')
     try {
       const batch = writeBatch(db)
       for (const p of catalogSeed) {
         const { id, ...data } = p
-        batch.set(doc(db, 'products', id), data)
+        batch.set(doc(db, 'products', id), { ...data, rev: CATALOG_REV })
       }
+      for (const r of stale) batch.delete(doc(db, 'products', r.id))
       await batch.commit()
       setLoading(true); await load()
     } catch (e) { setError((e as Error).message) }
     setSaving(false)
   }
 
+  const outdated = rows.length > 0 && !rows.some(isCurrentRev)
   const filtered = useMemo(() => rows.filter(r => cat === 'all' || (r.category as ProductCategory) === cat), [rows, cat])
 
   async function save() {
@@ -124,6 +133,7 @@ export default function ProductsPanel() {
       style: draft.category === 'sheet' ? draft.style : null,
       sort_order: Number(draft.sort_order) || 0,
       active: draft.active,
+      rev: CATALOG_REV,
     }
     try {
       await setDoc(doc(db, 'products', id), payload, { merge: true })
@@ -212,7 +222,7 @@ export default function ProductsPanel() {
               </>
             )}
             <Field label="Sort order (lower shows first on ties)"><input type="number" className={inputCls} value={draft.sort_order} onChange={e => set('sort_order', Number(e.target.value))} /></Field>
-            <Field label="Price NT$ (optional, not shown to customers)"><input type="number" className={inputCls} value={draft.price_twd ?? ''} onChange={e => set('price_twd', e.target.value ? Number(e.target.value) : null)} /></Field>
+            <Field label="Price NT$ (not shown to customers; used to pick the entry and premium options)"><input type="number" className={inputCls} value={draft.price_twd ?? ''} onChange={e => set('price_twd', e.target.value ? Number(e.target.value) : null)} /></Field>
           </div>
         </Section>
 
@@ -227,11 +237,11 @@ export default function ProductsPanel() {
         {/* 4. Matching */}
         {draft.category === 'sheet' ? (
           <Section n="4" title="When to recommend">
-            <p className="text-sm text-charcoal/55">Bedding sets are matched automatically from the material tier and design style above. Nothing else to set.</p>
+            <p className="text-sm text-charcoal/55">Bedding sets are matched automatically from the material tier and design style above (material first, then style). Add the price so the app can show an entry option and a premium upgrade.</p>
           </Section>
         ) : (
           <Section n="4" title="Recommend this product when the customer answers…">
-            <p className="text-xs text-charcoal/45 mb-4">Tick every answer this product suits. The more ticks a product collects from a customer's answers, the higher it ranks.</p>
+            <p className="text-xs text-charcoal/45 mb-4">Tick every answer this product suits. The more ticks a product collects from a customer's answers, the higher it ranks. Allergy and no-scent answers are strict: a product that is not ticked for them is never shown to that customer.</p>
             <div className="space-y-5">
               {sectionQs.map(q => (
                 <div key={q.id}>
@@ -277,7 +287,7 @@ export default function ProductsPanel() {
         <div className="flex-1" />
         <button onClick={importBundled} disabled={saving} title="Writes the built-in catalog shipped with the app into the database"
           className="text-xs px-3 py-2 rounded-xl border border-charcoal/15 text-charcoal/50 hover:bg-white/60 disabled:opacity-50 cursor-pointer">
-          {saving ? 'Importing…' : rows.length === 0 ? `Import built-in catalog (${catalogSeed.length})` : 'Restore built-in catalog'}
+          {saving ? 'Importing…' : rows.length === 0 ? `Import built-in catalog (${catalogSeed.length})` : outdated ? `Update database to the new catalog (${catalogSeed.length})` : 'Restore built-in catalog'}
         </button>
         <select className="text-sm px-3 py-2 rounded-xl border border-charcoal/15 bg-white/70 text-charcoal/70 cursor-pointer"
           onChange={e => { if (e.target.value) { setError(''); setDraft(blankDraft(e.target.value as ProductCategory)); e.target.value = '' } }} defaultValue="">
@@ -285,6 +295,12 @@ export default function ProductsPanel() {
           {CATEGORIES.map(c => <option key={c} value={c}>New: {CAT_LABEL[c]}</option>)}
         </select>
       </div>
+
+      {outdated && (
+        <p className="text-sm text-charcoal/70 bg-gold/10 border border-gold/30 rounded-xl px-4 py-3 mb-5">
+          The database still holds the previous catalog. The app is showing customers the new built-in catalog ({catalogSeed.length} products). Click “Update database to the new catalog” to edit the new products here.
+        </p>
+      )}
 
       {loading ? <p className="text-charcoal/40 text-sm py-12 text-center">Loading…</p>
         : error ? <p className="text-red-500 text-sm py-12 text-center">{error}</p>

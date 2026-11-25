@@ -1,5 +1,13 @@
 import type { Product } from './types'
 
+// Catalog revision. Bump when the question set or matching rules change in a way
+// that makes products stored under the previous revision unusable (rev 2 = FEAC
+// 1123 workbook: new answer values, hard exclusions, price tiers). The kiosk
+// ignores database products from an older revision and uses the built-in
+// catalog until an admin updates the database from /admin.
+export const CATALOG_REV = 2
+export const isCurrentRev = (r: { rev?: number | null }) => (r.rev ?? 1) >= CATALOG_REV
+
 // Firestore `products/{id}` document (+ id) → Product
 export interface ProductRow {
   id: string; category: string
@@ -11,6 +19,7 @@ export interface ProductRow {
   match: Record<string, string[]> | null
   material: string | null; style: string | null
   sort_order: number; active: boolean
+  rev?: number | null
 }
 
 export function imageUrlFor(url: string): string {
