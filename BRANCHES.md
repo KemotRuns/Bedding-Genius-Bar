@@ -4,15 +4,28 @@
 
 | Branch | Status | Base | Description |
 |--------|--------|------|-------------|
-| `main` | **Stable / Live** | — | v1.1 — 7-question quiz, 3-product results (sheets, pillow, comforter) |
+| `main` | **Stable / Live** | — | v2.3 (tag `v2.3`) — live on tn-probar.netlify.app via manual `--prod` deploy. Releases are tagged from here. |
 | `develop` | Integration | main | Mirror of main. Merge features here before promoting to main. |
 | `feature/v1.2-advisory-questions` | In Review | main | 11 advisory questions split into 3 labeled sections. Not yet merged. |
 | `feature/v1.3-product-sections` | Done (superseded) | v1.2 | Landing with 3 product entry points; per-product quiz, unified Sleep Plan, Supabase + full admin |
-| `feature/v2-fet-catalog` | **In Progress** | v1.3 | v2: real FET.com catalog with photos + links, FEAC's 1020 question set, set-based matching, products-only admin |
+| `feature/v2-fet-catalog` | Working branch | v1.3 | v2 line: real FET.com catalog, FEAC question sets; kept equal to `main` at each release |
 
 ---
 
 ## Version History
+
+Never push to `feature/v1.3-product-sections`: Netlify still auto-builds production from it.
+
+### v2.3 — tag `v2.3` (2026-11-27, live)
+- Downloadable Sleep Plan PDF on the results page (built in the browser, clickable FET.com links; share sheet on iPhone / iPad, normal download elsewhere). Product photos go through the `/img91/*` proxy in `public/_redirects`.
+- "Save my plan" form removed; no name or email is collected.
+- Anonymous response recording: written automatically on the results page, marked when the PDF is taken; one row per visit in admin (`visit_id`).
+- Admin Responses: Language + PDF columns, download filter, CSV `downloaded_pdf`; name / email / search removed.
+
+### v2.2 — tag `v2.2` (2026-11-25)
+- FEAC 1123 workbook: 92 products, new question wording, hard exclusions (allergy, sensitive skin, no scent), material-first bedding ranking, entry + premium picks.
+- Sleep-first results page: "What we heard", cause-and-effect reasons, softer labels.
+- Save form no longer promised an emailed report.
 
 ### v1.1 — `main` (current live)
 - Comforter added as third recommendation (Silk, Wool, Down, Tech Fiber)

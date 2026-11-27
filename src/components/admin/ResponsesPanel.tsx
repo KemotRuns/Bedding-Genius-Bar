@@ -5,8 +5,10 @@ import { db } from '../../lib/firebase'
 interface ResponseRow {
   id: string
   created_at: string
-  name: string | null
-  email: string | null
+  visit_id?: string | null
+  downloaded?: boolean
+  /** Every database document behind this row (a visit can write several snapshots). */
+  docIds: string[]
   lang: string | null
   answers: Record<string, string>
   completed_sections: string[]
@@ -26,10 +28,33 @@ function csvCell(v: unknown): string {
   return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
 }
 
+/**
+ * The kiosk writes a new snapshot whenever a visit changes (more sections done,
+ * edited answers, PDF taken). Show one row per visit: its latest snapshot, marked
+ * as downloaded if any snapshot was. Rows saved before visit ids existed stand alone.
+ * Expects rows newest first.
+ */
+function collapseVisits(rows: ResponseRow[]): ResponseRow[] {
+  const byVisit = new Map<string, ResponseRow>()
+  const out: ResponseRow[] = []
+  for (const r of rows) {
+    const seen = r.visit_id ? byVisit.get(r.visit_id) : undefined
+    if (seen) {
+      seen.docIds.push(...r.docIds)
+      seen.downloaded = Boolean(seen.downloaded || r.downloaded)
+      continue
+    }
+    const row = { ...r, docIds: [...r.docIds] }
+    if (r.visit_id) byVisit.set(r.visit_id, row)
+    out.push(row)
+  }
+  return out
+}
+
 function toCsv(rows: ResponseRow[]): string {
-  const header = ['created_at', 'name', 'email', 'lang', 'completed_sections', 'sheet', 'comforter', 'pillow', ...ANSWER_KEYS]
+  const header = ['created_at', 'lang', 'downloaded_pdf', 'completed_sections', 'sheet', 'comforter', 'pillow', ...ANSWER_KEYS]
   const lines = rows.map(r => [
-    r.created_at, r.name ?? '', r.email ?? '', r.lang ?? '',
+    r.created_at, r.lang ?? '', r.downloaded ? 'yes' : 'no',
     (r.completed_sections ?? []).join(' | '),
     recName(r.recommendation?.sheet), recName(r.recommendation?.comforter), recName(r.recommendation?.pillow),
     ...ANSWER_KEYS.map(k => r.answers?.[k] ?? ''),
@@ -41,15 +66,14 @@ export default function ResponsesPanel() {
   const [rows, setRows] = useState<ResponseRow[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [query, setQuery] = useState('')
-  const [emailOnly, setEmailOnly] = useState(false)
+  const [downloadedOnly, setDownloadedOnly] = useState(false)
   const [expanded, setExpanded] = useState<string | null>(null)
 
   // Awaits first, so no setState runs synchronously inside the mount effect.
   async function fetchRows(): Promise<ResponseRow[]> {
     if (!db) return []
     const snap = await getDocs(fsQuery(collection(db, 'responses'), orderBy('created_at', 'desc')))
-    return snap.docs.map(d => ({ id: d.id, ...(d.data() as Omit<ResponseRow, 'id'>) }))
+    return collapseVisits(snap.docs.map(d => ({ ...(d.data() as Omit<ResponseRow, 'id' | 'docIds'>), id: d.id, docIds: [d.id] })))
   }
   async function load() {
     try { setRows(await fetchRows()); setError('') } catch (e) { setError((e as Error).message) }
@@ -69,19 +93,14 @@ export default function ResponsesPanel() {
     return () => { cancelled = true }
   }, [])
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    return rows.filter(r => {
-      if (emailOnly && !r.email) return false
-      if (!q) return true
-      return (r.name ?? '').toLowerCase().includes(q) || (r.email ?? '').toLowerCase().includes(q)
-    })
-  }, [rows, query, emailOnly])
+  const filtered = useMemo(() => rows.filter(r => !downloadedOnly || r.downloaded), [rows, downloadedOnly])
+  const downloadedCount = useMemo(() => rows.filter(r => r.downloaded).length, [rows])
 
   async function handleDelete(id: string) {
     if (!db) return
     if (!confirm('Delete this response permanently?')) return
-    try { await deleteDoc(doc(db, 'responses', id)) } catch (e) { alert((e as Error).message); return }
+    const row = rows.find(r => r.id === id)
+    try { for (const docId of row?.docIds ?? [id]) await deleteDoc(doc(db, 'responses', docId)) } catch (e) { alert((e as Error).message); return }
     setRows(prev => prev.filter(r => r.id !== id))
   }
 
@@ -101,15 +120,12 @@ export default function ResponsesPanel() {
     <>
         {/* Toolbar */}
         <div className="flex flex-wrap items-center gap-3 mb-5">
-          <input
-            value={query}
-            onChange={e => setQuery(e.target.value)}
-            placeholder="Search name or email…"
-            className="flex-1 min-w-[200px] px-4 py-2.5 rounded-xl bg-white/70 border border-charcoal/12 text-sm text-charcoal outline-none focus:border-gold transition-colors"
-          />
+          <p className="flex-1 min-w-[200px] text-sm text-charcoal/60">
+            {loading ? '' : `${rows.length} response${rows.length === 1 ? '' : 's'} · ${downloadedCount} downloaded the PDF`}
+          </p>
           <label className="flex items-center gap-2 text-sm text-charcoal/60 cursor-pointer select-none">
-            <input type="checkbox" checked={emailOnly} onChange={e => setEmailOnly(e.target.checked)} />
-            Has email
+            <input type="checkbox" checked={downloadedOnly} onChange={e => setDownloadedOnly(e.target.checked)} />
+            Downloaded PDF only
           </label>
           <button onClick={() => { setLoading(true); void load() }} className="text-sm px-4 py-2.5 rounded-xl border border-charcoal/15 text-charcoal/70 hover:bg-white/60 transition-colors cursor-pointer">Refresh</button>
           <button onClick={handleExport} disabled={filtered.length === 0} className="text-sm px-4 py-2.5 rounded-xl bg-charcoal text-cream hover:bg-charcoal/85 transition-colors disabled:opacity-40 cursor-pointer">Export CSV ({filtered.length})</button>
@@ -128,8 +144,8 @@ export default function ResponsesPanel() {
                 <thead>
                   <tr className="text-left text-[11px] uppercase tracking-wider text-charcoal/40 border-b border-charcoal/10">
                     <th className="px-4 py-3 font-semibold">Date</th>
-                    <th className="px-4 py-3 font-semibold">Name</th>
-                    <th className="px-4 py-3 font-semibold">Email</th>
+                    <th className="px-4 py-3 font-semibold">Language</th>
+                    <th className="px-4 py-3 font-semibold">PDF</th>
                     <th className="px-4 py-3 font-semibold">Sections</th>
                     <th className="px-4 py-3 font-semibold">Recommendation</th>
                     <th className="px-4 py-3 font-semibold"></th>
@@ -140,8 +156,8 @@ export default function ResponsesPanel() {
                     <Fragment key={r.id}>
                       <tr className="border-b border-charcoal/6 hover:bg-white/40">
                         <td className="px-4 py-3 text-charcoal/60 whitespace-nowrap">{fmtDate(r.created_at)}</td>
-                        <td className="px-4 py-3 text-charcoal font-medium">{r.name || '—'}</td>
-                        <td className="px-4 py-3 text-charcoal/60">{r.email || '—'}</td>
+                        <td className="px-4 py-3 text-charcoal/60">{r.lang === 'zh' ? '中文' : r.lang === 'en' ? 'English' : '—'}</td>
+                        <td className="px-4 py-3 text-charcoal/60">{r.downloaded ? 'Downloaded' : '—'}</td>
                         <td className="px-4 py-3 text-charcoal/50">{(r.completed_sections ?? []).join(', ') || '—'}</td>
                         <td className="px-4 py-3 text-charcoal/60">
                           <span className="text-xs">{[recName(r.recommendation?.sheet), recName(r.recommendation?.comforter), recName(r.recommendation?.pillow)].filter(Boolean).join(' · ') || '—'}</span>

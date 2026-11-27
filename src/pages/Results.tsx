@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useMemo, useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { getRecommendation, matchPercent, pickTiers, MATERIAL_BROWSE_URL } from '../lib/engine'
@@ -6,8 +6,10 @@ import { useCatalog } from '../lib/CatalogContext'
 import type { QuizAnswers, ScoredProduct, PriceTier } from '../lib/types'
 import { useLang } from '../lib/LanguageContext'
 import { tr } from '../lib/i18n'
-import { buildSession, saveSession, isSectionComplete } from '../lib/session'
+import { isSectionComplete, recordVisit, endVisit } from '../lib/session'
 import { heardSummary, reasonsFor } from '../lib/advice'
+import { buildSleepPlanPdf, deliverFile, usesShareSheet } from '../lib/report'
+import type { ReportData } from '../lib/report'
 
 const SECTION_ORDER = ['sheets', 'comforter', 'pillow'] as const
 type SectionId = typeof SECTION_ORDER[number]
@@ -76,6 +78,36 @@ const TIER_LABEL: Record<PriceTier, { en: string; zh: string }> = {
   premium: { en: 'If you want to go further', zh: '想更進一步' },
 }
 
+const STYLE_LABEL: Record<string, { en: string; zh: string }> = {
+  Nature: { en: 'Nature-inspired', zh: '自然風格' }, Minimal: { en: 'Minimalist', zh: '簡約風格' },
+  Playful: { en: 'Playful', zh: '主題童趣' }, Classic: { en: 'Classic luxury', zh: '經典奢華' },
+}
+const WINTER_NOTE = {
+  en: 'This is a winter-weight comforter. No lighter option is currently available in the materials that fit your allergy and scent answers.',
+  zh: '此款為冬被。符合您過敏與氣味需求的材質，目前沒有較輕薄的款式。',
+}
+
+/** Everything a recommendation shows, shared by the on-screen card and the PDF. */
+function cardView(section: SectionId, top: ScoredProduct, tier: PriceTier | undefined, alternative: boolean, answers: QuizAnswers, zh: boolean) {
+  const meta = SECTIONS[section]
+  const p = top.product
+  return {
+    name: zh ? p.name_zh : p.name_en,
+    altName: zh ? p.name_en : p.name_zh,
+    // Fall back to the other language when a product has copy in only one.
+    bullets: zh ? (p.bullets_zh.length ? p.bullets_zh : p.bullets_en) : (p.bullets_en.length ? p.bullets_en : p.bullets_zh),
+    headLabel: alternative && !tier ? (zh ? '也可考慮' : 'Also consider') : (zh ? meta.cardLabel.zh : meta.cardLabel.en),
+    tierLabel: tier ? (zh ? TIER_LABEL[tier].zh : TIER_LABEL[tier].en) : undefined,
+    typeLabel: zh ? p.type_zh : p.type_en,
+    styleLabel: p.style && STYLE_LABEL[p.style] ? (zh ? STYLE_LABEL[p.style].zh : STYLE_LABEL[p.style].en) : undefined,
+    // Warm sleeper, but the allergy / scent rules left only winter-weight comforters.
+    winterNote: section === 'comforter' && answers.comforterTemp === 'Hot' && !top.matched.includes('comforterTemp'),
+    browseUrl: section === 'sheets' && p.material ? MATERIAL_BROWSE_URL[p.material] : null,
+    // "Why this fits": one cause-and-effect sentence per criterion this product satisfies.
+    reasons: reasonsFor(top, answers, zh),
+  }
+}
+
 function ProductCard({ section, top, tier, alternative = false, answers, zh }: {
   section: SectionId; top: ScoredProduct; tier?: PriceTier; alternative?: boolean; answers: QuizAnswers; zh: boolean
 }) {
@@ -83,17 +115,7 @@ function ProductCard({ section, top, tier, alternative = false, answers, zh }: {
   const p = top.product
   const accentBg = meta.accent === 'gold' ? 'bg-gold/8 border-gold/20' : 'bg-sage/12 border-sage/20'
   const tone = meta.accent === 'gold' ? 'gold' : 'sage'
-  const name = zh ? p.name_zh : p.name_en
-  const altName = zh ? p.name_en : p.name_zh
-  // Fall back to the other language when a product has copy in only one.
-  const bullets = zh ? (p.bullets_zh.length ? p.bullets_zh : p.bullets_en) : (p.bullets_en.length ? p.bullets_en : p.bullets_zh)
-  const headLabel = alternative && !tier ? (zh ? '也可考慮' : 'Also consider') : (zh ? meta.cardLabel.zh : meta.cardLabel.en)
-  // Warm sleeper, but the allergy / scent rules left only winter-weight comforters.
-  const winterNote = section === 'comforter' && answers.comforterTemp === 'Hot' && !top.matched.includes('comforterTemp')
-  const browseUrl = section === 'sheets' && p.material ? MATERIAL_BROWSE_URL[p.material] : null
-
-  // "Why this fits": one cause-and-effect sentence per criterion this product satisfies.
-  const reasons = reasonsFor(top, answers, zh)
+  const { name, altName, bullets, headLabel, tierLabel, typeLabel, styleLabel, winterNote, browseUrl, reasons } = cardView(section, top, tier, alternative, answers, zh)
 
   return (
     <>
@@ -102,7 +124,7 @@ function ProductCard({ section, top, tier, alternative = false, answers, zh }: {
           <div className="min-w-0">
             <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-0.5 flex flex-wrap items-center gap-2">
               <span>{headLabel}</span>
-              {tier && <span className="normal-case tracking-normal text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-sage/15 text-sage-dark">{zh ? TIER_LABEL[tier].zh : TIER_LABEL[tier].en}</span>}
+              {tierLabel && <span className="normal-case tracking-normal text-[11px] font-medium px-2.5 py-0.5 rounded-full bg-sage/15 text-sage-dark">{tierLabel}</span>}
             </p>
             <h2 className="text-xl font-semibold text-charcoal tracking-tight leading-snug">{name}</h2>
             {altName && <p className="text-xs text-charcoal/45 mt-0.5 truncate">{altName}</p>}
@@ -116,8 +138,8 @@ function ProductCard({ section, top, tier, alternative = false, answers, zh }: {
             </a>
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap gap-2 mb-4">
-                {(zh ? p.type_zh : p.type_en) && <Chip tone={tone}>{zh ? p.type_zh : p.type_en}</Chip>}
-                {p.style && <Chip>{{ Nature: zh ? '自然風格' : 'Nature-inspired', Minimal: zh ? '簡約風格' : 'Minimalist', Playful: zh ? '主題童趣' : 'Playful', Classic: zh ? '經典奢華' : 'Classic luxury' }[p.style]}</Chip>}
+                {typeLabel && <Chip tone={tone}>{typeLabel}</Chip>}
+                {styleLabel && <Chip>{styleLabel}</Chip>}
               </div>
               {bullets.length > 0 && (
                 <ul className="space-y-2 mb-5">
@@ -139,7 +161,7 @@ function ProductCard({ section, top, tier, alternative = false, answers, zh }: {
               </div>
               {winterNote && (
                 <p className="text-xs text-charcoal/50 leading-relaxed mt-4">
-                  {zh ? '此款為冬被。符合您過敏與氣味需求的材質，目前沒有較輕薄的款式。' : 'This is a winter-weight comforter. No lighter option is currently available in the materials that fit your allergy and scent answers.'}
+                  {zh ? WINTER_NOTE.zh : WINTER_NOTE.en}
                 </p>
               )}
             </div>
@@ -193,12 +215,14 @@ export default function Results() {
   const { lang } = useLang()
   const zh = lang === 'zh'
   const product = searchParams.get('product') ?? 'sheets'
-  const { catalog } = useCatalog()
+  const { catalog, loading: catalogLoading } = useCatalog()
 
   const [answers] = useState<QuizAnswers>(() => {
     const raw = sessionStorage.getItem('quiz_answers')
     return raw ? JSON.parse(raw) as QuizAnswers : DUMMY_ANSWERS
   })
+  // Only a real quiz is recorded, never the dev fallback answers.
+  const [fromQuiz] = useState(() => Boolean(sessionStorage.getItem('quiz_answers')))
   const result = useMemo(() => getRecommendation(answers, catalog), [answers, catalog])
   const ranked: Record<SectionId, ScoredProduct[]> = { sheets: result.sheets, comforter: result.comforters, pillow: result.pillows }
 
@@ -210,23 +234,101 @@ export default function Results() {
   const doneCount = SECTION_ORDER.filter(id => done[id]).length
   const anyComplete = doneCount > 0
 
-  // ── Save ──
-  const savedInit = (() => { try { return JSON.parse(sessionStorage.getItem('tn_saved') || 'null') as { name: string; email: string } | null } catch { return null } })()
-  const [name, setName] = useState(savedInit?.name ?? '')
-  const [email, setEmail] = useState(savedInit?.email ?? '')
-  const [saved, setSaved] = useState(Boolean(savedInit))
-  const [nameError, setNameError] = useState(false)
-
-  function handleFinalize() {
-    if (!name.trim()) { setNameError(true); return }
-    saveSession(buildSession({ name, email, lang, answers, catalog }))
-    try { sessionStorage.setItem('tn_saved', JSON.stringify({ name: name.trim(), email: email.trim() })) } catch { /* ignore */ }
-    setSaved(true)
-  }
   function startOver() {
     try { sessionStorage.removeItem('quiz_answers'); sessionStorage.removeItem('tn_saved') } catch { /* ignore */ }
+    endVisit()
     navigate('/')
   }
+  // ── Download (PDF) ──
+  // The file is built once per language and reused after that.
+  type PdfPhase = 'idle' | 'working' | 'panel' | 'shared' | 'downloaded' | 'error'
+  const pdfKey = lang
+  const [built, setBuilt] = useState<{ key: string; file: File } | null>(null)
+  const [pdfUi, setPdfUi] = useState<{ key: string; phase: PdfPhase } | null>(null)
+  const inflight = useRef<{ key: string; promise: Promise<File> } | null>(null)
+  const pdfFile = built?.key === pdfKey ? built.file : null
+  const phase: PdfPhase = pdfUi?.key === pdfKey ? pdfUi.phase : 'idle'
+  const [viaShare] = useState(() => usesShareSheet())
+
+  function reportData(): ReportData {
+    return {
+      zh,
+      heard: SECTION_ORDER.filter(id => done[id])
+        .map(id => ({ label: tr(SECTIONS[id].label, lang), text: heardSummary(id, answers, zh) }))
+        .filter(r => r.text),
+      sections: SECTION_ORDER.filter(id => done[id]).map(id => {
+        const pick = pickTiers(ranked[id])
+        const picks = pick ? [
+          { top: pick.primary, tier: pick.primaryTier, alternative: false },
+          ...(pick.secondary ? [{ top: pick.secondary, tier: pick.secondaryTier, alternative: true }] : []),
+        ] : []
+        return {
+          label: tr(SECTIONS[id].label, lang),
+          cards: picks.map(({ top, tier, alternative }) => {
+            const v = cardView(id, top, tier, alternative, answers, zh)
+            return {
+              head: v.headLabel, tier: v.tierLabel, name: v.name, altName: v.altName,
+              tags: [v.typeLabel, v.styleLabel].filter((x): x is string => Boolean(x)),
+              bullets: v.bullets, reasons: v.reasons,
+              note: v.winterNote ? (zh ? WINTER_NOTE.zh : WINTER_NOTE.en) : undefined,
+              url: top.product.url, imageUrl: top.product.image_url, match: matchPercent(top),
+            }
+          }),
+        }
+      }),
+    }
+  }
+
+  function ensureBuilt(key: string): Promise<File> {
+    if (inflight.current?.key === key) return inflight.current.promise
+    const promise = buildSleepPlanPdf(reportData()).then(file => { setBuilt({ key, file }); return file })
+    inflight.current = { key, promise }
+    promise.catch(() => { if (inflight.current?.promise === promise) inflight.current = null })
+    return promise
+  }
+
+  // iPhone / iPad only open the share sheet straight from a tap, so the file is
+  // prepared in the background there and the first tap can hand it over at once.
+  useEffect(() => {
+    if (!viaShare || !anyComplete) return
+    const t = setTimeout(() => { ensureBuilt(pdfKey).catch(() => { /* retried on tap */ }) }, 600)
+    return () => clearTimeout(t)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- rebuild only when the file's identity changes
+  }, [pdfKey, viaShare, anyComplete])
+
+  // Anonymous response for analysis: answers and picks only, no personal data.
+  useEffect(() => {
+    // Wait for the live catalog so the recorded picks are the ones on screen.
+    if (fromQuiz && !catalogLoading) recordVisit({ lang, answers, catalog })
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once per results view; recordVisit ignores repeats
+  }, [catalogLoading])
+
+  async function handOver(file: File, key: string) {
+    try {
+      const outcome = await deliverFile(file)
+      if (outcome === 'cancelled') setPdfUi(p => (p?.phase === 'panel' ? p : null))
+      else {
+        setPdfUi({ key, phase: outcome })
+        if (fromQuiz) recordVisit({ lang, answers, catalog, downloaded: true })
+      }
+    } catch {
+      // The tap was too long ago for Safari: ask for one more, unmissably.
+      setPdfUi({ key, phase: 'panel' })
+    }
+  }
+
+  async function handleDownload() {
+    if (phase === 'working') return
+    const key = pdfKey
+    let file = pdfFile
+    if (!file) {
+      setPdfUi({ key, phase: 'working' })
+      try { file = await ensureBuilt(key) }
+      catch (e) { console.error('Sleep plan PDF failed', e); setPdfUi({ key, phase: 'error' }); return }
+    }
+    await handOver(file, key)
+  }
+
   function scrollToSection(id: string) { document.getElementById(`sec-${id}`)?.scrollIntoView({ behavior: 'smooth', block: 'start' }) }
 
   useEffect(() => {
@@ -320,41 +422,34 @@ export default function Results() {
             )
           })}
 
-          {/* ── Save ── */}
+          {/* ── Download ── */}
           {anyComplete && (
-            <motion.div variants={itemVariants} className="glass-card p-6">
-              {saved ? (
-                <div className="text-center py-2">
-                  <div className="w-10 h-10 rounded-full bg-sage/20 flex items-center justify-center mx-auto mb-3">
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10L8 14L16 6" stroke="#6A8E67" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            <motion.div variants={itemVariants} className={`glass-card p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 ${phase === 'shared' || phase === 'downloaded' ? 'ring-1 ring-sage/40' : ''}`}>
+              <div className="flex items-start gap-3">
+                {(phase === 'shared' || phase === 'downloaded') && (
+                  <div className="w-9 h-9 rounded-full bg-sage/20 flex items-center justify-center flex-shrink-0">
+                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M4 10L8 14L16 6" stroke="#6A8E67" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>
-                  <p className="text-sm font-semibold text-charcoal mb-1">{zh ? `已儲存，${name}！` : `Saved, ${name}!`}</p>
-                  <p className="text-xs text-charcoal/50 leading-relaxed">
-                    {email ? (zh ? `您的睡眠計畫已儲存。我們可能會透過 ${email} 與您聯繫。` : `Your sleep plan has been saved. We may follow up at ${email}.`) : (zh ? '您的睡眠檔案已儲存。' : 'Your sleep profile has been saved.')}
+                )}
+                <div>
+                  <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-1">{zh ? '帶走您的睡眠計畫' : 'Take your sleep plan with you'}</p>
+                  <p className={`text-sm leading-relaxed ${phase === 'shared' || phase === 'downloaded' ? 'text-charcoal font-medium' : 'text-charcoal/55'}`} aria-live="polite">
+                    {phase === 'error' ? (zh ? '無法產生 PDF，請再試一次。' : 'The PDF could not be created. Please try again.')
+                      : phase === 'shared' ? (zh ? '完成。若您選擇「儲存到檔案」，可以在「檔案」App 中找到您的計畫。' : 'Done. If you chose Save to Files, your plan is in the Files app.')
+                      : phase === 'downloaded' ? (zh ? '您的 PDF 已下載。若沒有開始下載，請再點一次按鈕。' : 'Your PDF has been downloaded. If it did not start, press the button again.')
+                      : (zh ? '將您的建議下載為 PDF，存在這台裝置上，商品連結都可以直接點選。' : 'Download your recommendations as a PDF to keep on this device, with links to each product.')}
                   </p>
-                  <button onClick={() => setSaved(false)} className="text-xs text-charcoal/40 hover:text-gold mt-3 cursor-pointer">{zh ? '以最新答案重新儲存' : 'Re-save with latest answers'}</button>
                 </div>
-              ) : (
-                <>
-                  <p className="text-xs font-semibold tracking-widest uppercase text-charcoal/40 mb-1">{zh ? '儲存您的睡眠計畫' : 'Save your sleep plan'}</p>
-                  <p className="text-sm text-charcoal/55 leading-relaxed mb-4">
-                    {zh ? '留下您的姓名以儲存目前完成的內容。若希望我們後續與您聯繫，歡迎留下 Email。' : 'Add your name to save everything you\'ve completed. Leave your email if you\'d like us to follow up.'}
-                  </p>
-                  <div className="grid sm:grid-cols-2 gap-3 mb-4">
-                    <div>
-                      <input type="text" value={name} onChange={e => { setName(e.target.value); if (nameError) setNameError(false) }} placeholder={zh ? '姓名（必填）' : 'Name (required)'}
-                        className={`w-full px-4 py-3 rounded-xl bg-white/60 border text-sm text-charcoal placeholder:text-charcoal/35 outline-none focus:border-gold transition-colors ${nameError ? 'border-red-300' : 'border-charcoal/12'}`} />
-                      {nameError && <p className="text-xs text-red-400 mt-1 pl-1">{zh ? '請輸入您的姓名' : 'Please enter your name'}</p>}
-                    </div>
-                    <input type="email" value={email} onChange={e => setEmail(e.target.value)} placeholder={zh ? 'Email（選填）' : 'Email (optional)'}
-                      className="w-full px-4 py-3 rounded-xl bg-white/60 border border-charcoal/12 text-sm text-charcoal placeholder:text-charcoal/35 outline-none focus:border-gold transition-colors" />
-                  </div>
-                  <motion.button onClick={handleFinalize} className="bg-charcoal text-cream px-8 py-3 rounded-xl text-sm font-medium hover:bg-charcoal/85 transition-colors shadow-sm inline-flex items-center gap-2 cursor-pointer" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
-                    {zh ? '儲存我的計畫' : 'Save my plan'}
-                    <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
-                  </motion.button>
-                </>
-              )}
+              </div>
+              <motion.button onClick={handleDownload} disabled={phase === 'working'}
+                className="flex-shrink-0 border border-charcoal/25 bg-white/60 text-charcoal px-6 py-3 rounded-xl text-sm font-medium hover:border-gold hover:text-gold transition-colors inline-flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-wait"
+                whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.97 }}>
+                <svg width="15" height="15" viewBox="0 0 16 16" fill="none"><path d="M8 2v8M8 10L5 7M8 10l3-3M3 13h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                {phase === 'working' ? (zh ? '準備中…' : 'Preparing…')
+                  : phase === 'shared' ? (zh ? '再次儲存或分享' : 'Save or share again')
+                  : phase === 'downloaded' ? (zh ? '再次下載' : 'Download again')
+                  : (zh ? '下載我的計畫（PDF）' : 'Download my plan (PDF)')}
+              </motion.button>
             </motion.div>
           )}
 
@@ -365,6 +460,24 @@ export default function Results() {
           </motion.div>
         </motion.div>
       </main>
+
+      {/* ── "Ready" panel: only when the phone needs one more tap to open the share sheet ── */}
+      {phase === 'panel' && pdfFile && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-charcoal/50 backdrop-blur-sm p-4" role="dialog" aria-modal="true">
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3, ease: apple }}
+            className="w-full max-w-sm bg-cream rounded-3xl shadow-2xl p-7 text-center">
+            <div className="w-14 h-14 rounded-full bg-sage/20 flex items-center justify-center mx-auto mb-4">
+              <svg width="26" height="26" viewBox="0 0 20 20" fill="none"><path d="M4 10L8 14L16 6" stroke="#6A8E67" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </div>
+            <p className="font-serif text-2xl text-charcoal mb-2">{zh ? '您的計畫已準備好' : 'Your plan is ready'}</p>
+            <p className="text-sm text-charcoal/60 leading-relaxed mb-6">{zh ? '點選下方按鈕，然後選擇「儲存到檔案」。' : 'Tap the button below, then choose Save to Files.'}</p>
+            <button onClick={() => handOver(pdfFile, pdfKey)} className="w-full bg-charcoal text-cream py-4 rounded-2xl text-base font-semibold cursor-pointer">
+              {zh ? '儲存到我的手機' : 'Save to my phone'}
+            </button>
+            <button onClick={() => setPdfUi(null)} className="mt-4 text-sm text-charcoal/45 cursor-pointer">{zh ? '先不要' : 'Not now'}</button>
+          </motion.div>
+        </div>
+      )}
     </motion.div>
   )
 }
