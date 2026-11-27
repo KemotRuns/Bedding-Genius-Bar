@@ -9,7 +9,8 @@ service cloud.firestore {
         && request.auth.token.email != null
         && request.auth.token.email.lower() in [
           'tom@brainiakconsulting.com',
-          'vashanna@fet.com.tw'
+          'vashanna@fet.com.tw',
+          'aprilyu@fet.com.tw'
         ];
     }
 
